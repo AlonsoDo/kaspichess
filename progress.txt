@@ -1,0 +1,13 @@
+14.03.2016
+Inicio de este fichero (progress.txt)
+Creacion del directorio de la aplicacion (kaspichess)
+Configuracion del fichero package.json
+Instalacion de los modulos Express, Socket.io y MySQL
+Clonacion del servidor (web.js)
+Testeando socket.io en index.html
+15.03.2016
+Quitando Express 4 e instalando version 3
+Creando la extructura de carpetas de la aplicacion
+Reeditando fichero package.json
+Test del servidor web.js - Ok
+Test de Socket.io de index.html - Ok (utiliza WebSockets)

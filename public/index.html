@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KaspiChess</title>
+    <script src="socket.io/lib/socket.io.js"></script>
+    
+    <script type="text/javascript">
+        
+        var socket = io.connect(window.location.hostname);
+        socket.on('news', function (data) {
+            alert(data.hello);
+            socket.emit('my other event', { my: 'data' });	    
+        });        
+        
+    </script>
+    
+</head>
+<body>
+
+
+
+</body>
+</html>
