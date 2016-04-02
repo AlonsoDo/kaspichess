@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta name="description" content="a new room to play live chess">	
+    <meta name="keywords" content="Play by internet,Online,Real adversaries,live,chess,multiplayer,new room to play chess,fun chess club">
+    <title>KaspiChess</title>
+    
+    <script src="socket.io/lib/socket.io.js"></script>
+    <link type="text/css" href="css/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet"/>
+    <script src="js/jquery-2.2.1.min.js"></script>    
+    <script src="css/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+    <link type="text/css" href="css/mystyle.css" rel="stylesheet"/>
+    <script src="js/fabric.min.js" type="text/javascript"></script>
+    <script src="js/funciones.js" type="text/javascript"></script>
+    <script src="js/auxiliar.js" type="text/javascript"></script>
+    <script src="js/retos.js" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        
+        var MyId = '';
+        var cUserName = '';        
+        var MyElo = 0;
+        var MyCountry = '';
+        var socket;
+        
+        $(document).ready(function(){
+            
+            socket = io.connect(window.location.hostname);
+            
+            var hash = getUrlVars();
+            var Games;
+            var Wins;
+            var Losts;
+            var Draws;
+            if (hash['name']=='Guest'){
+                var MyRandomNumber = Math.floor(Math.random()*9999)+1;
+		cUserName = hash['name'] + MyRandomNumber;            
+                MyElo = '1200';  // (If you register you will begin with 1800)
+                MyCountry = 'ad';
+                Games = 0;
+                Wins = 0;
+                Losts = 0;
+                Draws = 0;
+            }else{
+                cUserName = hash['name']; 
+                MyElo = hash['elo'];
+                MyCountry = hash['country'];
+                MyCountry = MyCountry.toLowerCase();
+                Games = hash['games'];
+                Wins = hash['wins'];
+                Losts = hash['losts'];
+                Draws = hash['draws'];
+            }                        
+            $('#status').html('<img src="res/img/flags/' + MyCountry + '.png" style="border:1px black solid;margin-left:8px; margin-top:9px; margin-right:8px; float:left;"></a>' +
+                              '<label for="Statst" style="color:red; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Stats for: </label>' +
+                              '<label for="User" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cUserName + '</label>' +
+                              '<label for="Elo" style="color:red; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Elo: </label>' +
+                              '<label for="nElo" id="nEloVal" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + MyElo + '</label>' +
+			      '<label for="Games" style="color:red; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Games: </label>' +
+                              '<label for="nGames" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + Games + '</label>' + 	
+			      '<label for="Wins" style="color:red; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Wins: </label>' +
+                              '<label for="nWins" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + Wins + '</label>' +  	
+			      '<label for="Losts" style="color:red; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Losts: </label>' +
+                              '<label for="nLosts" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + Losts + '</label>' +  	
+			      '<label for="Draws" style="color:red; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Draws: </label>' +
+                              '<label for="nDraws" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + Draws + '</label>'  	
+			      );
+            
+            
+            $('#stxaMsg').bind('keypress',function(e){
+                if(e.keyCode==13){
+                    SendChatText();                    
+                }
+            });
+            
+            $('#sbtnSend').button();
+            
+            $('#sbtnSend').click(function(){
+                SendChatText();                           
+            });
+            
+            socket.on('connected',function(data){    
+                Welcome();
+                MyId = data.PlayerId;
+                socket.emit('SendPlayerData',{MyPlayerId:data.PlayerId,MyPlayerName:cUserName,Elo:MyElo,Country:MyCountry,Games:Games})
+            });
+            
+            socket.on('PlayersOnline',function(data){
+                PlayersOnLine(data.PlayersOnline);
+            });
+            
+            socket.on('chatback',function(data){                
+                GetChatText(data);
+            });
+            
+            socket.on('MandarRetoBack',function(data){                
+                CrearRetoRemoto(data);
+            });
+            
+            socket.on('CancelarRetoBack',function(data){                
+                CancelarReto(data.PlayerId,false)
+            });
+            
+            socket.on('AceptarRetoBack',function(data){                
+                LoadBoard(data);
+            });            
+            
+            $('#NewGame').button();
+            $('#Cancel').button();
+            $('#Cancel').hide();
+            
+            $('#NewGame').click(function(){               
+                CrearRetoLocal();
+                $('#NewGame').hide();
+                $('#Cancel').show();
+            });
+            
+            $('#Cancel').click(function(){               
+                CancelarReto(MyId,true);
+                $('#NewGame').show();
+                $('#Cancel').hide();
+            });
+            
+            $(window).unload(function(){
+                CancelarReto(MyId,true);
+            });            
+            
+            $('#tabs').tabs();            
+            
+            Reset();
+        
+            CargarRecursos();
+            
+            CargarRecursosRetos();
+            
+            $('#ContenedorBoard').hide();
+            
+        });        
+        
+    </script>    
+        
+</head>
+<body>
+    
+    <div style="border:0px black solid; width:1100px; height:750px; margin:0 auto 0 auto;">
+        <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px;">
+            <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">Welcome to</label>								
+            <label style="color:green; margin-left:20px; margin-top:2px; float:left; font-family:Forte,Arial,Helvetica,sans-serif; font-weight:bold; font-size:40px;">KaspiChess.com</label>								
+        </div>
+        <div id="ContenedorBoard" style="background-color:#e8e8e8; border:0px black solid; width:546px; height:564px; margin-top:8px; margin-bottom:8px; margin-right:8px; float:left;">
+            <canvas id="BoardCanvas" width="442" height="442" style="margin-top:61px; margin-left:52px; border:0px coral solid"></canvas>
+        </div>
+        <div id="ContenedorRetos" style="background-color:#e8e8e8; border:0px black solid; width:546px; height:564px; margin-top:8px; margin-bottom:8px; margin-right:8px; float:left;">
+            <canvas id="RetosCanvas" width="442" height="442" style="margin-top:61px; margin-left:52px; border:3px #800080 solid"></canvas>
+        </div>
+        <div style="background-color:#e8e8e8; border:0px black solid; width:546px; height:564px; margin-top:8px; margin-bottom:8px; float:left;">
+            <div style="background-color:#e8e8e8; border:0px black solid; width:530px; height:470px; margin-top:8px; margin-left:8px; float:left;">
+                <div id="tabs">
+                    <ul>
+                        <li><a href="#tabs-1" style="padding:5px 5px 8px 5px; font-weight:bold;">Chat</a></li>
+                        <li><a href="#tabs-2" style="padding:5px 5px 8px 5px; font-weight:bold;">Game</a></li>
+                        <li><a href="#tabs-3" style="padding:5px 5px 8px 5px; font-weight:bold;">Players</a></li>
+                        <li><a href="#tabs-4" style="padding:5px 5px 8px 5px; font-weight:bold;">Boards</a></li>
+                        <li><a href="#tabs-5" style="padding:5px 5px 8px 5px; font-weight:bold;">Private Chat</a></li>
+                    </ul>
+                    <div id="tabs-1">
+                        <div id="sdivChat" style="position:relative; height:360px; width:520px; overflow-x:hidden; overflow-y:scroll;">
+			</div>			
+			<div id="MensajeChat" style="background-color:#e8e8e8; margin-top:3px; margin-left:0px; border:3px white solid; width:516px; height:36px;">
+			    <button id="sbtnSend" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:4px; margin-right:6px;">Send</button>
+                            <input type="text" maxlength="200" id="stxaMsg" placeholder="Please type your message here!" style="color:#800080; clear:left; margin-top:8px; font-family:Arial,Helvetica,sans-serif; font-size:16px; font-weight:bold; margin-left:2px; height: 14px; width:435px;">
+			</div>
+                    </div>
+                    <div id="tabs-2">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</div>
+                    <div id="tabs-3">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</div>
+                    <div id="tabs-4">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</div>
+                    <div id="tabs-5">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</div>
+                </div>            
+            </div>
+            <div style="background-color:white; border:0px black solid; width:546px; height:8px; float:left;">
+            </div>
+            <div style="background-color:#e8e8e8; border:0px black solid; width:530px; height:64px; margin-left:8px; float:left;">
+                <button id="NewGame" style="font-size:20px; font-weight:bold; margin-top:17px; margin-left:10px;">New Game</button>
+                <button id="Cancel" style="font-size:20px; font-weight:bold; margin-top:17px; margin-left:10px;">Cancel</button>
+            </div>            
+        </div>
+        <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px; margin-bottom:8px; float:left;">
+            <div id="status" style="background-color:#FBEDFF; margin:10px auto 0 auto; border:0px white solid; width:1080px; height:40px;"></div>
+        </div>
+        <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:40px; float:left;">
+        </div>
+    </div>   
+    
+</body>
+</html>

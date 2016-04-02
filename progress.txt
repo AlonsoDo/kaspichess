@@ -1,13 +1,172 @@
-14.03.2016
+
+LUNES-14.03.2016
+
 Inicio de este fichero (progress.txt)
 Creacion del directorio de la aplicacion (kaspichess)
 Configuracion del fichero package.json
 Instalacion de los modulos Express, Socket.io y MySQL
 Clonacion del servidor (web.js)
 Testeando socket.io en index.html
-15.03.2016
+
+MARTES-15.03.2016
+
 Quitando Express 4 e instalando version 3
 Creando la extructura de carpetas de la aplicacion
 Reeditando fichero package.json
 Test del servidor web.js - Ok
 Test de Socket.io de index.html - Ok (utiliza WebSockets)
+Despliegue de la aplicacion en Heroku
+Acceso a la base de datos y reset
+Volcado de datos locales en BBDD remota
+Copia Seguridad
+
+MIERCOLES-16.03.2016
+
+Descarga de jquery-2.2.1.min.js
+Link en pagina index.html
+Crear y centrar div principal
+Incluir $(document).ready(function(){... en pagina
+meta name="description" y <meta name="keywords"
+Fondo de div principal
+Logo KaspiChess.com
+Botones y Imput texts
+Incluir fichero mystyle.css
+Copia Seguridad 21:40
+
+JUEVES-17.03.2016
+
+Terminacion de colocar todos los elementos pagina
+Paso de datos del login al servidor
+Confeccion de tema de jQuery UI y descarga
+Link a la pagina del fichero css
+Acceso a la BBDD remota - Ok
+Login - Ok
+Ventana Dialog Player no existe
+Copia Seguridad 22:40
+
+VIERNES-18.03.2016
+
+Add border to Dialog
+Sign Up Click
+Cambio en el tema css
+Reestructurar elementos en ventana de create account
+Check si el jugador esta registrado
+Copia Seguridad 22:35
+
+SABADO-19.03.2016
+
+Grabar datos de Jugador Nuevo
+Editar index.html Dar formato
+Comparar diseños de chess.com y chess24.com
+Inicio de pagina main.html
+Links desde index.html a main.html
+Diseño de los paneles
+Inclusion de la libreria fabric.js
+Inclusion del fichero funciones.js
+Prueba del tablero con piezas de 45x45
+Copia de seguridad 22:15
+
+DOMINGO-20.03.2016
+
+Diseño de paneles y centrado de tablero
+Problemas con ficheros de css
+Hay que iniciar con $('#tabs').tabs();
+cada boton con su nombre $('#button1').button();
+Averiguar para todos los botones
+Eliminando padding de los tabs
+Font bold en tabs
+Copia de seguridad 22:58
+
+LUNES-21.03.2016
+
+Recojiendo parametros de la url (var hash = getUrlVars();)
+Creacion del fichero auxiliar.js
+Editar cabeceras de tabs
+Editar tab de chat
+Añadir texto con tecla intro
+Añadir texto con boton send
+socket.emit('chat',{Name:cUserName,Menssage:cTxtChat});
+Funcion para recibir mensaje del chat
+Copia de seguridad 22:53
+
+JUEVES-24.03.2016
+
+Funciones SendChatText y GetChatText
+Welcome Mensajes onConnect
+Añadir datos jugador a aPlayers
+Copia de seguridad 22:05
+
+VIERNES-25.03.2016
+
+Pasando parametros Elo y Country en URL
+Copia de seguridad 22:02
+
+SABADO-26.03.2016
+
+nPlayersOnline funcion
+ramdon name for Guest
+boton New Game
+Copia de seguridad 22:05
+
+DOMINGO-27.03.2016
+
+Clone de la imagen de las damas
+Mensaje Bienvenida en cabecera
+Copia Seguridad 00:04
+
+LUNES-28.03.2016
+
+Copiar funciones TimeToPos y EloToPos
+Añadir RetosCanvas y hacer swich
+Crear funcion CrearRetos
+Dibujar mi reto (circulo)
+Cambio del fondo canvas2
+
+MARTES-29.03.2016
+
+Boton Cancel reto
+Swich entre NewGame y Cancel
+Test en canvas2 de getItemByName2
+add reto a aControlRetos
+sacar reto local
+Copia Seguridad 22:04
+
+MIERCOLES-30.03.2016
+
+Mandar Reto
+MandarRetoBack
+Recolocar Reto Local sobre Reto Remoto
+Cancelar Reto
+CancelarRetoBack
+Div status
+Copia seguridad 22:10
+
+JUEVES-31.03.2016
+
+Barra horizontal time
+Barra vertical rating
+Cambio de color fondo tabs
+Cambio de color de texto en active tab
+mouse over sobre retos
+mouse down sobre circle
+window unload CancelarReto
+cambio de color del content de tabs
+Copia seguridad 21:50 0.1.4
+
+VIERNES-01.04.2016
+
+Eliminar borde azul en tab
+Recojiendo parametros de Url para Stats
+Ajustar time y elo en retos
+Stats para create new player
+Click sobre rect (aceptar reto)
+Copia seguridad 22:47 0.1.5
+
+SABADO-O2.04.2016
+
+Mensaje AceptarReto
+Cargar Boards
+Vaciar Retos
+Copia seguridad 23:12 0.1.6
+
+

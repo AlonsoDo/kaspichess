@@ -1,0 +1,29 @@
+.button {
+    background-color:#ffbcff;
+    border:0px solid #362917;
+    color:#800080;
+    padding:10px 18px;
+    text-align: center;
+    text-decoration:none;
+    display:inline-block;
+    font-family:Arial,Helvetica,sans-serif;
+    font-weight:bold;
+    cursor:pointer;
+}
+.ui-widget-content.ui-dialog
+{
+   border:3px solid #DDD;
+}
+.ui-tabs .ui-tabs-panel {
+    padding:0px 0px 0px 0px;
+    background:#FBEDFF;
+}
+#tabs .ui-tabs-active {
+    background:#ffbcff;  
+}
+#tabs .ui-state-active a {
+  color:#800080;  
+}
+#tabs li a {
+    outline-color:transparent;
+}
