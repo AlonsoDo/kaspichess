@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
-    
+<head>    
     <meta name="description" content="a new room to play live chess">	
     <meta name="keywords" content="Play by internet,Online,Real adversaries,live,chess,multiplayer,new room to play chess,fun chess club">
-    <title>KaspiChess</title>
+    <title>KaspiChess</title>    
     
     <script src="socket.io/lib/socket.io.js"></script>
     <link type="text/css" href="css/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet"/>
@@ -15,43 +14,228 @@
     <script src="js/funciones.js" type="text/javascript"></script>
     <script src="js/auxiliar.js" type="text/javascript"></script>
     <script src="js/retos.js" type="text/javascript"></script>
-    
-    <script type="text/javascript">
+    <script src="js/board.js" type="text/javascript"></script>
+    <script src="js/moves.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="jqgrid/css/ui.jqgrid.css" />
+    <script src="jqgrid/js/i18n/grid.locale-en.js" type="text/javascript"></script>
+    <script src="jqgrid/js/jquery.jqGrid.min.js" type="text/javascript"></script>
+    <script src="js/ion.sound.min.js" type="text/javascript"></script>
+        
+    <script type="text/javascript">                
         
         var MyId = '';
         var cUserName = '';        
         var MyElo = 0;
         var MyCountry = '';
-        var socket;
+        var MyAlt = '';
+        var MinElo = 1;
+	var MaxElo = 2999;
+	var SelectRat = 'Rated';						
+	var ColorPartida = 'White';
+        var Games = '0';
+        var Wins = '0';
+        var Losts = '0';
+        var Draws = '0';
+        var lHighlight = '0'; // Disable
+        var lSound = '1';
+        var lPromote = '1';
+        var cWelcomeMenssage = '';
+        var lShowCoord = '1';
         
-        $(document).ready(function(){
+        var WhoPlayer = -1;
+        var nGameNumber = -1;
+        var cWhiteIdPrivate = '';  // Room Name
+        var nNumberOfCalls = 4;
+        var Following = false;
+        
+        var socket;        
+        
+        $(document).ready(function(){            
             
-            socket = io.connect(window.location.hostname);
+            $('#imgloader').show();            
+            
+            socket = io.connect(window.location.hostname);            
+            
+            // init bunch of sounds
+            ion.sound({
+                sounds: [
+                    { name: 'main' , volume: 0.1 },
+                    { name: 'comienzopartida' , volume: 0.5 },
+                    { name: 'newgame' , volume: 0.9 },
+                    { name: 'move' , volume: 0.9 },
+                    { name: 'cancel' , volume: 0.6 },
+                    { name: 'call' , volume: 0.5 },
+                    { name: 'lost' , volume: 0.9 },
+                    { name: 'win' , volume: 0.9 },
+                    { name: 'draw' , volume: 0.9 }
+                ],            
+                // main config
+                path: "res/sounds/",
+                preload: true,
+                multiplay: true,
+                volume: 0.9
+            });            
+                                    
+            jQuery('#list1').jqGrid({
+		datatype: 'local',
+		height: 306,
+		width:513,
+	   	colNames:['Nick Name','Elo','Country','Alt','Status','Games','IdPlayer'],
+	   	colModel:[
+                            {name:'Name',index:'Name', width:250,classes:'gridclass2'},
+                            {name:'Elo',index:'Elo',width:70,classes:'gridclass'},	 
+                            {name:'Country',width:24,fixed:true,classes:'gridclass2',
+                                formatter: function(cellvalue, options, rowObject){
+                                    var cAlt = rowObject['Alt'];
+                                    return "<img src='res/img/flags/16/"+cellvalue+".png' title='"+cAlt+"' alt='Country' />";
+                                }                             
+                            },
+                            {name:'Alt',width:50,hidden:true},
+                            {name:'Status',width:110,classes:'gridclass2'},
+                            {name:'Games',index:'Games',sorttype:'int',width:90,classes:'gridclass2',align:'right'},
+                            {name:'IdPlayer',width:50,hidden:true}
+                            ],
+		onSelectRow: function(id){
+		    var rowData = jQuery(this).getRowData(id); 
+                    WhoPlayer = rowData['IdPlayer'];                    
+		}
+            });
+            
+            $('#list1').jqGrid('setLabel','Name','Nick Name',{'font-weight':'bold','font-size':'18px'});
+            $('#list1').jqGrid('setLabel','Elo','Elo',{'font-weight':'bold','font-size':'18px'});
+            $('#list1').jqGrid('setLabel','Country',' ',{'font-weight':'bold','font-size':'18px'});
+            $('#list1').jqGrid('setLabel','Status','Status',{'font-weight':'bold','font-size':'18px'});
+            $('#list1').jqGrid('setLabel','Games','Games',{'font-weight':'bold','font-size':'18px'});
+            
+            $('#sbtnLoadPlayers').click(function(){
+                socket.emit('GetPlayersData',{});                           
+            });
+            
+            socket.on('GetPlayersDataBack',function(data){
+                GetPlayersData(data);
+            });            
+            
+            jQuery('#list2').jqGrid({
+		datatype: 'local',                
+		height: 306,
+		width:513,
+	   	colNames:['White','Elo','Black','Elo','Status','Number','When','WhiteId','BlackId','Show','Time'],
+	   	colModel:[
+			{name:'whitename',width:137,sortable:false,classes:'gridclass2'},
+			{name:'whiteelo',width:41,sortable:false,classes:'gridclass'},
+			{name:'blackname',width:137,sortable:false,classes:'gridclass2'},
+			{name:'blackelo',sortable:false,width:41,classes:'gridclass'},
+			{name:'status',sortable:false,width:62,classes:'gridclass2'},
+			{name:'number',sortable:false,width:50,hidden:true},	   		
+			{name:'when',sortable:false,width:128,hidden:true},
+			{name:'whiteid',sortable:false,width:110,hidden:true},
+			{name:'blackid',sortable:false,width:110,hidden:true},
+			{name:'show',sortable:false,width:40,hidden:true},
+			{name:'timing',sortable:false,width:46,hidden:false,classes:'gridclass'}
+			],
+		shrinkToFit:false,
+		onSelectRow: function(id){
+			var rowData = jQuery(this).getRowData(id); 
+			nGameNumber = rowData['number'];
+			cWhiteIdPrivate = rowData['whiteid']; // Room name
+		}
+            });
+            
+            $('#list2').jqGrid('setLabel','whitename','White',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','whiteelo','Elo',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','blackname','Black',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','blackelo','Elo',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','status','Status',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','timing','Time',{'font-weight':'bold','font-size':'18px'});
+            
+            $('#sbtnLoadGames').click(function(){
+                $('#imgloader').show();
+                socket.emit('GetGamesData',{});                           
+            });
+            
+            socket.on('GetGamesDataBack',function(data){
+                GetGamesData(data);
+                $('#imgloader').hide();
+            });           
             
             var hash = getUrlVars();
-            var Games;
-            var Wins;
-            var Losts;
-            var Draws;
+            
             if (hash['name']=='Guest'){
+                
+                // Datos y stats
                 var MyRandomNumber = Math.floor(Math.random()*9999)+1;
 		cUserName = hash['name'] + MyRandomNumber;            
                 MyElo = '1200';  // (If you register you will begin with 1800)
                 MyCountry = 'ad';
+                MyAlt = 'ad'
                 Games = 0;
                 Wins = 0;
                 Losts = 0;
-                Draws = 0;
+                Draws = 0;                
+            
             }else{
+                
+                // Datos y stats
                 cUserName = hash['name']; 
                 MyElo = hash['elo'];
                 MyCountry = hash['country'];
                 MyCountry = MyCountry.toLowerCase();
+                MyAlt = hash['alt'];
                 Games = hash['games'];
                 Wins = hash['wins'];
                 Losts = hash['losts'];
                 Draws = hash['draws'];
-            }                        
+                
+                // Retos
+                $('#minutes').val(hash['minutes']);
+                $('#seconds').val(hash['seconds']);
+                $('#minrat').val(hash['minrat']);
+                $('#maxrat').val(hash['maxrat']);
+                if (hash['rated']=='1') {
+                    $("#SelectRated").val('Rated');    
+                }else{
+                    $("#SelectRated").val('Unrated');
+                }
+                $("#ColorPartida").val(hash['color']);
+                
+                // Setting
+                $("#welcome").val(hash['welcome']);
+                cWelcomeMenssage = $("#welcome").val();
+                if (hash['coordenadas']=='1') {                    
+                    lShowCoord = '1';
+                }else{
+                    $('#cbShowCoord').attr('checked', false);
+                    lShowCoord = '0';
+                }
+                if (hash['promote']=='1') {
+                    $('#cbPromote').attr('checked', true);
+                    lPromote = '1';
+                }else{
+                    $('#cbPromote').attr('checked', false);
+                    lPromote = '0';
+                }
+                if (hash['sound']=='1') {
+                   $('#cbSound').attr('checked', true); 
+                   lSound = '1'; 
+                }else{
+                   $('#cbSound').attr('checked', false);  
+                   lSound = '0'; 
+                }
+                if (hash['highlight']=='1') {
+                   $('#cbHighLight').attr('checked', true); 
+                   lHighlight = '1';
+                }else{
+                    $('#cbHighLight').attr('checked', false);
+                    lHighlight = '0';
+                }                
+                $("#country option:selected").text(MyAlt);
+            }
+            
+            // play sound
+            if ( lSound=='1') {
+                ion.sound.play('main');    
+            }
+            
             $('#status').html('<img src="res/img/flags/' + MyCountry + '.png" style="border:1px black solid;margin-left:8px; margin-top:9px; margin-right:8px; float:left;"></a>' +
                               '<label for="Statst" style="color:red; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Stats for: </label>' +
                               '<label for="User" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cUserName + '</label>' +
@@ -66,32 +250,82 @@
 			      '<label for="Draws" style="color:red; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Draws: </label>' +
                               '<label for="nDraws" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + Draws + '</label>'  	
 			      );
-            
-            
+                        
             $('#stxaMsg').bind('keypress',function(e){
                 if(e.keyCode==13){
                     SendChatText();                    
                 }
             });
             
+            $('#stxaMsg2').bind('keypress',function(e){
+                if(e.keyCode==13){
+                    SendChatText2();                    
+                }
+            });
+            
             $('#sbtnSend').button();
+            $('#sbtnSend2').button();
             
             $('#sbtnSend').click(function(){
                 SendChatText();                           
             });
             
+            $('#sbtnSend2').click(function(){
+                SendChatText2();                           
+            });
+            
+            $('#sbtnFollowGame').click(function(){
+                FollowGame();                           
+            });
+            
+            $('#Abort').click(function(){
+                GameAborted({ByButton:true});
+                socket.emit('AbortGame',{RoomName:cWhiteIdPrivate,ByButton:true,MyPlayerName:cUserName,OpPlayerName:OpName});
+                socket.emit('UpdateGameStatus',{cStatus:'Aborted',nGameNumber:nCodigoAltaPartida});
+            });
+            
             socket.on('connected',function(data){    
                 Welcome();
                 MyId = data.PlayerId;
-                socket.emit('SendPlayerData',{MyPlayerId:data.PlayerId,MyPlayerName:cUserName,Elo:MyElo,Country:MyCountry,Games:Games})
+                socket.emit('SendPlayerData',{MyPlayerId:data.PlayerId,MyPlayerName:cUserName,Elo:MyElo,Country:MyCountry,Games:Games,Alt:MyAlt})
             });
+            
+            socket.on('disconnect', function(){
+                $(document).attr('title','Lost Connection');
+		$("#dialog-result").html(
+					"<div id=\"dialog-result\" title=\"Information\">" +
+					"<p style=\"color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">" + cUserName + '  ' + "You have lost the connection. You can reload the page to reconnect.</p>" +
+					"</div>"
+		);
+			
+		$("#dialog-result").dialog({ height: 360 },{ width: 310 });
+		$('.ui-button:contains(Reconnect)').show();
+		$('.ui-button:contains(Ok)').hide();			
+		$("#dialog-result").dialog( "open" );	
+            });
+            
+            socket.on('IfGameActiveBack',function(data){
+                IfGameActive(data);                   
+            })
             
             socket.on('PlayersOnline',function(data){
                 PlayersOnLine(data.PlayersOnline);
             });
             
+            socket.on('PlayerName',function(data){
+                PlayerNameFromCall(data);
+            });
+            
+            socket.on('GetStatsBack',function(data){
+                GetStatsBack(data);
+            });    
+            
             socket.on('chatback',function(data){                
                 GetChatText(data);
+            });
+            
+            socket.on('chatback2',function(data){                
+                GetChatText2(data);
             });
             
             socket.on('MandarRetoBack',function(data){                
@@ -104,29 +338,337 @@
             
             socket.on('AceptarRetoBack',function(data){                
                 LoadBoard(data);
+            });
+            
+            socket.on('SendPosBack',function(data){                
+                if (Playing){
+                    GetPos(data);    
+                }else{
+                    if (Following){
+                        GetPos(data);
+                    }
+                }                
+            });
+            
+            socket.on('AskPos',function(data){
+                //Mandar primera posicion a observador               
+                socket.emit('SendPos',{RoomName:data.WhiteIdPrivate,Pos:aPos,FromAskPos:true,IdWhoAsk:data.IdWhoAsk,SelectRat:SelectRat});        
+            });
+            
+            socket.on('AskPlayersLabelsBack',function(data){
+                AskPlayersLabels(data);
+                $('#Rematch').hide();
+            });
+            
+            // Recive Call
+            socket.on('MakeBackCall',function(data){                
+                GetCall(data);
+            });
+            
+            socket.on('RegisterGameBack',function(data){                
+                nCodigoAltaPartida = data.GameNumber;
+            });
+            
+            socket.on('GameTimeOffBack',function(data){                
+                GameTimeOffBack(data);
+            });
+            
+            socket.on('GameAbortedBack',function(data){
+                GameAborted(data);
+            });
+            
+            socket.on('GameResignBack',function(data){
+                GameResignBack(data);
+            });
+            
+            socket.on('WinByMateBack',function(data){
+                WinByMateBack(data);
+            });
+            
+            socket.on('DrawByStaleMateBack',function(data){
+                DrawByStaleMateBack(data);
+            });
+            
+            socket.on('DrawByInsuficientMaterialBack',function(data){
+                DrawByInsuficientMaterialBack(data);
+            });
+            
+            socket.on('DrawBy3RepeatBack',function(data){
+                DrawBy3RepeatBack(data);
             });            
+            
+            socket.on('DrawBy50MovesRuleBack',function(data){
+                DrawBy50MovesRuleBack(data);
+            });
+            
+            socket.on('DisconnectPlaying',function(data){
+                DisconnectPlaying(data);    
+            });
+            
+            socket.on('OfferingDrawRecive',function(data){
+                if (Playing){
+                   $('#Abort').hide();                
+                    $('#Draw').hide();
+                    $('#DeclinedDrawLabel').hide();
+                    $('#OfferingDraw').show(); 
+                }
+            });            
+            
+            socket.on('DeclinedDrawBack',function(data){
+                if (Playing){
+                   $('#Abort').hide();                
+                    $('#Draw').hide();
+                    $('#OfferingDraw').hide();
+                    $('#OfferingDrawLabel').hide();
+                    $('#DeclinedDrawLabel').show();
+                }
+            });
+            
+            socket.on('AcceptDrawBack',function(data){
+                AcceptDrawBack(data);
+            });
+            
+            socket.on('OfferingRematchRecive',function(data){                
+                OfferingRematch = true;
+                $('#Rematch').hide();
+                $('#DeclinedRematchLabel').hide();
+                $('#OfferingRematch').show();                
+            });
+            
+            socket.on('DeclinedRematchBack',function(data){
+                OfferingRematch = false;
+                $('#OfferingRematch').hide();
+                $('#OfferingRematchLabel').hide();
+                $('#DeclinedRematchLabel').show();
+            });
+            
+            socket.on('AcceptRematchBack',function(data){
+                OfferingRematch = false;
+                $('#OfferingRematch').hide();
+                $('#OfferingRematchLabel').hide();
+                $('#DeclinedRematchLabel').hide();
+                AcceptRematchBack(data);
+            });
             
             $('#NewGame').button();
             $('#Cancel').button();
-            $('#Cancel').hide();
+            $('#Resign').button();
+            $('#Draw').button();
+            $('#Abort').button();
+            $('#Rematch').button();
+            $('#btSetting').button();
+            $('#Stats').button();            
+            $('#sbtnCallPlayer').button();
+            $('#sbtnLoadPlayers').button();
+            $('#sbtnFollowPlayers').button();            
+            $('#sbtnLoadGames').button();
+            $('#sbtnFollowGame').button();
+            $('#SendGame').button();
+            $('#IniGame').button();
+            $('#PrevGame').button();
+            $('#NextGame').button();
+            $('#EndGame').button();
             
-            $('#NewGame').click(function(){               
-                CrearRetoLocal();
-                $('#NewGame').hide();
-                $('#Cancel').show();
+            $('#Cancel').hide();            
+            $('#Resign').hide();
+            $('#Draw').hide();
+            $('#Abort').hide();
+            $('#Rematch').hide();
+            
+            $('#OfferingDrawLabel').hide();
+            $('#DeclinedDrawLabel').hide();
+            $('#OfferingDraw').hide();
+            $('#AcceptDrawBt').button();
+            $('#DeclineDrawBt').button();
+            
+            $('#OfferingRematchLabel').hide();
+            $('#DeclinedRematchLabel').hide();
+            $('#OfferingRematch').hide();
+            $('#AcceptRematchBt').button();
+            $('#DeclineRematchBt').button();
+            
+            $('#BotonesGame').hide();
+            
+            $('#Draw').click(function(){
+                socket.emit('OfferingDraw',{RoomName:cWhiteIdPrivate});
+                $('#Abort').hide();                
+                $('#Draw').hide();
+                $('#OfferingDrawLabel').show();
+                // play sound
+                if ( lSound=='1') {
+                    ion.sound.play('draw');    
+                } 
+            });
+            
+            $('#DeclineDrawBt').click(function(){
+                socket.emit('DeclinedDraw',{RoomName:cWhiteIdPrivate});
+                $('#Draw').show();
+                $('#Resign').show();    
+                $('#OfferingDraw').hide();
+                // play sound
+                if ( lSound=='1') {
+                    ion.sound.play('draw');    
+                }
+            });
+            
+            $('#AcceptDrawBt').click(function(){
+                AcceptDraw();
+            });
+            
+            $('#Rematch').click(function(){
+                socket.emit('OfferingRematch',{OpId:OpId});
+                $('#Abort').hide();                
+                $('#Draw').hide();
+                $('#Rematch').hide();
+                $('#OfferingRematchLabel').show();
+                OfferingRematch = true;
+                // play sound
+                if ( lSound=='1') {
+                    ion.sound.play('newgame');    
+                } 
+            });
+            
+            $('#DeclineRematchBt').click(function(){
+                socket.emit('DeclinedRematch',{RoomName:cWhiteIdPrivate});
+                OfferingRematch = false;
+                $('#OfferingRematch').hide();
+                // play sound
+                if ( lSound=='1') {
+                    ion.sound.play('newgame');    
+                }
+            });
+            
+            $('#sbtnFollowPlayers').click(function(){
+                FollowPlayer();
+            });
+            
+            $('#sbtnCallPlayer').click(function(){                
+                CallPlayer();
+            });
+            
+            $('#NewGame').click(function(){
+                // play sound
+                if ( lSound=='1') {
+                    ion.sound.play('newgame');    
+                }
+                $('#dialogchallenge').dialog('open');               
+            });
+            
+            $('#AcceptRematchBt').click(function(){
+                // play sound
+                if ( lSound=='1') {
+                    ion.sound.play('newgame');    
+                }
+                AcceptRematch();              
+            });
+            
+            $('#btSetting').click(function(){               
+                $('#dialogsetting').dialog('open');                
+            });
+            
+            $('#TabPlayers').click(function(){                 
+                socket.emit('GetPlayersData',{});
+            });
+            
+            $('#TabBoards').click(function(){               
+                $('#imgloader').show();
+                socket.emit('GetGamesData',{});    
+            });
+            
+            $('#Resign').click(function(){
+                GameResign();
+            });    
+            
+            $('#Stats').click(function(){               
+                socket.emit('GetStats',{PlayerName:cUserName});                
             });
             
             $('#Cancel').click(function(){               
                 CancelarReto(MyId,true);
                 $('#NewGame').show();
                 $('#Cancel').hide();
+                // play sound
+                if ( lSound=='1') {
+                    ion.sound.play('cancel');    
+                }
+            });
+            
+            $('#wqpromo').click(function(){
+                MakeMove('1');
+                $('#dialog-promo').dialog('close');
+            });
+            
+            $('#wrpromo').click(function(){
+                MakeMove('2');
+                $('#dialog-promo').dialog('close');
+            });
+            
+            $('#wnpromo').click(function(){
+                MakeMove('3');
+                $('#dialog-promo').dialog('close');
+            });
+            
+            $('#wbpromo').click(function(){
+                MakeMove('4');
+                $('#dialog-promo').dialog('close');
+            });
+            
+            $('#bqpromo').click(function(){
+                MakeMove('5');
+                $('#dialog-promo').dialog('close');
+            });
+            
+            $('#brpromo').click(function(){
+                MakeMove('6');
+                $('#dialog-promo').dialog('close');
+            });
+            
+            $('#bnpromo').click(function(){
+                MakeMove('7');
+                $('#dialog-promo').dialog('close');
+            });
+            
+            $('#bbpromo').click(function(){
+                MakeMove('8');
+                $('#dialog-promo').dialog('close');
+            });
+            
+            $('#PrevGame').click(function(){
+                Prev();
+            });
+            
+            $('#IniGame').click(function(){
+                Ini();
+            });
+            
+            $('#NextGame').click(function(){
+                Next();
+            });
+            
+            $('#EndGame').click(function(){
+                End();
+            });
+            
+            $('#SendGame').click(function(){
+                SendGame();
             });
             
             $(window).unload(function(){
+                if (cWhiteIdPrivate!=''){
+                    if (OfferingRematch){
+                        socket.emit('DeclinedRematch',{RoomName:cWhiteIdPrivate});    
+                    }                        
+                }                                                
                 CancelarReto(MyId,true);
             });            
             
-            $('#tabs').tabs();            
+            $('#tabs').tabs();
+            
+            //Array todos los movimiento
+            for(var i=0;i<500;i++) AllMoves[i]=new Array(3);
+	
+            //Array movimientos legales
+            for(var i=0;i<500;i++) LegalMoves[i]=new Array(3);
             
             Reset();
         
@@ -134,34 +676,298 @@
             
             CargarRecursosRetos();
             
-            $('#ContenedorBoard').hide();
+            $('#ContenedorBoard').hide();            
             
-        });        
+            $('#dialog:ui-dialog').dialog('destroy');
+            
+            var minutes = $( '#minutes' ), 
+		seconds = $( '#seconds' ),
+		minrat = $( '#minrat' ),
+		maxrat = $( '#maxrat' ),
+		allFields = $( [] ).add( minutes ).add( seconds ).add( minrat ).add( maxrat ),
+		tips = $( '.validateTips' );
+
+	    function updateTips( t ) {
+		tips.text( t ).addClass( 'ui-state-highlight' );
+		setTimeout(function() {
+		    tips.removeClass( 'ui-state-highlight', 1500 );
+		}, 500 );
+	    }
+
+	    function checkLength( o, n, min, max ) {
+		if ( o.val().length > max || o.val().length < min ) {
+		    o.addClass( 'ui-state-error' );
+		    updateTips( 'Length of ' + n + ' must be between ' + min + ' and ' + max + '.' );
+		    return false;
+		} else {
+		    return true;
+		}
+	    }
+
+	    function checkRegexp( o, regexp, n ) {
+			if ( !( regexp.test( o.val() ) ) ) {
+				o.addClass( 'ui-state-error' );
+				updateTips( n );
+				return false;
+			} else {
+				return true;
+			}
+	    }
+                
+            // increase the default animation speed to exaggerate the effect
+	    $.fx.speeds._default = 1000;
+            
+            $('#dialog-result').dialog({
+				autoOpen: false,
+				height: 170,
+				width: 290,
+				modal: true,			
+				show: 'blind',
+				hide: 'explode',
+				buttons: {
+					Ok: function() {						
+						$( this ).dialog('close');						
+				},'Reconnect': function() {
+					$( this ).dialog('close');
+					//location.reload(true);
+                                        window.location = 'http://localhost:3000';
+				}
+			}
+	    });	
+	    $('.ui-button:contains(Reconnect)').hide();
+            
+            $('#dialog-promo').dialog({
+                                dialogClass: 'no-close',
+				autoOpen: false,
+				height: 160,
+				width: 380,
+				modal: true,			
+				show: 'blind',
+				hide: 'explode'				
+                                }
+	    );
+                
+            $('#dialogchallenge').dialog({		
+                autoOpen: false,
+                hide: 'explode',
+		height: 460,
+		width: 426,
+		modal: true,
+                buttons: {		    
+                    'New Game': function() {
+			var bValid = true;
+			$( '.validateTips' ).text( 'All form fields are required.' );
+			allFields.removeClass( 'ui-state-error' );
+
+			bValid = bValid && checkLength( minutes, 'minutes', 1, 3 );
+			bValid = bValid && checkLength( seconds, 'seconds', 1, 2 );
+			bValid = bValid && checkLength( minrat, 'minrat', 1, 4 );
+			bValid = bValid && checkLength( maxrat, 'maxrat', 4, 4 );
+
+			bValid = bValid && checkRegexp( minutes, /^([1-9]|[1-9][0-9]|[1-9][0-9][0-9])+$/i, 'Minutes may consist of 1 to 999.' );
+			bValid = bValid && checkRegexp( seconds, /^([0-9]|[1-9][0-9])+$/i, 'Seconds may consist of 0 to 99.' );
+			bValid = bValid && checkRegexp( minrat, /^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-2][0-9][0-9][0-9])+$/i ,'Min Rating may consist of 1 to 2999.' );
+			bValid = bValid && checkRegexp( maxrat, /^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-3][0-9][0-9][0-9])+$/i , 'Max Rating may consist of 1 to 3999.' );
+					
+			if ( bValid ) {	
+						
+			    $('#ContenedorRetos').show();
+                            $('#ContenedorBoard').hide();
+                            
+                            if (OfferingRematch){
+                                socket.emit('DeclinedRematch',{RoomName:cWhiteIdPrivate});
+                                OfferingRematch = false;
+                            }
+                                                        
+                            // dejar room
+                            socket.emit('unsubscribe',{WhiteIdPrivate:cWhiteIdPrivate});
+                            
+                            Reset();  // Ojo aki                                              
+			    											
+			    nMinutosPartida = minutes.val();
+			    nSegundosPartida = seconds.val();						
+			    MinElo = minrat.val();
+			    MaxElo = maxrat.val();
+			    SelectRat = $('#SelectRated').val();						
+			    ColorPartida = $('#ColorPartida').val();			    						
+
+			    $(document).attr('title','Challenging...');	
+
+			    CrearRetoLocal();
+						
+			    $('#tabs').tabs('option','active',0); //jQuery 1.9+
+			    						
+                            $( '#dialogchallenge' ).dialog( 'close' );
+                            $('#Cancel').show();
+                            $('#NewGame').hide();
+                            $('#Resign').hide();
+                            $('#Draw').hide();
+                            $('#Abort').hide();
+                            $('#Rematch').hide();
+                            $('#OfferingDraw').hide();
+                            $('#OfferingDrawLabel').hide();
+                            $('#DeclinedDrawLabel').hide();
+                            $('#OfferingRematch').hide();
+                            $('#OfferingRematchLabel').hide();
+                            $('#DeclinedRematchLabel').hide();
+                            $('#sdivGame').html('');
+                            $('#BotonesGame').hide();
+                            
+                            Following = false;
+                            
+                            cPartidaCompleta = '';
+                            
+                            $('#status2').text('');                            
+                                                
+			}
+		    },
+		    Cancel: function() {
+			$('#dialogchallenge').dialog( 'close' );
+                        $('#NewGame').show();
+                        $('#Cancel').hide();
+		    },				
+		    'Save': function() {
+			var Minutes = $('#minutes').val();
+			var Seconds = $('#seconds').val();
+			var MinRat = $('#minrat').val();
+			var MaxRat = $('#maxrat').val();			
+			var ColorPartida = $('#ColorPartida').val();
+                        var SelectRated = $('#SelectRated').val();
+			if (SelectRated=='Rated'){
+			    SelectRated = '1';
+			}else{
+			    SelectRated = '0';
+			}                        
+                        socket.emit('SalvarDatosReto',{Name:cUserName,Minutos:Minutes,Segundos:Seconds,MinRat:MinRat,MaxRat:MaxRat,SelectRated:SelectRated,ColorPartida:ColorPartida});
+			$('#status2').html('<label style="color:green; margin-left:8px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">The new configuration was saved</label>');		
+		    } 
+				
+		},
+		close: function() {
+		    allFields.removeClass( 'ui-state-error' );
+                },
+		open: function() {
+		    $( '.validateTips' ).text( 'All form fields are required.' );                    
+		}
+                
+	    });        
         
+            $("#dialogsetting").dialog({			
+                autoOpen:false,
+                height:600,
+                width:440,
+                modal:true,
+                show: 'blind',
+                hide: 'explode',
+                buttons: {
+                    'Save': function() {
+                        if ($('#cbShowCoord').is(':checked')){
+                            lShowCoord='1';	
+                        }else{
+                            lShowCoord='0';
+                        }
+                        VerCoords();
+                        if ($('#cbHighLight').is(':checked')){
+                            lHighlight='1';	
+                        }else{
+                            lHighlight='0';
+                        }
+                        if ($('#cbPromote').is(':checked')){
+                            lPromote='1';
+                        }else{
+                            lPromote='0';
+                        }
+                        if ($('#cbSound').is(':checked')){
+                            lSound='1';
+                        }else{
+                            lSound='0';
+                        }					
+                        MyCountry = $('#country').val();
+                        MyAlt = $("#country option:selected").text();
+                        cWelcomeMenssage = $("#welcome").val();
+                        if (cUserName.substring(0,5) != 'Guest'){                            
+                            socket.emit('SalvarDatosSetting',{ MyName:cUserName , HighLight:lHighlight , Promote:lPromote , Sound:lSound , Welcome:cWelcomeMenssage , MyCountry:MyCountry , Alt:MyAlt , ShowCoord:lShowCoord });
+                            $('#status2').html('<label style="color:green; margin-left:8px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">The new configuration was saved</label>');		
+		        }else{                            
+                            $('#status2').html('<label style="color:green; margin-left:8px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">The configuration was saved temporarily</label>');		
+		        }
+                        MyCountry = MyCountry.toLowerCase(); //Para bandera pais
+                        $(this).dialog( 'close' );			
+                    },			
+                    Cancel: function() { $(this).dialog( 'close' );}
+                    },
+                close: function() {																		
+                },
+                open: function() {                    
+                    if (lShowCoord == '1'){
+                        $('#cbShowCoord').prop('checked',true);
+                    }else{
+                        $('#cbShowCoord').prop('checked', false);
+                    }
+                    if (lHighlight=='1'){
+                        $('#cbHighLight').prop('checked', true);	
+                    }else{
+                        $('#cbHighLight').prop('checked', false);
+                    }				
+                    if (lPromote=='1'){
+                        $('#cbPromote').prop('checked', true);
+                    }else{
+                        $('#cbPromote').prop('checked', false);
+                    }
+                    if (lSound=='1'){
+                        $('#cbSound').prop('checked', true);
+                    }else{
+                        $('#cbSound').prop('checked', false);
+                    }
+                    $("#welcome").val(cWelcomeMenssage);
+                    $('#country').val(MyCountry.toUpperCase()).change();															
+                }							
+            });        
+        
+            $('#imgloader').hide();        
+        
+        });  // End $(document).ready(function()       
+       	       
     </script>    
-        
 </head>
-<body>
-    
-    <div style="border:0px black solid; width:1100px; height:750px; margin:0 auto 0 auto;">
+<body>    
+    <div style="border:0px black solid; width:1100px; height:780px; margin:0 auto 0 auto;">
         <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px;">
             <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">Welcome to</label>								
             <label style="color:green; margin-left:20px; margin-top:2px; float:left; font-family:Forte,Arial,Helvetica,sans-serif; font-weight:bold; font-size:40px;">KaspiChess.com</label>								
+            <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">version 0.6.8 by ApoloSoft (c) 2016</label>								
+            <button id="btSetting" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:16px;">Setting</button>
+            <button id="Stats" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:16px;">Stats</button>
         </div>
         <div id="ContenedorBoard" style="background-color:#e8e8e8; border:0px black solid; width:546px; height:564px; margin-top:8px; margin-bottom:8px; margin-right:8px; float:left;">
-            <canvas id="BoardCanvas" width="442" height="442" style="margin-top:61px; margin-left:52px; border:0px coral solid"></canvas>
+            <div id="DatosArribaPlayer" style="background-color:#e8e8e8; border:0px black solid; width:346px; height:30px; margin-top:21px; margin-left:52px; float:left;">
+            </div>
+            <div id="RelojArriba" style="background-color:#e8e8e8; border:0px black solid; width:90px; height:30px; margin-top:21px; margin-left:3px; float:left;">
+                <label id="RelojArribaLabel" style="margin-right:2px; margin-top:2px; float:right; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">00:00:00</label>
+            </div>            
+            <div style="width:442px; height:442px; margin-top:10px; margin-left:52px; float:left;">
+                <canvas id="BoardCanvas" width="442" height="442" style="margin-top:0px; margin-left:0px;"></canvas>
+            </div>
+            <div id="DatosAbajoPlayer" style="background-color:#e8e8e8; border:0px black solid; width:346px; height:30px; margin-top:10px; margin-left:52px; float:left;">
+            </div>
+            <div id="RelojAbajo" style="background-color:#e8e8e8; border:0px black solid; width:90px; height:30px; margin-top:10px; margin-left:3px; float:left;">
+                <label id="RelojAbajoLabel" style="margin-right:2px; margin-top:2px; float:right; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">00:00:00</label>
+            </div>            
         </div>
         <div id="ContenedorRetos" style="background-color:#e8e8e8; border:0px black solid; width:546px; height:564px; margin-top:8px; margin-bottom:8px; margin-right:8px; float:left;">
             <canvas id="RetosCanvas" width="442" height="442" style="margin-top:61px; margin-left:52px; border:3px #800080 solid"></canvas>
         </div>
+        
+        <img id="imgloader" class="Loader" src="res/img/imgloader.gif"/>
+        
         <div style="background-color:#e8e8e8; border:0px black solid; width:546px; height:564px; margin-top:8px; margin-bottom:8px; float:left;">
             <div style="background-color:#e8e8e8; border:0px black solid; width:530px; height:470px; margin-top:8px; margin-left:8px; float:left;">
                 <div id="tabs">
                     <ul>
                         <li><a href="#tabs-1" style="padding:5px 5px 8px 5px; font-weight:bold;">Chat</a></li>
                         <li><a href="#tabs-2" style="padding:5px 5px 8px 5px; font-weight:bold;">Game</a></li>
-                        <li><a href="#tabs-3" style="padding:5px 5px 8px 5px; font-weight:bold;">Players</a></li>
-                        <li><a href="#tabs-4" style="padding:5px 5px 8px 5px; font-weight:bold;">Boards</a></li>
+                        <li><a id="TabPlayers" href="#tabs-3" style="padding:5px 5px 8px 5px; font-weight:bold;">Players</a></li>
+                        <li><a id="TabBoards" href="#tabs-4" style="padding:5px 5px 8px 5px; font-weight:bold;">Boards</a></li>
                         <li><a href="#tabs-5" style="padding:5px 5px 8px 5px; font-weight:bold;">Private Chat</a></li>
                     </ul>
                     <div id="tabs-1">
@@ -172,10 +978,40 @@
                             <input type="text" maxlength="200" id="stxaMsg" placeholder="Please type your message here!" style="color:#800080; clear:left; margin-top:8px; font-family:Arial,Helvetica,sans-serif; font-size:16px; font-weight:bold; margin-left:2px; height: 14px; width:435px;">
 			</div>
                     </div>
-                    <div id="tabs-2">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</div>
-                    <div id="tabs-3">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</div>
-                    <div id="tabs-4">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</div>
-                    <div id="tabs-5">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</div>
+                    <div id="tabs-2">
+                        <div id="sdivGame" style="position:relative; height:360px; width:520px; overflow-x:hidden; overflow-y:scroll;">
+			</div>			
+			<div id="BotonesGame" style="background-color:#e8e8e8; margin-top:3px; margin-left:0px; border:3px white solid; width:516px; height:36px;">
+			    <button id="SendGame" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:4px; margin-right:6px;">Send game as PGN</button>
+                            <button id="IniGame" style="padding:0px 0px 0px 0px; float:left; font-size:12px; font-weight:bold; margin-top:4px; margin-left: 6px;">Ini</button>
+                            <button id="PrevGame" style="padding:0px 0px 0px 0px; float:left; font-size:12px; font-weight:bold; margin-top:4px; margin-left: 6px;">Prev</button>
+                            <button id="NextGame" style="padding:0px 0px 0px 0px; float:left; font-size:12px; font-weight:bold; margin-top:4px; margin-left: 6px;">Next</button>
+                            <button id="EndGame" style="padding:0px 0px 0px 0px; float:left; font-size:12px; font-weight:bold; margin-top:4px; margin-left: 6px;">End</button>
+                        </div>
+                    </div>
+                    <div id="tabs-3">
+                        <table id="list1"></table>    		
+    			<div id="BotonesPlayers" style="background-color:#e8e8e8; margin-top:4px; margin-left:0px; border:4px white solid; width:514px; height:54px;">
+			    <input id="sbtnCallPlayer" type="button" value="Call" style="float:right; margin-top:10px; margin-right:10px; font-size:16px; font-weight:bold;">
+			    <input id="sbtnLoadPlayers" type="button" value="Reload" style="float:right; margin-top:10px; margin-right:10px; font-size:16px; font-weight:bold;">
+                            <input id="sbtnFollowPlayers" type="button" value="Follow" style="float:right; margin-top:10px; margin-right:10px; font-size:16px; font-weight:bold;">
+			</div>
+                    </div>
+                    <div id="tabs-4">
+                        <table id="list2"></table>    		
+    			<div id="BotonesGames" style="background-color:#e8e8e8; margin-top:4px; margin-left:0px; border:4px white solid; width:514px; height:54px;">
+			    <input id="sbtnLoadGames" type="button" value="Reload" style="float:right; margin-top:10px; margin-right:10px; font-size:16px; font-weight:bold;">
+                            <input id="sbtnFollowGame" type="button" value="Follow" style="float:right; margin-top:10px; margin-right:10px; font-size:16px; font-weight:bold;">
+			</div>   
+                    </div>
+                    <div id="tabs-5">
+                        <div id="sdivChat2" style="position:relative; height:360px; width:520px; overflow-x:hidden; overflow-y:scroll;">
+			</div>			
+			<div id="MensajeChat2" style="background-color:#e8e8e8; margin-top:3px; margin-left:0px; border:3px white solid; width:516px; height:36px;">
+			    <button id="sbtnSend2" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:4px; margin-right:6px;">Send</button>
+                            <input type="text" maxlength="200" id="stxaMsg2" placeholder="Please type your message here!" style="color:#800080; clear:left; margin-top:8px; font-family:Arial,Helvetica,sans-serif; font-size:16px; font-weight:bold; margin-left:2px; height: 14px; width:435px;">
+			</div>
+                    </div>
                 </div>            
             </div>
             <div style="background-color:white; border:0px black solid; width:546px; height:8px; float:left;">
@@ -183,14 +1019,391 @@
             <div style="background-color:#e8e8e8; border:0px black solid; width:530px; height:64px; margin-left:8px; float:left;">
                 <button id="NewGame" style="font-size:20px; font-weight:bold; margin-top:17px; margin-left:10px;">New Game</button>
                 <button id="Cancel" style="font-size:20px; font-weight:bold; margin-top:17px; margin-left:10px;">Cancel</button>
+                <button id="Resign" style="font-size:20px; font-weight:bold; margin-top:17px; margin-left:10px;">Resign</button>
+                <button id="Draw" style="font-size:20px; font-weight:bold; margin-top:17px; margin-left:10px;">Draw</button>
+                <button id="Abort" style="font-size:20px; font-weight:bold; margin-top:17px; margin-left:10px;">Abort</button>
+                <button id="Rematch" style="font-size:20px; font-weight:bold; margin-top:17px; margin-left:10px;">Rematch</button>
+                <label id="OfferingDrawLabel" style="color:red; margin-right:18px; margin-left:18px; margin-top:26px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Offering Draw...</label>
+                <label id="DeclinedDrawLabel" style="color:red; margin-right:18px; margin-left:18px; margin-top:26px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Draw Declined</label>
+                <div id="OfferingDraw" style="border:0px black solid; width:234px; height:75px; margin-top:0px; float:left;">
+                    <label style="color:red; margin-left:48px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Offering Draw</label>
+                    <button id="AcceptDrawBt" style=" float:left; font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:bold; margin-top:4px; margin-left:10px;">Accept</button>
+                    <button id="DeclineDrawBt" style=" float:left; font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:bold; margin-top:4px; margin-left:10px;">Decline</button>
+                </div>
+                <label id="OfferingRematchLabel" style="color:red; margin-right:18px; margin-left:18px; margin-top:26px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Offering Rematch...</label>
+                <label id="DeclinedRematchLabel" style="color:red; margin-right:18px; margin-left:18px; margin-top:26px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Rematch Declined</label>
+                <div id="OfferingRematch" style="border:0px black solid; width:234px; height:75px; margin-top:0px; float:left;">
+                    <label style="color:red; margin-left:48px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Offering Rematch</label>
+                    <button id="AcceptRematchBt" style=" float:left; font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:bold; margin-top:4px; margin-left:10px;">Accept</button>
+                    <button id="DeclineRematchBt" style=" float:left; font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:bold; margin-top:4px; margin-left:10px;">Decline</button>
+                </div>
             </div>            
         </div>
         <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px; margin-bottom:8px; float:left;">
             <div id="status" style="background-color:#FBEDFF; margin:10px auto 0 auto; border:0px white solid; width:1080px; height:40px;"></div>
         </div>
-        <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:40px; float:left;">
+        <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px; float:left;">
+            <div id="status2" style="background-color:#FBEDFF; margin:10px auto 0 auto; border:0px white solid; width:1080px; height:40px;"></div>
         </div>
+    </div>    
+    <div id="dialogchallenge" title="Create new Challenge">
+	<p class="validateTips">All form fields are required.</p>
+	<form>
+            <fieldset>
+		<table style="width:360px;" >
+                    <tr>
+                        <td style="width:160px; height:70px;">
+                            <label for="Minutes:" style="color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Minutes</label>
+                            <input type="text" name="minutes" id="minutes" style="background-color:white; color:#800080; width:30px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" maxlength="3" value="5" class="text ui-widget-content ui-corner-all" />
+                        </td>
+                        <td style="width:160px; height:70px;">
+                            <label for="seconds" style="color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Seconds</label>
+                            <input type="text" name="seconds" id="seconds" style="background-color:white; color:#800080; width:30px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" maxlength="2" value="0" class="text ui-widget-content ui-corner-all" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:160px; height:110px;">
+                            <label for="minrat" style="color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Min Rating</label>
+                            <input type="text" name="minrat" id="minrat" value="1000" style="background-color:white; color:#800080; width:40px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" maxlength="4" class="text ui-widget-content ui-corner-all" />
+                        </td>
+                        <td style="width:160px; height:110px;">
+                            <label for="maxrat" style="color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Max Rating</label>
+                            <input type="text" name="maxrat" id="maxrat" value="2800" style="background-color:white; color:#800080; width:40px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" maxlength="4" class="text ui-widget-content ui-corner-all" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="labelrat" style="color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Rated</label>
+                            <select id="SelectRated" style="color:#800080; width:100px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" name="oprated">
+                                <option value="Rated"  style="color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Rated</option>
+                                <option value="Unrated"  style="color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Unrated</option>			
+                            </select>
+                        </td>
+                        <td>
+                            <label for="labelcolor" style="color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Color</label>
+                            <select id="ColorPartida" style="color:#800080; width:100px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" name="opcolor">
+                                <option value="Random" style="color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Random</option>
+                                <option value="White"  style="color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">White</option>
+                                <option value="Black"  style="color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Black</option>			
+                            </select>
+                        </td>
+                    </tr>
+		</table>		
+            </fieldset>
+	</form>
+    </div>    
+    <div id="dialog-result" title="Information">
+	<p></p>
+    </div>
+    <div id="dialog-promo" title="Promotion">
+        <p></p>
+        <img id="wqpromo" src="res/img/merida45wq.png"/>
+        <img id="wrpromo" src="res/img/merida45wr.png"/>
+        <img id="wnpromo" src="res/img/merida45wn.png"/>
+        <img id="wbpromo" src="res/img/merida45wb.png"/>
+        <img id="bqpromo" src="res/img/merida45bq.png"/>
+        <img id="brpromo" src="res/img/merida45br.png"/>
+        <img id="bnpromo" src="res/img/merida45bn.png"/>
+        <img id="bbpromo" src="res/img/merida45bb.png"/>
+        <label style="color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;">Click on the Piece</label>
+    </div>
+    <div id="dialogsetting" title="Setting">
+	<p></p>	
+	<table style="width:380px; border:1px black solid;">
+	    <tr>                            
+                <td style="border:0px black solid; padding:15px 15px 15px 15px;">
+                    <input type="checkbox" name="test0" value="test" id="cbShowCoord"/>                
+                    <label style="color:red;" for="ShowCoord">Show coordinates</label>	
+                </td>
+	    </tr>
+            <tr>                            
+                <td style="border:0px black solid; padding:15px 15px 15px 15px;">
+                    <input type="checkbox" name="test1" value="test" id="cbHighLight"/>                
+                    <label style="color:red;" for="highlight">Highlight the squares of the last move</label>	
+                </td>
+	    </tr>            
+	    <tr>
+		<td style="border:0px black solid; padding:15px 15px 15px 15px;">
+		    <input type="checkbox" name="test2" value="test" id="cbPromote"/>		
+		    <label style="color:red;" for="promote">Always promotion to queen</label>
+		</td>
+	    </tr>
+	    <tr>
+		<td style="border:0px black solid; padding:15px 15px 15px 15px;">
+                    <input type="checkbox" name="test3" value="test" id="cbSound"/>
+                    <label style="color:red;" for="sound">Enable sound</label></td>
+	    </tr>
+	    <tr>
+                <td style="border:0px black solid; padding:20px 0px 0px 18px;">
+                    <label style="color:red;" for="welcome">Welcome message to opponent</label>
+                </td>
+            </tr>
+	    <tr>
+                <td style="border:0px black solid; padding:0px 0px 0px 18px;">
+                    <input type="text" id="welcome" name="welcome" maxlength="100" style="color:#800080; width:312px;">
+                </td>
+            </tr>
+	    <br>
+	    <tr>
+                <td style="border:0px black solid; padding:20px 0px 0px 18px;">
+                    <label style="color:red;" for="country">Country</label>
+                </td>
+            </tr>
+	    <tr><td style="border:0px black solid; padding:0px 0px 0px 18px;">
+		<select id="country" style="width:332px; color:#800080;">
+                    <option value="AF">Afghanistan</option>
+                    <option value="AX">Åland Islands</option>
+                    <option value="AL">Albania</option>
+                    <option value="DZ">Algeria</option>
+                    <option value="AS">American Samoa</option>
+                    <option value="AD">Andorra</option>
+                    <option value="AO">Angola</option>
+                    <option value="AI">Anguilla</option>
+                    <option value="AQ">Antarctica</option>
+                    <option value="AG">Antigua and Barbuda</option>
+                    <option value="AR">Argentina</option>
+                    <option value="AM">Armenia</option>
+                    <option value="AW">Aruba</option>
+                    <option value="AU">Australia</option>
+                    <option value="AT">Austria</option>
+                    <option value="AZ">Azerbaijan</option>
+                    <option value="BS">Bahamas</option>
+                    <option value="BH">Bahrain</option>
+                    <option value="BD">Bangladesh</option>
+                    <option value="BB">Barbados</option>
+                    <option value="BY">Belarus</option>
+                    <option value="BE">Belgium</option>
+                    <option value="BZ">Belize</option>
+                    <option value="BJ">Benin</option>
+                    <option value="BM">Bermuda</option>
+                    <option value="BT">Bhutan</option>
+                    <option value="BO">Bolivia, Plurinational State of</option>
+                    <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+                    <option value="BA">Bosnia and Herzegovina</option>
+                    <option value="BW">Botswana</option>
+                    <option value="BV">Bouvet Island</option>
+                    <option value="BR">Brazil</option>
+                    <option value="IO">British Indian Ocean Territory</option>
+                    <option value="BN">Brunei Darussalam</option>
+                    <option value="BG">Bulgaria</option>
+                    <option value="BF">Burkina Faso</option>
+                    <option value="BI">Burundi</option>
+                    <option value="KH">Cambodia</option>
+                    <option value="CM">Cameroon</option>
+                    <option value="CA">Canada</option>
+                    <option value="CV">Cape Verde</option>
+                    <option value="KY">Cayman Islands</option>
+                    <option value="CF">Central African Republic</option>
+                    <option value="TD">Chad</option>
+                    <option value="CL">Chile</option>
+                    <option value="CN">China</option>
+                    <option value="CX">Christmas Island</option>
+                    <option value="CC">Cocos (Keeling) Islands</option>
+                    <option value="CO">Colombia</option>
+                    <option value="KM">Comoros</option>
+                    <option value="CG">Congo</option>
+                    <option value="CD">Congo, the Democratic Republic of the</option>
+                    <option value="CK">Cook Islands</option>
+                    <option value="CR">Costa Rica</option>
+                    <option value="CI">Côte d'Ivoire</option>
+                    <option value="HR">Croatia</option>
+                    <option value="CU">Cuba</option>
+                    <option value="CW">Curaçao</option>
+                    <option value="CY">Cyprus</option>
+                    <option value="CZ">Czech Republic</option>
+                    <option value="DK">Denmark</option>
+                    <option value="DJ">Djibouti</option>
+                    <option value="DM">Dominica</option>
+                    <option value="DO">Dominican Republic</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="EG">Egypt</option>
+                    <option value="SV">El Salvador</option>
+                    <option value="GQ">Equatorial Guinea</option>
+                    <option value="ER">Eritrea</option>
+                    <option value="EE">Estonia</option>
+                    <option value="ET">Ethiopia</option>
+                    <option value="FK">Falkland Islands (Malvinas)</option>
+                    <option value="FO">Faroe Islands</option>
+                    <option value="FJ">Fiji</option>
+                    <option value="FI">Finland</option>
+                    <option value="FR">France</option>
+                    <option value="GF">French Guiana</option>
+                    <option value="PF">French Polynesia</option>
+                    <option value="TF">French Southern Territories</option>
+                    <option value="GA">Gabon</option>
+                    <option value="GM">Gambia</option>
+                    <option value="GE">Georgia</option>
+                    <option value="DE">Germany</option>
+                    <option value="GH">Ghana</option>
+                    <option value="GI">Gibraltar</option>
+                    <option value="GR">Greece</option>
+                    <option value="GL">Greenland</option>
+                    <option value="GD">Grenada</option>
+                    <option value="GP">Guadeloupe</option>
+                    <option value="GU">Guam</option>
+                    <option value="GT">Guatemala</option>
+                    <option value="GG">Guernsey</option>
+                    <option value="GN">Guinea</option>
+                    <option value="GW">Guinea-Bissau</option>
+                    <option value="GY">Guyana</option>
+                    <option value="HT">Haiti</option>
+                    <option value="HM">Heard Island and McDonald Islands</option>
+                    <option value="VA">Holy See (Vatican City State)</option>
+                    <option value="HN">Honduras</option>
+                    <option value="HK">Hong Kong</option>
+                    <option value="HU">Hungary</option>
+                    <option value="IS">Iceland</option>
+                    <option value="IN">India</option>
+                    <option value="ID">Indonesia</option>
+                    <option value="IR">Iran, Islamic Republic of</option>
+                    <option value="IQ">Iraq</option>
+                    <option value="IE">Ireland</option>
+                    <option value="IM">Isle of Man</option>
+                    <option value="IL">Israel</option>
+                    <option value="IT">Italy</option>
+                    <option value="JM">Jamaica</option>
+                    <option value="JP">Japan</option>
+                    <option value="JE">Jersey</option>
+                    <option value="JO">Jordan</option>
+                    <option value="KZ">Kazakhstan</option>
+                    <option value="KE">Kenya</option>
+                    <option value="KI">Kiribati</option>
+                    <option value="KP">Korea, Democratic People's Republic of</option>
+                    <option value="KR">Korea, Republic of</option>
+                    <option value="KW">Kuwait</option>
+                    <option value="KG">Kyrgyzstan</option>
+                    <option value="LA">Lao People's Democratic Republic</option>
+                    <option value="LV">Latvia</option>
+                    <option value="LB">Lebanon</option>
+                    <option value="LS">Lesotho</option>
+                    <option value="LR">Liberia</option>
+                    <option value="LY">Libya</option>
+                    <option value="LI">Liechtenstein</option>
+                    <option value="LT">Lithuania</option>
+                    <option value="LU">Luxembourg</option>
+                    <option value="MO">Macao</option>
+                    <option value="MK">Macedonia, the former Yugoslav Republic of</option>
+                    <option value="MG">Madagascar</option>
+                    <option value="MW">Malawi</option>
+                    <option value="MY">Malaysia</option>
+                    <option value="MV">Maldives</option>
+                    <option value="ML">Mali</option>
+                    <option value="MT">Malta</option>
+                    <option value="MH">Marshall Islands</option>
+                    <option value="MQ">Martinique</option>
+                    <option value="MR">Mauritania</option>
+                    <option value="MU">Mauritius</option>
+                    <option value="YT">Mayotte</option>
+                    <option value="MX">Mexico</option>
+                    <option value="FM">Micronesia, Federated States of</option>
+                    <option value="MD">Moldova, Republic of</option>
+                    <option value="MC">Monaco</option>
+                    <option value="MN">Mongolia</option>
+                    <option value="ME">Montenegro</option>
+                    <option value="MS">Montserrat</option>
+                    <option value="MA">Morocco</option>
+                    <option value="MZ">Mozambique</option>
+                    <option value="MM">Myanmar</option>
+                    <option value="NA">Namibia</option>
+                    <option value="NR">Nauru</option>
+                    <option value="NP">Nepal</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="NC">New Caledonia</option>
+                    <option value="NZ">New Zealand</option>
+                    <option value="NI">Nicaragua</option>
+                    <option value="NE">Niger</option>
+                    <option value="NG">Nigeria</option>
+                    <option value="NU">Niue</option>
+                    <option value="NF">Norfolk Island</option>
+                    <option value="MP">Northern Mariana Islands</option>
+                    <option value="NO">Norway</option>
+                    <option value="OM">Oman</option>
+                    <option value="PK">Pakistan</option>
+                    <option value="PW">Palau</option>
+                    <option value="PS">Palestinian Territory, Occupied</option>
+                    <option value="PA">Panama</option>
+                    <option value="PG">Papua New Guinea</option>
+                    <option value="PY">Paraguay</option>
+                    <option value="PE">Peru</option>
+                    <option value="PH">Philippines</option>
+                    <option value="PN">Pitcairn</option>
+                    <option value="PL">Poland</option>
+                    <option value="PT">Portugal</option>
+                    <option value="PR">Puerto Rico</option>
+                    <option value="QA">Qatar</option>
+                    <option value="RE">Réunion</option>
+                    <option value="RO">Romania</option>
+                    <option value="RU">Russian Federation</option>
+                    <option value="RW">Rwanda</option>
+                    <option value="BL">Saint Barthélemy</option>
+                    <option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
+                    <option value="KN">Saint Kitts and Nevis</option>
+                    <option value="LC">Saint Lucia</option>
+                    <option value="MF">Saint Martin (French part)</option>
+                    <option value="PM">Saint Pierre and Miquelon</option>
+                    <option value="VC">Saint Vincent and the Grenadines</option>
+                    <option value="WS">Samoa</option>
+                    <option value="SM">San Marino</option>
+                    <option value="ST">Sao Tome and Principe</option>
+                    <option value="SA">Saudi Arabia</option>
+                    <option value="SN">Senegal</option>
+                    <option value="RS">Serbia</option>
+                    <option value="SC">Seychelles</option>
+                    <option value="SL">Sierra Leone</option>
+                    <option value="SG">Singapore</option>
+                    <option value="SX">Sint Maarten (Dutch part)</option>
+                    <option value="SK">Slovakia</option>
+                    <option value="SI">Slovenia</option>
+                    <option value="SB">Solomon Islands</option>
+                    <option value="SO">Somalia</option>
+                    <option value="ZA">South Africa</option>
+                    <option value="GS">South Georgia and the South Sandwich Islands</option>
+                    <option value="SS">South Sudan</option>
+                    <option value="ES">Spain</option>
+                    <option value="LK">Sri Lanka</option>
+                    <option value="SD">Sudan</option>
+                    <option value="SR">Suriname</option>
+                    <option value="SJ">Svalbard and Jan Mayen</option>
+                    <option value="SZ">Swaziland</option>
+                    <option value="SE">Sweden</option>
+                    <option value="CH">Switzerland</option>
+                    <option value="SY">Syrian Arab Republic</option>
+                    <option value="TW">Taiwan, Province of China</option>
+                    <option value="TJ">Tajikistan</option>
+                    <option value="TZ">Tanzania, United Republic of</option>
+                    <option value="TH">Thailand</option>
+                    <option value="TL">Timor-Leste</option>
+                    <option value="TG">Togo</option>
+                    <option value="TK">Tokelau</option>
+                    <option value="TO">Tonga</option>
+                    <option value="TT">Trinidad and Tobago</option>
+                    <option value="TN">Tunisia</option>
+                    <option value="TR">Turkey</option>
+                    <option value="TM">Turkmenistan</option>
+                    <option value="TC">Turks and Caicos Islands</option>
+                    <option value="TV">Tuvalu</option>
+                    <option value="UG">Uganda</option>
+                    <option value="UA">Ukraine</option>
+                    <option value="AE">United Arab Emirates</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="US">United States</option>
+                    <option value="UM">United States Minor Outlying Islands</option>
+                    <option value="UY">Uruguay</option>
+                    <option value="UZ">Uzbekistan</option>
+                    <option value="VU">Vanuatu</option>
+                    <option value="VE">Venezuela, Bolivarian Republic of</option>
+                    <option value="VN">Viet Nam</option>
+                    <option value="VG">Virgin Islands, British</option>
+                    <option value="VI">Virgin Islands, U.S.</option>
+                    <option value="WF">Wallis and Futuna</option>
+                    <option value="EH">Western Sahara</option>
+                    <option value="YE">Yemen</option>
+                    <option value="ZM">Zambia</option>
+                    <option value="ZW">Zimbabwe</option>
+                </select>
+	    </td></tr>
+	    <tr><td style="height:22px;"></td></tr>
+	</table>	
     </div>   
-    
 </body>
 </html>

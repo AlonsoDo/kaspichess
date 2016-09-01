@@ -169,4 +169,496 @@ Cargar Boards
 Vaciar Retos
 Copia seguridad 23:12 0.1.6
 
+DOMINGO-03.04.2016
+
+Recojiendo datos de los oponentes
+SendPos
+GetPos
+Pruebas con el telefono mobil
+Copia seguridad 0:28 0.1.7
+
+LUNES-04.04.2016
+
+Comprobar si el reto remoto existe
+Propagar reto cada 6 segundos
+Dialogo New Game
+Ajustar codigo
+Copia seguridad 21:41 0.1.8
+
+MARTES-05.04.2016
+
+Mostrar resto de los datos del tipo de reto
+Corrigiendo error en New game dialog
+
+MIERCOLES-06.04.2016
+
+Corrigiendo error en New game dialog
+Reeditar datos retos
+Copia seguridad 23:05 0.1.9
+
+JUEVES-07.04.2016
+
+Establecer color partida
+Flag en retos
+Gestion de botones Abort Resign Draw
+Copia seguridad 21:56 0.2.0
+
+VIERNES-08.04.2016
+
+AltaPartida()
+Datos player arriba y abajo (crear divs)
+Copia seguridad 22:15 0.2.1
+
+SABADO-09.04.2016
+
+Rellenar datos de los contrarios
+......Kaspichess dominio expirado......
+Copia seguridad 01:00 0.2.2
+
+DOMINGO-10.04.2016
+
+Title sobre banderitas
+
+LUNES-11.04.2016
+
+Colorear labels dialogo chalenger
+
+MARTES-12.04.2016
+
+Poner timing en status
+Arreglar status2 mismo tamaño que status
+Cargar datos en Crear Reto
+Botones Reload Stats y Setting
+Copia seguridad 13:10 0.2.3
+Ampliar paso de parametros en url create new player
+Reload Stats
+
+JUEVES-14.04.2016
+
+Salvar datos del reto (Boton Save)
+Ajustar clearInterval(Temp); (En un jugador no quitaba reto)
+Poner fondo edits reto color blanco
+Copia seguridad 0.2.4
+
+VIERNES-15.04.2016
+
+Cargando datos en Grid de jugadores
+Copia seguridad 22:37 0.2.5
+
+SABADO-16.04.2016
+
+Ajustando css en grid de jugadores
+Recolectar datos para grid de games
+Copia seguridad 0.2.6
+
+DOMINGO-17.04.2016
+
+Sacar Games in Progress del servidor (results)
+css grid games
+Copia seguridad 22:50 0.2.7
+
+LUNES-18.04.2016
+
+Manejar perdida de conexion
+Gif de Loader
+Chat privado
+Copia seguridad 21:38 0.2.8
+
+MARTES-19.04.2016
+
+join y leave room en chat privado
+
+MIERCOLES-20.04.2016
+
+Load game from Boards
+Copia seguridad 13:34 0.2.9
+Seguir partida (cargar tablero)
+
+JUEVES-21.04.2016
+
+Varios
+Solucionado evento over en bandera pais arriba
+Copia seguridad 22:45 0.3.0
+
+VIERNES-22.04.2016
+
+Leave room para observador cuando NewGame
+Control de botones
+Pasar a tab Private Chat cuando se acepta el reto
+
+SABADO-23.04.2016
+
+Labels de jugadores en Follow Game
+Copia seguridad 13:40 0.3.1
+Timing en Follow Game
+Paso de parametros url para dialogo settings
+Dialogo setting en html
+
+DOMINGO-24.04.2016
+
+Dando estilo a dialog setting
+Pasando datos en url
+Nuevas variables
+Copia seguridad 22:10 0.3.2
+
+LUNES-25.04.2016
+
+Varios
+Copia seguridad 22:45 0.3.3
+
+MARTES-26.04.2016
+
+Salvar datos Setting
+Label configuracion salvada
+Copia seguridad 23:10 0.3.4
+
+JUEVES-28.04.2016
+
+Mensaje de bienvenido al oponente
+CasIniSel CasFinSel visibles segun lHighlight
+
+VIERNES-29.04.2016
+
+Coordenadas visibles segun lShowCoord
+Mandar a pagina index.html cuando se pierde conexion
+Copia seguridad 23:35 0.3.5
+
+SABADO-30.04.2016
+
+Instalar ion.sound.min.js (libreria sonido)
+convirtiendo mp3 a ogg y acc
+Seleccionando sonidos
+Copia seguridad
+
+DOMINGO-01.05.2016
+
+Seleccionando sonidos
+Copia seguridad 22:15 0.3.7
+
+LUNES-02.05.2016
+
+Set Players Playing on Game Start
+Set Player Watching
+VerCoord() en Follow Game
+Set Player Challenging
+Copia seguridad 22:35 0.3.8
+
+MARTES-03.05.2016
+
+FollowPlayer()
+Copia seguridad 22:42 0.3.9
+
+MIERCOLES-04.05.2016
+
+FollowPlayer()
+Follow player on watching
+Set player to OnLine, Challenging, Playing and Watching
+Copia seguridad 21:38 0.4.0
+
+JUEVES-05.05.2016
+
+Call Player
+
+VIERNES-06.05.2016
+
+Terminar Call Player
+Control nNumberOfCalls = 4; (recargar cuando se juegue una partida)
+Copia seguridad 20:02 0.4.1
+
+MARTES-10.05.2016
+
+Send PassWord con nodemailer
+
+MIERCOLES-10.05.2016
+
+Dialog resultado Send PassWord
+Controlar reto fuera del rango del elo
+Copia seguridad 13:33 0.4.2
+$('#imgloader').show(); en Load Games
+Load Players on Tab Player Click
+Load Games on Tab Boards Click
+
+DOMINGO-15.05.2016
+
+Introduciendo control de tiempo
+Copia seguridad 23:35 0.4.3
+
+MARTES-17.05.2016
+
+Control de tiempo
+Copia seguridad 22:10 0.4.4
+
+JUEVES-19.05.2016
+
+Funcion perder por tiempo
+
+VIERNES-20.05.2016
+
+Funcion perder por tiempo
+Poner datos en labels players
+
+LUNES-23.O5.2016
+
+Calculando variacion de Elo
+Mostrando datos en labels on GameTimeOff()
+Copia seguridad 21:34 0.4.5
+
+MIERCOLES-25.05.2016
+
+Save Game Status
+Varios
+Copia seguridad 22:42 0.4.6
+
+SABADO-28.05.2016
+
+Salvar Elo en GameTimeOff()
+
+MARTES-31.05.2016
+
+GameTimeOffBack()
+Copia seguridad 0:20 0.4.7
+
+MIERCOLES-01.06.2016
+
+Actualizar tiempos en FollowGame()
+
+VIERNES-03.06.2016
+
+varios
+
+SABADO-04.06.2016
+
+Copia seguridad 14:15 0.4.8
+
+DOMINGO-05.06.2016
+
+Copia seguridad 22:10 0.4.9
+
+LUNES-06.06.2016
+
+Ajustar tiempos en FollowGame()
+Copia seguridad 1:10 0.5.0
+
+JUEVES-09.06.2016
+
+Funcion Abort()
+
+MIERCOLES-15.06.2016
+
+Playing = false; en GameAborted() para no propagar movimiento
+StartTime White on NewGame
+
+JUEVES-16.06.2016
+
+Abort Game by the server
+Grabar Aborted en Boards-Status
+Copia seguridad 20:00 0.5.1
+
+VIERNES-17.06.2016
+
+Check coronacion en GetPos
+
+SABADO-18.06.2016
+
+Sonidos Win Lost Abort
+
+DOMINGO-19.06.2016
+
+Varios
+Copia seguridad 23:43 0.5.2
+
+LUNES-20.06.2016
+
+Creacion del fichero moves.js
+Copiar funciones Generar Movimientos
+Casilla amenazadas
+LoadLegalMoves
+FindMoves
+Total: 2438 Lineas
+
+MARTES-21.O6.2016
+
+Funcion ActualizarPosicion()
+Copia Seguridad 21:55 0.5.3
+
+SABADO-25.06.2016
+
+Respetar movimientos segun turno
+Mantener casillas ultima jugada iluminadas
+
+MARTES-28.06.2016
+
+Varios
+
+MIERCOLES-29.06.2016
+
+Draw by insufficient material in GameTimeOff and Back
+Copia seguridad 22:24 0.5.4
+
+VIERNES-01.07.2016
+
+Funcion GameResign()
+
+SABADO-02.07.2016
+
+Cambiar status del jugador cuando GameAborted
+Copia seguridad 22:50 0.5.5
+
+MARTES-05.07.2016
+
+Funcion WinByMate() y WinByMateBack()
+
+MIERCOLES-06.07.2016
+
+Ajustar tiempos en AskPos
+
+JUEVES-07.07.2016
+
+Sigue Ajustar tiempos en AskPos
+Varios
+Copia seguridad 20:32 0.5.6
+
+MIERCOLES-13.07.2016
+
+DrawByStaleMate();
+DrawByStaleMateBack();
+
+JUEVES-14.07.2016
+
+DrawByInsuficientMaterial();
+DrawByInsuficientMaterialBack();
+
+DOMINGO-17.07.2016
+
+DrawBy3Repeat();
+Copia seguridad 23:35 0.5.7
+
+LUNES-18.07.2016
+
+UpdateDrawBy3Repeat();
+DrawBy3RepeatBack();
+
+MARTES-19.07.2016
+
+nRegla50Moves
+Copia seguridad 23:40 0.5.8
+
+MIERCOLES-20.07.2016
+
+DrawBy50MovesRuleBack
+UpdateDrawBy50MovesRule
+
+DOMINGO-24.07.2016
+
+Win by DisconnectPlaying();
+Copia seguridad 22:20 0.5.9
+
+JUEVES-28.07.2016
+
+Offering Draw
+Declined Draw
+
+SABADO-30.07.2016
+
+Correpcion varios errores
+AcceptDraw()
+Copia seguridad 22:10 0.6.0
+
+LUNES-01.08.2016
+
+AcceptDrawBack()
+GetStats()
+GetStatsBack()
+
+MIERCOLES-03.08.2016
+
+OfferingRematch
+OfferingRematchRecive
+Varios
+Time place on GameTimeOffBack with Follower
+Dejar Room en Follower cuando termine la partida observada
+Copia seguridad 22:55 0.6.1
+
+VIERNES-05.08.2016
+
+DeclinedRematch
+Copia seguridad 22:00 0.6.2 PDG
+
+MARTES-09.08.2016
+
+DeclinedRematch en Desconexion
+AcceptRematchBack
+Test
+
+JUEVES-11.08.2016
+
+Corregir mostrar elo en watching
+// flag no seguir siguiente partida
+Following = false;
+Copia seguridad 19:24 0.6.3 PDG
+
+DOMINGO-14.08.2016
+
+Corregir Disconnect en Follow
+Añadir tiempo incremento en Follow
+Copia seguridad 22:55 0.6.4 PDG
+
+JUEVES-18.08.2016
+
+Dialogo Promocion
+
+DOMINGO-21.08.2016
+
+Funciones Promocion
+Copia seguridad 21:40 0.6.5 PDG
+
+MARTES-23.08.2016
+
+Funcion ShowGame()
+
+MIERCOLES-24.08.2016
+
+Varios
+
+JUEVES-25.08.2016
+
+Completar funcion ShowGame()
+Copia seguridad 21:22 0.6.6 PDG
+
+VIERNES-26.08.2016
+
+Varios funcion ShowGame()
+
+SABADO-27.08.2016
+
+Añadir labels de movimientos al div de partida
+Añadir resultado partida
+GameLabelClick(id)
+
+DOMINGO-28.08.2016
+
+Añadir Resultado Partida en ShowGame
+
+LUNES-29.08.2016
+
+Varios
+
+MARTES-30.08.2016
+
+varios
+botones navegar partida terminada
+Prev()
+Copia seguridad 21:15 0.6.7 PDG
+
+MIERCOLES-31.08.2016
+
+Funciones Next(), Ini(), End()
+SendGame()
+
+JUEVES-01.09.2016
+
+Corregir errores
+varios
+Copia seguridad 13:16 0.6.8
+
 

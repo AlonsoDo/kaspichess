@@ -1,8 +1,12 @@
 var aControlRetos = [];
 var nMinutosPartida = 5;
 var nSegundosPartida = 0;
+//var BufferMinutosPartida;
+//var BufferSegundosPartida;
+var OpId,OpName,OpElo,OpCountry,OpAlt,OpWelcomeMenssage;
+var Playing = false;
 var Temp;
-var OpId,OpName,OpElo,OpCountry;
+//var nCodigoAltaPartida = -1;
 
 function CrearRetoLocal(){
 
@@ -19,14 +23,19 @@ function CrearRetoLocal(){
     getItemByName2(MyId).hasControls = getItemByName2(MyId).hasBorders = false;
     canvas2.renderAll();
     
-    // add a aControlRetos
-    var aReto = ['Id','Name','Elo','Country','Minutos','Segundos'];
-    aReto[0]=MyId; aReto[1]=cUserName; aReto[2]=MyElo;
-    aReto[3]=MyCountry; aReto[4]=nMinutosPartida; aReto[5]=nSegundosPartida;
+    var aReto = {};
+    
+    aReto.Id=MyId; aReto.Name=cUserName; aReto.Elo=MyElo; aReto.Alt=MyAlt;
+    aReto.Country=MyCountry; aReto.MinutosPartida=nMinutosPartida; aReto.SegundosPartida=nSegundosPartida;
+    aReto.MinElo=MinElo; aReto.MaxElo=MaxElo; aReto.SelectRat=SelectRat; aReto.ColorPartida=ColorPartida; aReto.WelcomeMenssage=cWelcomeMenssage;
+    
     aControlRetos.push(aReto);
     
     //Propagar
     socket.emit('MandarReto',{DatosReto:aReto});
+    
+    //Repetir cada 6 segundos
+    Temp = setInterval(function(){socket.emit('MandarReto',{DatosReto:aReto});},6000);
     
 }
 
@@ -35,14 +44,16 @@ function CancelarReto(PlayerId,Local){
     getItemByName2(PlayerId).remove();    
     canvas2.renderAll();
     
-    for (var i=0;i<aControlRetos.length;i++) {
-      if (aControlRetos[i][0]==PlayerId){
+    for (var i=0;i<aControlRetos.length;i++) {      
+      if (aControlRetos[i].Id==PlayerId){
         aControlRetos.splice(i,1);        
       }      
     }
     
     //Propagar
     if (Local){
+        $(document).attr('title','KaspiChess');
+        clearInterval(Temp);
         socket.emit('CancelarReto',{PlayerId:PlayerId});    
     }
     
@@ -50,28 +61,37 @@ function CancelarReto(PlayerId,Local){
 
 function CrearRetoRemoto(data){
     
-    var nTotalSeg = (data.DatosReto[4]*60)+(data.DatosReto[5]*30);
-    var y = EloToPos(data.DatosReto[2])*20;
+    var nTotalSeg = (data.DatosReto.MinutosPartida*60)+(data.DatosReto.SegundosPartida*30);
+    var y = EloToPos(data.DatosReto.Elo)*20;
     var x = TimeToPos(nTotalSeg)*20;
         
-    //Dibujar reto remoto
-    var rect = new fabric.Rect({
-        width:20,height:20,fill:'red',left:x-3+12,top:y-3-24
-        });
-    rect.name = data.DatosReto[0];    
-    canvas2.add(rect);
-    getItemByName2(data.DatosReto[0]).hasControls = getItemByName2(data.DatosReto[0]).hasBorders = false;
-    canvas2.renderAll();
+    //Comprobar si el reto existe
+    if (!CheckIfExist2(data.DatosReto.Id)) {   //Nuevo 
     
-    // add a aControlRetos
-    var aReto = ['Id','Name','Elo','Country','Minutos','Segundos'];
-    aReto[0]=data.DatosReto[0]; aReto[1]=data.DatosReto[1]; aReto[2]=data.DatosReto[2];
-    aReto[3]=data.DatosReto[3]; aReto[4]=data.DatosReto[4]; aReto[5]=data.DatosReto[5];
-    aControlRetos.push(aReto);    
+        //Dibujar reto remoto
+        var rect = new fabric.Rect({
+            width:20,height:20,fill:'red',left:x-3+12,top:y-3-24
+            });
+        rect.name = data.DatosReto.Id;    
+        canvas2.add(rect);
+        getItemByName2(data.DatosReto.Id).hasControls = getItemByName2(data.DatosReto.Id).hasBorders = false;
+        canvas2.renderAll();
+        
+        var aReto = {};
+        
+        aReto.Id=data.DatosReto.Id; aReto.Name=data.DatosReto.Name; aReto.Elo=data.DatosReto.Elo; aReto.Alt=data.DatosReto.Alt;
+        aReto.Country=data.DatosReto.Country; aReto.MinutosPartida=data.DatosReto.MinutosPartida; aReto.SegundosPartida=data.DatosReto.SegundosPartida;
+        aReto.MinElo=data.DatosReto.MinElo; aReto.MaxElo=data.DatosReto.MaxElo; aReto.SelectRat=data.DatosReto.SelectRat; aReto.ColorPartida=data.DatosReto.ColorPartida; aReto.WelcomeMenssage=data.DatosReto.WelcomeMenssage;
+        
+        aControlRetos.push(aReto);          
+            
+    }
     
 }
 
 function CargarRecursosRetos(){
+    
+    var OpColorOpcion;
     
     canvas2 = new fabric.Canvas('RetosCanvas',{
             hoverCursor: 'pointer'            
@@ -97,20 +117,28 @@ function CargarRecursosRetos(){
     
     canvas2.on('mouse:over',function(e){
                 
-        if ((e.target.get('type')=='circle')||(e.target.get('type')=='rect')) {            
+        if ((e.target.get('type')=='circle')||(e.target.get('type')=='rect')) {             
+            
             //Buscar datos del reto
             for (var i=0;i<aControlRetos.length;i++) {
-                if (aControlRetos[i][0]==e.target.name){
+                if (aControlRetos[i].Id==e.target.name){
+                    
+                    OpColorOpcion = aControlRetos[i].ColorPartida;
+                    
                     $('#status').html(
-                        "<label style=\"color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">Player: </label>" +
-			"<label style=\"color:green; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">" + aControlRetos[i][1] + "</label>" +       
-                        "<label style=\"color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">Elo: </label>" +
-			"<label style=\"color:green; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">" + aControlRetos[i][2] + "</label>" +      
-                        "<label style=\"color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">Minutos: </label>" +
-			"<label style=\"color:green; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">" + aControlRetos[i][4] + "</label>" +       
-                        "<label style=\"color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">Segundos: </label>" +
-			"<label style=\"color:green; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">" + aControlRetos[i][5] + "</label>"        
-                    );
+                        '<img src="res/img/flags/' + aControlRetos[i].Country + '.png" style="border:1px black solid;margin-left:8px; margin-top:9px; margin-right:8px; float:left;"></a>' +
+                        '<label style="color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Player: </label>' +
+			'<label style="color:green; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + aControlRetos[i].Name + '</label>' +       
+                        '<label style="color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Elo: </label>' +
+			'<label style="color:green; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + aControlRetos[i].Elo + '</label>' +      
+                        '<label style="color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Minutos: </label>' +
+			'<label style="color:green; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + aControlRetos[i].MinutosPartida + '</label>' +       
+                        '<label style="color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Segundos: </label>' +
+			'<label style="color:green; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + aControlRetos[i].SegundosPartida + '</label>' +       
+                        '<label style="color:green; margin-left:20px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + aControlRetos[i].MinElo + '-' + aControlRetos[i].MaxElo + '</label>' +       
+                        '<label style="color:green; margin-left:20px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + '(' + aControlRetos[i].SelectRat + ')' + '</label>' +
+                        '<label style="color:green; margin-left:20px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + aControlRetos[i].ColorPartida + '</label>'
+                    );                    
                 }      
             }        
         }        
@@ -126,44 +154,122 @@ function CargarRecursosRetos(){
         if (e.target.get('type')=='circle') {
             CancelarReto(MyId,true);
             $('#NewGame').show();
-            $('#Cancel').hide();    
+            $('#Cancel').hide();
+             // play sound
+            if ( lSound=='1') {
+                ion.sound.play('cancel');    
+            }
         }
         
-        if (e.target.get('type')=='rect') {
-            
-            $('#ContenedorRetos').hide();
-            $('#ContenedorBoard').show();
-            cColorSide = 'Black';
-            DrawPos();
-                        
-            // Cambiar color para el oponente
-            if (cColorSide=='White') {
-                cColorSide = 'Black';
-            }else{
-                cColorSide = 'White';
-            }
+        if (e.target.get('type')=='rect') {                      
             
             //Buscar datos del reto
             for (var i=0;i<aControlRetos.length;i++) {
                 
-                if (aControlRetos[i][0]==e.target.name){
+                if (aControlRetos[i].Id==e.target.name){
                     
-                    //Cargar datos Op
+                    //alert(aControlRetos[i].MinElo)
+                    //alert(aControlRetos[i].MaxElo)
+                    //alert(MyElo)
                     
+                    if ((MyElo>=aControlRetos[i].MinElo)&&(MyElo<=aControlRetos[i].MaxElo)){                        
+                        
+                        $('#ContenedorRetos').hide();
+                        $('#ContenedorBoard').show();
+                        $('#NewGame').hide();
+                        $('#Abort').show();
+                        $('#Cancel').hide();
+                        $(document).attr('title','Playing Game!');
+                        $("#tabs").tabs("option", "active", 4); //jQuery 1.9+
+                        
+                        cColorSide = OpColorOpcion;           
+                        
+                        var cOpColor;
+                        
+                        if (cColorSide=='Random'){                            
+                            var myRandomNumber = Math.floor(Math.random()*2);		
+                            if (myRandomNumber == 0){
+                                    cColorSide = 'White';
+                                    cOpColor = 'Black';
+                                    StartTimer('Abajo');
+                            }else{
+                                    cColorSide = 'Black';
+                                    cOpColor = 'White';
+                                    StartTimer('Arriba');
+                            }                                    
+                        }else if (cColorSide=='White'){
+                            StartTimer('Arriba');
+                            cColorSide = 'Black';
+                            cOpColor = 'White';                            
+                        }else if (cColorSide=='Black'){
+                            StartTimer('Abajo');
+                            cColorSide = 'White';
+                            cOpColor = 'Black';                            
+                        }            
+                        // Mi color es cColorSide
+                        DrawPos();                         
+                        
+                        //Id to send
+                        OpId = aControlRetos[i].Id;
+                        
+                        //Cargar resto datos Op
+                        OpName = aControlRetos[i].Name;
+                        OpElo = aControlRetos[i].Elo;
+                        OpCountry = aControlRetos[i].Country;
+                        OpAlt = aControlRetos[i].Alt;                    
+                        nMinutosPartida = aControlRetos[i].MinutosPartida;
+                        nSegundosPartida = aControlRetos[i].SegundosPartida;
+                        OpWelcomeMenssage = aControlRetos[i].WelcomeMenssage;
+                        
+                        //BufferMinutosPartida = nMinutosPartida;
+                        //BufferSegundosPartida = nSegundosPartida;
+                        
+                        $('#sdivChat2').html('');
+                        if (cWelcomeMenssage!=''){                        
+                            $('#sdivChat2').append('<span style="color:red; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">'+ 
+                                    cUserName + ': ' + '</span>' + 
+                                    '<span style="color:green; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">' +
+                                    cWelcomeMenssage + '</span><br>');
+                            $('#sdivChat2').animate({scrollTop:$('#sdivChat2').prop('scrollHeight')},500);
+                        }                        
+                        if (OpWelcomeMenssage!=''){                    
+                            $('#sdivChat2').append('<span style="color:red; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">'+ 
+                                    OpName + ': ' + '</span>' + 
+                                    '<span style="color:green; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">' +
+                                     OpWelcomeMenssage + '</span><br>');
+                            $('#sdivChat2').animate({scrollTop:$('#sdivChat2').prop('scrollHeight')},500);
+                        }
+                        
+                        //Devolver mis datos
+                        socket.emit('AceptarReto',{OpId:OpId,ColorSide:cOpColor,Id:MyId,Name:cUserName,Elo:MyElo,Country:MyCountry,Alt:MyAlt,MinutosPartida:nMinutosPartida,SegundosPartida:nSegundosPartida,WelcomeMenssage:cWelcomeMenssage}); 
+                        
+                        SelectRat = aControlRetos[i].SelectRat;
+                        
+                        //Cancelar ambos retos remotos
+                        socket.emit('CancelarReto',{PlayerId:OpId});
+                        socket.emit('CancelarReto',{PlayerId:MyId});
+                        
+                        VaciarRetos();
+                
+                        VerCoords();
+                        
+                        AltaPartida('');
+                        
+                        Playing = true;
+                        
+                        if ( lSound=='1') {
+                            ion.sound.play('comienzopartida');                
+                        }
+                        
+                        nNumberOfCalls = 4;                        
+                        
+                    }else{
+                        $('#status2').html('<label style="color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">The Challenger is out of Range.</label>');
+		    }
                     
-                    //Id to send
-                    var OpId = aControlRetos[i][0];
-                    
-                    //Devolver mis datos
-                    socket.emit('AceptarReto',{OpId:OpId,ColorSide:cColorSide,Id:MyId,Name:cUserName,Elo:MyElo,Country:MyCountry}); 
-                    
-                    //Cancelar ambos retos remotos
-                    socket.emit('CancelarReto',{PlayerId:OpId});
-                    socket.emit('CancelarReto',{PlayerId:MyId});
                 }
                 
-            }
-            VaciarRetos();
+            }            
             
         }
         
@@ -173,15 +279,226 @@ function CargarRecursosRetos(){
 
 function LoadBoard(data){
     
-    // Ok alert(data.ColorSide+'  '+data.Id+'  '+data.Name+'  '+data.Elo+'  '+data.Country); Datos Oponente
-    
-    $('#ContenedorRetos').hide();
-    $('#ContenedorBoard').show();
+    //En caso de varios oponentes accediendo al
+    //mismo tiempo, entra solo el primero
+    if (Playing==false) {
+        
+        Playing = true;        
+        
+        //SelectRat = data.SelectRat;        
+        //alert(SelectRat)
+        
+        //Datos Op
+        OpId = data.Id;
+        OpName = data.Name;
+        OpElo = data.Elo;
+        OpCountry = data.Country;
+        OpAlt = data.Alt;        
+        nMinutosPartida = data.MinutosPartida;
+        nSegundosPartida = data.SegundosPartida;
+        OpWelcomeMenssage = data.WelcomeMenssage;
+        
+        //BufferMinutosPartida = nMinutosPartida;
+        //BufferSegundosPartida = nSegundosPartida;
+        
+        $('#sdivChat2').html('');
+        if (cWelcomeMenssage!=''){
+            $('#sdivChat2').append('<span style="color:red; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">'+ 
+                    cUserName + ': ' + '</span>' + 
+                    '<span style="color:green; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">' +
+                    cWelcomeMenssage + '</span><br>');
+            $('#sdivChat2').animate({scrollTop:$('#sdivChat2').prop('scrollHeight')},500);
+        }        
+        if (OpWelcomeMenssage!=''){
+            $('#sdivChat2').append('<span style="color:red; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">'+ 
+                    OpName + ': ' + '</span>' + 
+                    '<span style="color:green; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">' +
+                    OpWelcomeMenssage + '</span><br>');
+            $('#sdivChat2').animate({scrollTop:$('#sdivChat2').prop('scrollHeight')},500);
+        }
+        
+        $('#ContenedorRetos').hide();
+        $('#ContenedorBoard').show();
+        $('#NewGame').hide();
+        $('#Cancel').hide();
+        $('#Abort').show();
+        $(document).attr('title','Playing Game!');
+        $('#tabs').tabs('option','active',4); //jQuery 1.9+
+                        
+        cColorSide = data.ColorSide;
+        DrawPos();
+        
+        if (cColorSide=='White'){
+            StartTimer('Abajo');
+        }else{
+            StartTimer('Arriba');
+        }
+        
+        VaciarRetos();
+        
+        VerCoords();
+        
+        AltaPartida('full'); //Graba datos
+        
+        if ( lSound=='1') {
+            ion.sound.play('comienzopartida');           
+        }
+        
+        nNumberOfCalls = 4;        
+        
+    }
             
-    cColorSide = data.ColorSide;
-    DrawPos();
+}
+
+function AltaPartida(full) {
     
-    VaciarRetos();    
+    var cNameWhitePlayer;
+    var cNameBlackPlayer;
+    var nEloWhitePlayer;
+    var nEloBlackPlayer;
+    var cIdWhitePlayer;
+    var cIdBlackPlayer;    
+        
+    if (cColorSide=='White') {
+        cNameWhitePlayer = cUserName;
+        cNameBlackPlayer =  OpName;
+        nEloWhitePlayer = MyElo;
+        nEloBlackPlayer = OpElo;
+        cIdWhitePlayer = MyId;
+        cIdBlackPlayer = OpId;        
+    }else{
+        cNameBlackPlayer = cUserName;
+        cNameWhitePlayer = OpName;
+        nEloBlackPlayer = MyElo;
+        nEloWhitePlayer = OpElo;
+        cIdBlackPlayer = MyId;
+        cIdWhitePlayer = OpId;        
+    }
+    
+    //name room for private
+    cWhiteIdPrivate = cIdWhitePlayer;
+    
+    //Join to room
+    socket.emit('subscribe',{WhiteIdPrivate:cWhiteIdPrivate});
+    
+    $('#DatosArribaPlayer').html(
+                                            '<label style="color:red; margin-left:0px; margin-top:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">'+OpName+'</label>' +
+                                            '<label style="color:green; margin-left:8px; margin-top:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">('+OpElo+')</label>' +
+                                            '<img src="res/img/flags/16/' + OpCountry + '.png"  title="'+OpAlt+'" style="border:0px black solid;margin-left:8px; margin-top:6px; float:left;"></a>'  
+                                         );    
+       
+    $('#DatosAbajoPlayer').html(
+                                            '<label style="color:red; margin-left:0px; margin-top:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">'+cUserName+'</label>' +
+                                            '<label style="color:green; margin-left:8px; margin-top:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">('+MyElo+')</label>' +
+                                            '<img src="res/img/flags/16/' + MyCountry + '.png" title="'+MyAlt+'" style="border:0px black solid;margin-left:8px; margin-top:6px; float:left;"></a>'  
+                                         );
+    
+    $('#status').html(
+                            '<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Timing: </label>' +
+                            '<label style="color:green; margin-left:2px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">('+nMinutosPartida+'/'+nSegundosPartida+')</label>' +
+                            '<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Game: </label>' +                           
+                            '<label style="color:green; margin-left:2px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">('+SelectRat+')</label>'                            
+                           )                
+ 
+    //Grabar partida en BBDD
+    if (full=='full') {
+        var date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        var nTiming = nMinutosPartida + '/' + nSegundosPartida;
+        socket.emit('RegisterGame',{when:date,status:'playing',show:'Y',whitename:cNameWhitePlayer,blackname:cNameBlackPlayer,whiteelo:nEloWhitePlayer,blackelo:nEloBlackPlayer,whiteid:cIdWhitePlayer,blackid:cIdBlackPlayer,timing:nTiming});
+    }
+    
+    TiempoPartida =  nMinutosPartida * 60000;
+    TiempoRestanteArriba = TiempoPartida;
+    TiempoRestanteAbajo = TiempoPartida;
+    
+    aPos[72] = TiempoPartida;
+    aPos[73] = TiempoPartida;
+    
+    $('#RelojArribaLabel').text(FormatearMilisegundos(TiempoRestanteArriba));
+    $('#RelojAbajoLabel').text(FormatearMilisegundos(TiempoRestanteAbajo));
+    
+    LoadLegalMovesForWhite();
     
 }
 
+function AcceptRematch(){
+    
+    // for change room
+    socket.emit('unsubscribe',{WhiteIdPrivate:cWhiteIdPrivate});
+    
+    Reset();   
+        
+    if (cColorSide=='White'){
+        cColorSide = 'Black';
+    }else{
+        cColorSide = 'White';
+    }
+    aPos[70]=cColorSide; 
+    
+    $('#NewGame').hide();
+    $('#OfferingRematch').hide();
+    $('#Abort').show();
+    $(document).attr('title','Playing Game!');      
+    
+    // Mi color es cColorSide
+    DrawPos();    
+    
+    AltaPartida('');
+    
+    if (cColorSide=='White'){
+        StartTimer('Abajo');
+    }else{
+        StartTimer('Arriba'); 
+    }  
+                        
+    Playing = true;
+                        
+    if ( lSound=='1') {
+        ion.sound.play('comienzopartida');                
+    }
+                        
+    nNumberOfCalls = 4;
+    
+    socket.emit('AcceptRematch',{WhiteIdPrivate:cWhiteIdPrivate,OpId:OpId});
+    
+}
+
+function AcceptRematchBack(data){
+            
+    // for change room
+    socket.emit('unsubscribe',{WhiteIdPrivate:cWhiteIdPrivate});
+    
+    Reset();   
+        
+    if (cColorSide=='White'){
+        cColorSide = 'Black';
+    }else{
+        cColorSide = 'White';
+    }
+    aPos[70]=cColorSide; 
+    
+    $('#NewGame').hide();
+    $('#OfferingRematch').hide();
+    $('#Abort').show();
+    $(document).attr('title','Playing Game!');
+    
+     // Mi color es cColorSide
+    DrawPos();     
+    
+    AltaPartida('full');
+    
+    if (cColorSide=='White'){
+        StartTimer('Abajo');
+    }else{
+        StartTimer('Arriba'); 
+    }    
+                        
+    Playing = true;
+                        
+    if ( lSound=='1') {
+        ion.sound.play('comienzopartida');                
+    }
+                        
+    nNumberOfCalls = 4;    
+        
+}
