@@ -662,3 +662,20 @@ varios
 Copia seguridad 13:16 0.6.8
 Subida a Heroku
 
+VIERNES-02.09.2016
+
+Correccion de errores
+
+DOMINGO-04.09.2016
+
+Creacion de Base de Datos remota enlazada a KaspiChess en Heroku
+Datos Base de Datos Antigua
+host:us-cdbr-east-04.cleardb.com
+database:heroku_d6062326996f9df
+user:b8173383f00cf9
+pass:eef44ffc
+Test Base de Datos Nueva
+Cambio Base de datos en web.js
+Copia seguridad 20:52 0.6.9
+Subida a heroku
+

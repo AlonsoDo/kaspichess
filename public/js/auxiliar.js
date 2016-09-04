@@ -324,8 +324,8 @@ function GetStatsBack(data){
 
 function FollowPlayer(){
     
-    socket.emit('DeclinedRematch',{RoomName:cWhiteIdPrivate});    
-        
+    socket.emit('NullRematch',{RoomName:cWhiteIdPrivate});    
+    OfferingRematch = false;    
     $('#OfferingRematchLabel').hide();
     $('#DeclinedRematchLabel').hide();
     $('#OfferingRematch').hide();
@@ -390,8 +390,8 @@ function FollowPlayer(){
 
 function FollowGame(){
     
-    socket.emit('DeclinedRematch',{RoomName:cWhiteIdPrivate});    
-        
+    socket.emit('NullRematch',{RoomName:cWhiteIdPrivate});    
+    OfferingRematch = false;    
     $('#OfferingRematchLabel').hide();
     $('#DeclinedRematchLabel').hide();
     $('#OfferingRematch').hide();

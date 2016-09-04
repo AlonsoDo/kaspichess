@@ -208,8 +208,10 @@ function GameTimeOff(){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
-       $('#Rematch').hide(); 
+       $('#Rematch').hide();
+       OfferingRematch = false;
     }    
     $('#Resign').hide();                            
     $('#OfferingDraw').hide();
@@ -233,6 +235,8 @@ function GameTimeOff(){
     $('#dialog-result').dialog('open');
     
     BufferMoveShow = ContPosi;
+    
+    $('#dialog-promo').dialog('close');
         
 }
 
@@ -334,8 +338,10 @@ function GameTimeOffBack(data){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
        $('#Rematch').hide();
+       OfferingRematch = false;
        // flag no seguir siguiente partida
        Following = false;
     }
@@ -441,8 +447,10 @@ function GameResignBack(data){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
        $('#Rematch').hide();
+       OfferingRematch = false;
        // flag no seguir siguiente partida
        Following = false;
     }
@@ -607,8 +615,10 @@ function GameResign() {
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
-       $('#Rematch').hide(); 
+       $('#Rematch').hide();
+       OfferingRematch = false;
     }
     $('#OfferingDraw').hide();
     $('#OfferingDrawLabel').hide();
@@ -707,8 +717,10 @@ function WinByMate(){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
-       $('#Rematch').hide(); 
+       $('#Rematch').hide();
+       OfferingRematch = false;
     }    
     $('#OfferingDraw').hide();
     $('#OfferingDrawLabel').hide();
@@ -808,8 +820,10 @@ function WinByMateBack(data){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
        $('#Rematch').hide();
+       OfferingRematch = false;
        // flag no seguir siguiente partida
        Following = false;
     }
@@ -890,8 +904,10 @@ function DrawByStaleMate(){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
-       $('#Rematch').hide(); 
+       $('#Rematch').hide();
+       OfferingRematch = false;
     }    
     $('#OfferingDraw').hide();
     $('#OfferingDrawLabel').hide();
@@ -975,8 +991,10 @@ function DrawByStaleMateBack(data){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
        $('#Rematch').hide();
+       OfferingRematch = false;
        // flag no seguir siguiente partida
        Following = false;
     }
@@ -1092,8 +1110,10 @@ function UpdateDrawByInsuficientMaterial(){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
-       $('#Rematch').hide(); 
+       $('#Rematch').hide();
+       OfferingRematch = false;
     }
     $('#OfferingDraw').hide();
     $('#OfferingDrawLabel').hide();
@@ -1178,8 +1198,10 @@ function DrawByInsuficientMaterialBack(data){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
        $('#Rematch').hide();
+       OfferingRematch = false;
        // flag no seguir siguiente partida
        Following = false;
     }
@@ -1300,8 +1322,10 @@ function UpdateDrawBy3Repeat(){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
-       $('#Rematch').hide(); 
+       $('#Rematch').hide();
+       OfferingRematch = false;
     }
     $('#OfferingDraw').hide();
     $('#OfferingDrawLabel').hide();
@@ -1387,8 +1411,10 @@ function DrawBy3RepeatBack(data){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
        $('#Rematch').hide();
+       OfferingRematch = false;
        // flag no seguir siguiente partida
        Following = false;
     }    
@@ -1468,8 +1494,10 @@ function UpdateDrawBy50MovesRule(){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
-       $('#Rematch').hide(); 
+       $('#Rematch').hide();
+       OfferingRematch = false;
     }
     $('#OfferingDraw').hide();
     $('#OfferingDrawLabel').hide();
@@ -1556,8 +1584,10 @@ function DrawBy50MovesRuleBack(data){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
        $('#Rematch').hide();
+       OfferingRematch = false;
        // flag no seguir siguiente partida
        Following = false;
     }
@@ -1735,8 +1765,10 @@ function AcceptDraw(){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
-       $('#Rematch').hide(); 
+       $('#Rematch').hide();
+       OfferingRematch = false;
     }
     $('#OfferingDraw').hide();
     $('#OfferingDrawLabel').hide();
@@ -1822,8 +1854,10 @@ function AcceptDrawBack(data){
     $('#NewGame').show();
     if (Playing){
        $('#Rematch').show();
+       OfferingRematch = true;
     }else{
        $('#Rematch').hide();
+       OfferingRematch = false;
        // flag no seguir siguiente partida
        Following = false;
     }
