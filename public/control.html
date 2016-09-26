@@ -176,7 +176,9 @@
                             {name:'Country',width:24,fixed:true,classes:'gridclass2',
                                 formatter: function(cellvalue, options, rowObject){
                                     var cAlt = rowObject['Alt'];
-                                    return "<img src='res/img/flags/16/"+cellvalue+".png' title='"+cAlt+"' alt='Country' />";
+                                    var flag = rowObject['Country'];
+                                    //return "<img src='res/img/flags/16/"+cellvalue+".png' title='"+cAlt+"' alt='Country' />";
+                                    return "<img src='res/img/flags/16/"+flag+".png' title='"+cAlt+"' alt='Country' />";
                                 }                             
                             },
                             {name:'Alt',width:50,hidden:true},

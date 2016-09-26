@@ -10,7 +10,7 @@ Pendiente:
     Ok* Boton Cancel en Send Email en Control
     Ok* Mensaje Fuera de Rango poner en Status
     Ok* Poner email de Apolosoft al final de pagina
-        
+     * Reducir text edit de mensaje de chat para dispositivos apple   
 
 
 LUNES-14.03.2016
