@@ -114,6 +114,7 @@
                 var EloPlayer2 = $('#EloPlayer2').val();
                 var TotalGames2 = $('#TotalGames2').val();
                 var flagCountry = $('#CountryPlayer2').val();
+                flagCountry = flagCountry.toLowerCase();
                 var CountryName = $('#CountryPlayer2  option:selected').text();
                 
                 if ((PlayerName2=='')||(EloPlayer2=='')||(TotalGames2=='')){    
@@ -192,7 +193,7 @@
                     PlayerName = rowData['Name'];
                     TipoJugador = rowData['Type'];
                     RowIdPlayer = id;
-                    alert(rowData['Country']);
+                    //alert(rowData['Country']);
 		}
             });
             
