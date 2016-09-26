@@ -114,6 +114,7 @@ io.sockets.on('connection',function(socket){
     console.log(data.PlayerName);
     console.log(data.EloPlayer);
     console.log(data.TotalGames);
+    console.log(data.CountryPlayer);
     
     for (var i=0;i<aPlayers.length;i++){
       if (aPlayers[i][1]==data.PlayerName){
@@ -123,7 +124,7 @@ io.sockets.on('connection',function(socket){
     
     if (Found==false){      
     
-      aPlayer[0]=-2; //data.MyPlayerId;
+      aPlayer[0]='abcd'; //data.MyPlayerId;
       aPlayer[1]=data.PlayerName;
       aPlayer[2]=data.EloPlayer;
       aPlayer[3]=data.CountryPlayer;
