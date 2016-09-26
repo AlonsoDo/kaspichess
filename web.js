@@ -126,7 +126,7 @@ io.sockets.on('connection',function(socket){
       aPlayer[0]=-2; //data.MyPlayerId;
       aPlayer[1]=data.PlayerName;
       aPlayer[2]=data.EloPlayer;
-      aPlayer[3]='ES'; //data.CountryPlayer;
+      aPlayer[3]=data.CountryPlayer;
       aPlayer[4]=data.TotalGames;
       aPlayer[5]='OnLine';
       aPlayer[6]=data.CountryName;

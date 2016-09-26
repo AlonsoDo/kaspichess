@@ -192,7 +192,7 @@ function AddPlayerBack(data) {
         var RowNumbers = $('#list2').getGridParam('reccount');
         var PlayerName = $('#PlayerName2').val();
         var Elo = $('#EloPlayer2').val();
-        var flag = $('#CountryPlayer2').val();
+        var flag = 'ES'; //$('#CountryPlayer2').val();
         var PlayerCountry = $('#CountryPlayer2  option:selected').text();
         var TotalGames = $('#TotalGames2').val();
         
