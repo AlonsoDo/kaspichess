@@ -113,13 +113,13 @@
                 var PlayerName2 = $('#PlayerName2').val();
                 var EloPlayer2 = $('#EloPlayer2').val();
                 var TotalGames2 = $('#TotalGames2').val();
-                var CountryPlayer2 = 'ES'; //$('#CountryPlayer2').val();
+                var flagCountry = $('#CountryPlayer2').val();
                 var CountryName = $('#CountryPlayer2  option:selected').text();
                 
                 if ((PlayerName2=='')||(EloPlayer2=='')||(TotalGames2=='')){    
                     alert('Error en los datos');
                 }else{
-                    socket.emit('AddPlayer',{PlayerName:PlayerName2,EloPlayer:EloPlayer2,TotalGames:TotalGames2,CountryPlayer:CountryPlayer2,CountryName:CountryName});   
+                    socket.emit('AddPlayer',{PlayerName:PlayerName2,EloPlayer:EloPlayer2,TotalGames:TotalGames2,CountryPlayer:flagCountry,CountryName:CountryName});   
                 }
                 
             });
