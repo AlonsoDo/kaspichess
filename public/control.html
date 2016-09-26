@@ -4,7 +4,8 @@
     <title>Control</title>
     <script src="socket.io/lib/socket.io.js"></script>
     <link type="text/css" href="css/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet"/>
-    <script src="js/jquery-2.2.1.min.js"></script>    
+    <script src="js/jquery-2.2.1.min.js"></script>
+    <script src="js/funcionescontrol.js" type="text/javascript"></script>
     <script src="css/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
     <link type="text/css" href="css/mystyle.css" rel="stylesheet"/>    
     <link rel="stylesheet" type="text/css" media="screen" href="jqgrid/css/ui.jqgrid.css" />
@@ -13,16 +14,592 @@
     <script src="js/ion.sound.min.js" type="text/javascript"></script>    
     <script type="text/javascript">
         
+        var socket = io.connect(window.location.hostname);
+        
         $(document).ready(function(){        
             
-            var socket = io.connect(window.location.hostname);
+            var PlayerName = '';
+            var Moment;
+            var TotalGames;
+            var EventName;
+            var SaveMode;
+            var SocketIdControl;
+            var RowIdEvent = 0;
+            var RowIdPlayer = 0;
+            var TipoJugador = '';
             
+            // init bunch of sounds
+            ion.sound({
+                sounds: [
+                    { name: 'chat' , volume: 0.5 },
+                    { name: 'retando' , volume: 0.5 },
+                    { name: 'desconectarjugando' , volume: 0.5 },
+                    { name: 'desconectado' , volume: 0.5 },
+                    { name: 'nuevoconectado' , volume: 0.5 },
+                    { name: 'jugando' , volume: 0.5 },
+                    { name: 'mirar' , volume: 0.5 },
+                    { name: 'abortar' , volume: 0.5 },
+                    { name: 'revancha' , volume: 0.5 }
+                ],            
+                // main config
+                path: "res/sounds/control/",
+                preload: true,
+                multiplay: true,
+                volume: 0.9
+            });            
+                        
+            $('#ContainerEmail').hide();
+            
+            $('#SaveEvent').button();
+            $('#AutoSave').button();
+            $('#SearchEvents').button();
+            $('#SearchPlayer').button();
+            $('#Email').button();
+            $('#SendEmail').button();
+            $('#AddPlayer').button();
+            $('#DelPlayer').button();
+            $('#ReloadPlayers').button();
+            $('#CancelSendEmail').button();
+            
+            $('#AutoSave').click(function(){
+                
+                if ($('#OnOfAutoSave').text()=='Disable'){
+                    $('#OnOfAutoSave').text('Enable');
+                    socket.emit('AutoSave',{AutoSave:'Enable'});
+                }else{
+                    $('#OnOfAutoSave').text('Disable');
+                    socket.emit('AutoSave',{AutoSave:'Disable'});
+                }
+                
+            });
+            
+            $('#SaveEvent').click(function(){
+            
+                if ((RowIdEvent!=0)&&($('#OnOfAutoSave').text()=='Disable')&&(SaveMode=='No')){
+                    SaveMode = 'Yes';
+                    $('#list1').jqGrid('setCell',RowIdEvent,'Save','Yes');                    
+                    socket.emit('SaveEvent',{PlayerName:PlayerName,Moment:Moment,TotalGames:TotalGames,EventName:EventName});                    
+                }
+            
+            });
+            
+            $('#SearchEvents').click(function(){
+                
+                var EventName = $('#EventType').val();
+                var DateIni = ($('#MomentIni').val()).substring(0,10);
+                var DateEnd = ($('#MomentEnd').val()).substring(0,10);
+                var TimeIni = ($('#MomentIni').val()).substring(11,19);
+                var TimeEnd = ($('#MomentEnd').val()).substring(11,19);
+                                
+                socket.emit('SearchEvents',{EventName:EventName,DateIni:DateIni,DateEnd:DateEnd,TimeIni:TimeIni,TimeEnd:TimeEnd});
+                
+            });
+            
+            $('#SearchPlayer').click(function(){
+                socket.emit('SearchPlayer',{PlayerName:PlayerName});
+            });
+            
+            $('#SendEmail').click(function(){                
+                $('#ContainerEmail').hide();
+                socket.emit('SendEmail',{SubjectEmail:$('#SubjectEmail').val(),TextEmail:$('#TextEmail').val(),EmailAdress:$('#EmailPlayer').text()});
+            });
+            
+            $('#Email').click(function(){
+                $('#ContainerEmail').show();
+            });
+            
+            $('#AddPlayer').click(function(){
+                
+                var PlayerName2 = $('#PlayerName2').val();
+                var EloPlayer2 = $('#EloPlayer2').val();
+                var TotalGames2 = $('#TotalGames2').val();
+                var CountryPlayer2 = $('#CountryPlayer2').val();
+                var CountryName = $('#CountryPlayer2  option:selected').text();
+                
+                if ((PlayerName2=='')||(EloPlayer2=='')||(TotalGames2=='')){    
+                    alert('Error en los datos');
+                }else{
+                    socket.emit('AddPlayer',{PlayerName:PlayerName2,EloPlayer:EloPlayer2,TotalGames:TotalGames2,CountryPlayer:CountryPlayer2,CountryName:CountryName});   
+                }
+                
+            });
+            
+            $('#ReloadPlayers').click(function(){                 
+                socket.emit('ReloadPlayersData',{});
+            });
+            
+            $('#DelPlayer').click(function(){                 
+                DelPlayer(RowIdPlayer,PlayerName,TipoJugador);
+            });
+            
+            $('#CancelSendEmail').click(function(){
+                $('#ContainerEmail').hide();
+            });    
+            
+            jQuery('#list1').jqGrid({
+		datatype: 'local',
+		height: 550,
+		width:731,
+	   	colNames:['NickName','Moment','Games','Event','Save'],
+	   	colModel:[
+                            {name:'Name',index:'Name', width:250,classes:'gridclass2'},
+                            {name:'Moment',index:'Moment',width:180,classes:'gridclass'},
+                            {name:'Games',width:80,classes:'gridclass2'},
+                            {name:'Event',width:180,classes:'gridclass'},
+                            {name:'Save',width:60,classes:'gridclass2'}
+                            ],
+		onSelectRow: function(id){
+		    var rowData = jQuery(this).getRowData(id); 
+                    PlayerName = rowData['Name'];   
+                    Moment = rowData['Moment'];
+                    TotalGames = rowData['Games'];
+                    EventName = rowData['Event'];
+                    SaveMode = rowData['Save'];
+                    RowIdEvent = id;                    
+		}
+            });
+            
+            $('#list1').jqGrid('setLabel','Name','Nick Name',{'font-weight':'bold','font-size':'18px'});
+            $('#list1').jqGrid('setLabel','Moment','Moment',{'font-weight':'bold','font-size':'18px'});
+            $('#list1').jqGrid('setLabel','Games','Games',{'font-weight':'bold','font-size':'18px'});
+            $('#list1').jqGrid('setLabel','Event','Event',{'font-weight':'bold','font-size':'18px'});
+            $('#list1').jqGrid('setLabel','Save','Save',{'font-weight':'bold','font-size':'18px'});
+            
+            jQuery('#list2').jqGrid({
+		datatype: 'local',
+		height: 500,
+		width:731,
+	   	colNames:['Nick Name','Elo','Country','Alt','Status','Games','IdPlayer','Type'],
+	   	colModel:[
+                            {name:'Name',index:'Name', width:270,classes:'gridclass2'},
+                            {name:'Elo',index:'Elo',width:70,classes:'gridclass'},	 
+                            {name:'Country',width:24,fixed:true,classes:'gridclass2',
+                                formatter: function(cellvalue, options, rowObject){
+                                    var cAlt = rowObject['Alt'];
+                                    return "<img src='res/img/flags/16/"+cellvalue+".png' title='"+cAlt+"' alt='Country' />";
+                                }                             
+                            },
+                            {name:'Alt',width:50,hidden:true},
+                            {name:'Status',width:130,classes:'gridclass2'},
+                            {name:'Games',index:'Games',sorttype:'int',width:100,classes:'gridclass2',align:'right'},
+                            {name:'IdPlayer',width:50,hidden:true},
+                            {name:'Type',width:130,classes:'gridclass'}
+                            ],
+		onSelectRow: function(id){
+		    var rowData = jQuery(this).getRowData(id); 
+                    PlayerName = rowData['Name'];
+                    TipoJugador = rowData['Type'];
+                    RowIdPlayer = id;
+		}
+            });
+            
+            $('#list2').jqGrid('setLabel','Name','Nick Name',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','Elo','Elo',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','Country','Country',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','Status','Status',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','Games','Games',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','Type','Type',{'font-weight':'bold','font-size':'18px'});
+                        
+            socket.on('ChallengingBack',function(data){
+                ChallengingBack(data);
+            });
+            
+            socket.on('DisconnectPlayingControl',function(data){
+                DisconnectPlayingControl(data);                
+            });
+            
+            socket.on('DisconnectControl',function(data){
+                DisconnectControl(data);                
+            });
+            
+            socket.on('ConnectControl',function(data){                
+                SocketIdControl = data.SocketIdControl;                
+                socket.emit('SetSocketIdControl',{SocketIdControl:SocketIdControl});                
+                if (data.AutoSave=='Disable'){
+                    $('#OnOfAutoSave').text('Disable');  
+                }else{
+                    $('#OnOfAutoSave').text('Enable');
+                }                
+            });
+            
+            socket.on('PlayerConnectedControl',function(data){
+                PlayerConnectedControl(data);
+            });
+            
+            socket.on('PlayerPlayingControl',function(data){
+                PlayerPlayingControl(data);
+            });
+            
+            socket.on('PlayerDataWatching',function(data){
+                PlayerDataWatching(data);
+            });
+            
+            socket.on('GameAbortedControl',function(data){
+                GameAbortedControl(data);
+            });
+            
+            socket.on('RematchingControlBack',function(data){
+                RematchingControlBack(data);  
+            });
+            
+            socket.on('SearchEventsBack',function(data){
+                SearchEventsBack(data);
+            });
+            
+            socket.on('SearchPlayerBack',function(data){
+                SearchPlayerBack(data);
+                //alert('Test')
+            });
+            
+            socket.on('AddPlayerBack',function(data){
+                //alert(data.NewPlayer)
+                AddPlayerBack(data);
+            });
+            
+            socket.on('ReloadPlayersDataBack',function(data){
+                ReloadPlayersDataBack(data);
+            });
+            
+            socket.on('ChatControlBack',function(data){
+               ion.sound.play('chat'); 
+            });
+                
         });
         
     </script>   
 </head>
 <body>
-    <div style="border:1px black solid; width:1100px; height:600px; margin:0 auto 0 auto;">
+    <div style="background-color:#e8e8e8; width:1100px; height:1680px;">
+        <div style="float:left; margin-top:20px; margin-left:20px; border:1px black solid; width:740px; height:820px;">
+            <table id="list1"></table>
+            <div style="margin-top:20px; margin-left:20px; border:1px black solid; width:700px; height:80px;">
+                <input id="SaveEvent" type="button" value="Save Event" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+                <input id="AutoSave" type="button" value="AutoSave" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+                <label id="OnOfAutoSave" style="color:red; margin-left:20px; margin-top:20px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px"></label>
+                <input id="SearchEvents" type="button" value="Search Events" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+            </div>
+            <div style="margin-top:20px; margin-left:20px; border:1px black solid; width:700px; height:76px;">
+                <input type="text" id="MomentIni" maxlength="19" placeholder="Moment Ini" value="" style="margin-top:20px; margin-left:12px; width:200px; color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">
+                <input type="text" id="MomentEnd" maxlength="19" placeholder="Moment End" value="" style="margin-top:20px; margin-left:12px; width:200px; color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">
+                <select id="EventType" style="margin-top:20px; margin-left:12px; width:220px; color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">
+                    <option value="All">All</option>
+                    <option value="Connected">Connected</option>
+                    <option value="Disconnect">Disconnect</option>
+                    <option value="Playing">Playing</option>
+                    <option value="Game Aborted">Game Aborted</option>
+                    <option value="Challenging">Challenging</option>
+                    <option value="Rematching">Rematching</option>
+                    <option value="Whatching">Whatching</option>
+                    <option value="Disconnect Playing">Disconnect Playing</option>                    
+                </select>            
+            </div>
+        </div>        
+        <div id="ShowPlayerData" style="float:left; margin-top:20px; margin-left:20px; border:1px black solid; width:300px; height:480px;">
+            <div style="float:left; margin-top:10px; margin-left:10px; border:0px black solid; width:278px; height:36px;">
+                <label id="NickName" style="color:green; margin-left:4px; margin-top:8px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px"></label>
+            </div>
+            <div style="float:left; margin-top:10px; margin-left:10px; border:0px black solid; width:278px; height:36px;">
+                <label style="color:red; margin-left:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px">ELO:</label>
+                <label id="EloPlayer" style="color:green; margin-left:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px"></label>
+            </div>
+            <div id="CountryPlayer" style="float:left; margin-top:10px; margin-left:10px; border:0px black solid; width:278px; height:36px;">
+            </div>
+            <div style="float:left; margin-top:10px; margin-left:10px; border:0px black solid; width:278px; height:36px;">
+                <label style="color:red; margin-left:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px">Wins:</label>
+                <label id="WinsGames" style="color:green; margin-left:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px"></label>
+            </div>
+            <div style="float:left; margin-top:10px; margin-left:10px; border:0px black solid; width:278px; height:36px;">
+                <label style="color:red; margin-left:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px">Losts:</label>
+                <label id="LostsGames" style="color:green; margin-left:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px"></label>
+            </div>
+            <div style="float:left; margin-top:10px; margin-left:10px; border:0px black solid; width:278px; height:36px;">
+                <label style="color:red; margin-left:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px">Draws:</label>
+                <label id="DrawsGames" style="color:green; margin-left:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px"></label>
+            </div>
+            <div style="float:left; margin-top:10px; margin-left:10px; border:0px black solid; width:278px; height:36px;">
+                <label id="EmailPlayer" style="color:green; margin-left:4px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px"></label>
+            </div>
+            <div style="float:left; margin-top:10px; margin-left:10px; border:0px black solid; width:278px; height:36px;">
+                <label id="DateSignUp" style="color:green; margin-left:4px; margin-top:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:30px"></label>
+            </div>
+        </div>
+        <div style="float:left; margin-top:20px; margin-left:20px; border:1px black solid; width:300px; height:80px;">
+            <input id="SearchPlayer" type="button" value="Search Player" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+            <input id="Email" type="button" value="Email" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+        </div>
+        <div id="ContainerEmail" style="float:left; margin-top:20px; margin-left:20px; border:1px black solid; width:740px; height:420px;">
+            <input id="SendEmail" type="button" value="Send" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+            <input id="CancelSendEmail" type="button" value="Cancel" style="float:left; margin-top:20px; margin-left:10px; font-size:16px; font-weight:bold;">
+            <label  style="color:green; margin-left:10px; margin-top:26px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Subject:</label>
+            <input type="text" id="SubjectEmail" maxlength="100" placeholder="Subject" value="" style="margin-top:20px; margin-left:10px; width:420px; color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">
+            <textarea id="TextEmail" style="float:left; margin-top:20px; margin-left:20px; border:0px black solid; width:700px; height:320px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px;">
+            </textarea>    
+        </div>
+        <div style="float:left; margin-top:20px; margin-left:20px; border:1px black solid; width:740px; height:750px;">
+            <table id="list2"></table>
+            <div style="margin-top:20px; margin-left:20px; border:1px black solid; width:700px; height:76px;">
+                <input type="text" id="PlayerName2" maxlength="20" placeholder="PlayerName" value="" style="margin-top:20px; margin-left:8px; width:200px; color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">
+                <input type="text" id="EloPlayer2" maxlength="4" placeholder="ELO" value="" style="margin-top:20px; margin-left:8px; width:50px; color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">
+                <input type="text" id="TotalGames2" maxlength="4" placeholder="Games" value="" style="margin-top:20px; margin-left:8px; width:50px; color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">
+                <select id="CountryPlayer2" style="width:332px; margin-left:8px; color:#800080; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:24px;">
+                    <option value="AF">Afghanistan</option>
+                    <option value="AX">Åland Islands</option>
+                    <option value="AL">Albania</option>
+                    <option value="DZ">Algeria</option>
+                    <option value="AS">American Samoa</option>
+                    <option value="AD">Andorra</option>
+                    <option value="AO">Angola</option>
+                    <option value="AI">Anguilla</option>
+                    <option value="AQ">Antarctica</option>
+                    <option value="AG">Antigua and Barbuda</option>
+                    <option value="AR">Argentina</option>
+                    <option value="AM">Armenia</option>
+                    <option value="AW">Aruba</option>
+                    <option value="AU">Australia</option>
+                    <option value="AT">Austria</option>
+                    <option value="AZ">Azerbaijan</option>
+                    <option value="BS">Bahamas</option>
+                    <option value="BH">Bahrain</option>
+                    <option value="BD">Bangladesh</option>
+                    <option value="BB">Barbados</option>
+                    <option value="BY">Belarus</option>
+                    <option value="BE">Belgium</option>
+                    <option value="BZ">Belize</option>
+                    <option value="BJ">Benin</option>
+                    <option value="BM">Bermuda</option>
+                    <option value="BT">Bhutan</option>
+                    <option value="BO">Bolivia, Plurinational State of</option>
+                    <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+                    <option value="BA">Bosnia and Herzegovina</option>
+                    <option value="BW">Botswana</option>
+                    <option value="BV">Bouvet Island</option>
+                    <option value="BR">Brazil</option>
+                    <option value="IO">British Indian Ocean Territory</option>
+                    <option value="BN">Brunei Darussalam</option>
+                    <option value="BG">Bulgaria</option>
+                    <option value="BF">Burkina Faso</option>
+                    <option value="BI">Burundi</option>
+                    <option value="KH">Cambodia</option>
+                    <option value="CM">Cameroon</option>
+                    <option value="CA">Canada</option>
+                    <option value="CV">Cape Verde</option>
+                    <option value="KY">Cayman Islands</option>
+                    <option value="CF">Central African Republic</option>
+                    <option value="TD">Chad</option>
+                    <option value="CL">Chile</option>
+                    <option value="CN">China</option>
+                    <option value="CX">Christmas Island</option>
+                    <option value="CC">Cocos (Keeling) Islands</option>
+                    <option value="CO">Colombia</option>
+                    <option value="KM">Comoros</option>
+                    <option value="CG">Congo</option>
+                    <option value="CD">Congo, the Democratic Republic of the</option>
+                    <option value="CK">Cook Islands</option>
+                    <option value="CR">Costa Rica</option>
+                    <option value="CI">Côte d'Ivoire</option>
+                    <option value="HR">Croatia</option>
+                    <option value="CU">Cuba</option>
+                    <option value="CW">Curaçao</option>
+                    <option value="CY">Cyprus</option>
+                    <option value="CZ">Czech Republic</option>
+                    <option value="DK">Denmark</option>
+                    <option value="DJ">Djibouti</option>
+                    <option value="DM">Dominica</option>
+                    <option value="DO">Dominican Republic</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="EG">Egypt</option>
+                    <option value="SV">El Salvador</option>
+                    <option value="GQ">Equatorial Guinea</option>
+                    <option value="ER">Eritrea</option>
+                    <option value="EE">Estonia</option>
+                    <option value="ET">Ethiopia</option>
+                    <option value="FK">Falkland Islands (Malvinas)</option>
+                    <option value="FO">Faroe Islands</option>
+                    <option value="FJ">Fiji</option>
+                    <option value="FI">Finland</option>
+                    <option value="FR">France</option>
+                    <option value="GF">French Guiana</option>
+                    <option value="PF">French Polynesia</option>
+                    <option value="TF">French Southern Territories</option>
+                    <option value="GA">Gabon</option>
+                    <option value="GM">Gambia</option>
+                    <option value="GE">Georgia</option>
+                    <option value="DE">Germany</option>
+                    <option value="GH">Ghana</option>
+                    <option value="GI">Gibraltar</option>
+                    <option value="GR">Greece</option>
+                    <option value="GL">Greenland</option>
+                    <option value="GD">Grenada</option>
+                    <option value="GP">Guadeloupe</option>
+                    <option value="GU">Guam</option>
+                    <option value="GT">Guatemala</option>
+                    <option value="GG">Guernsey</option>
+                    <option value="GN">Guinea</option>
+                    <option value="GW">Guinea-Bissau</option>
+                    <option value="GY">Guyana</option>
+                    <option value="HT">Haiti</option>
+                    <option value="HM">Heard Island and McDonald Islands</option>
+                    <option value="VA">Holy See (Vatican City State)</option>
+                    <option value="HN">Honduras</option>
+                    <option value="HK">Hong Kong</option>
+                    <option value="HU">Hungary</option>
+                    <option value="IS">Iceland</option>
+                    <option value="IN">India</option>
+                    <option value="ID">Indonesia</option>
+                    <option value="IR">Iran, Islamic Republic of</option>
+                    <option value="IQ">Iraq</option>
+                    <option value="IE">Ireland</option>
+                    <option value="IM">Isle of Man</option>
+                    <option value="IL">Israel</option>
+                    <option value="IT">Italy</option>
+                    <option value="JM">Jamaica</option>
+                    <option value="JP">Japan</option>
+                    <option value="JE">Jersey</option>
+                    <option value="JO">Jordan</option>
+                    <option value="KZ">Kazakhstan</option>
+                    <option value="KE">Kenya</option>
+                    <option value="KI">Kiribati</option>
+                    <option value="KP">Korea, Democratic People's Republic of</option>
+                    <option value="KR">Korea, Republic of</option>
+                    <option value="KW">Kuwait</option>
+                    <option value="KG">Kyrgyzstan</option>
+                    <option value="LA">Lao People's Democratic Republic</option>
+                    <option value="LV">Latvia</option>
+                    <option value="LB">Lebanon</option>
+                    <option value="LS">Lesotho</option>
+                    <option value="LR">Liberia</option>
+                    <option value="LY">Libya</option>
+                    <option value="LI">Liechtenstein</option>
+                    <option value="LT">Lithuania</option>
+                    <option value="LU">Luxembourg</option>
+                    <option value="MO">Macao</option>
+                    <option value="MK">Macedonia, the former Yugoslav Republic of</option>
+                    <option value="MG">Madagascar</option>
+                    <option value="MW">Malawi</option>
+                    <option value="MY">Malaysia</option>
+                    <option value="MV">Maldives</option>
+                    <option value="ML">Mali</option>
+                    <option value="MT">Malta</option>
+                    <option value="MH">Marshall Islands</option>
+                    <option value="MQ">Martinique</option>
+                    <option value="MR">Mauritania</option>
+                    <option value="MU">Mauritius</option>
+                    <option value="YT">Mayotte</option>
+                    <option value="MX">Mexico</option>
+                    <option value="FM">Micronesia, Federated States of</option>
+                    <option value="MD">Moldova, Republic of</option>
+                    <option value="MC">Monaco</option>
+                    <option value="MN">Mongolia</option>
+                    <option value="ME">Montenegro</option>
+                    <option value="MS">Montserrat</option>
+                    <option value="MA">Morocco</option>
+                    <option value="MZ">Mozambique</option>
+                    <option value="MM">Myanmar</option>
+                    <option value="NA">Namibia</option>
+                    <option value="NR">Nauru</option>
+                    <option value="NP">Nepal</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="NC">New Caledonia</option>
+                    <option value="NZ">New Zealand</option>
+                    <option value="NI">Nicaragua</option>
+                    <option value="NE">Niger</option>
+                    <option value="NG">Nigeria</option>
+                    <option value="NU">Niue</option>
+                    <option value="NF">Norfolk Island</option>
+                    <option value="MP">Northern Mariana Islands</option>
+                    <option value="NO">Norway</option>
+                    <option value="OM">Oman</option>
+                    <option value="PK">Pakistan</option>
+                    <option value="PW">Palau</option>
+                    <option value="PS">Palestinian Territory, Occupied</option>
+                    <option value="PA">Panama</option>
+                    <option value="PG">Papua New Guinea</option>
+                    <option value="PY">Paraguay</option>
+                    <option value="PE">Peru</option>
+                    <option value="PH">Philippines</option>
+                    <option value="PN">Pitcairn</option>
+                    <option value="PL">Poland</option>
+                    <option value="PT">Portugal</option>
+                    <option value="PR">Puerto Rico</option>
+                    <option value="QA">Qatar</option>
+                    <option value="RE">Réunion</option>
+                    <option value="RO">Romania</option>
+                    <option value="RU">Russian Federation</option>
+                    <option value="RW">Rwanda</option>
+                    <option value="BL">Saint Barthélemy</option>
+                    <option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
+                    <option value="KN">Saint Kitts and Nevis</option>
+                    <option value="LC">Saint Lucia</option>
+                    <option value="MF">Saint Martin (French part)</option>
+                    <option value="PM">Saint Pierre and Miquelon</option>
+                    <option value="VC">Saint Vincent and the Grenadines</option>
+                    <option value="WS">Samoa</option>
+                    <option value="SM">San Marino</option>
+                    <option value="ST">Sao Tome and Principe</option>
+                    <option value="SA">Saudi Arabia</option>
+                    <option value="SN">Senegal</option>
+                    <option value="RS">Serbia</option>
+                    <option value="SC">Seychelles</option>
+                    <option value="SL">Sierra Leone</option>
+                    <option value="SG">Singapore</option>
+                    <option value="SX">Sint Maarten (Dutch part)</option>
+                    <option value="SK">Slovakia</option>
+                    <option value="SI">Slovenia</option>
+                    <option value="SB">Solomon Islands</option>
+                    <option value="SO">Somalia</option>
+                    <option value="ZA">South Africa</option>
+                    <option value="GS">South Georgia and the South Sandwich Islands</option>
+                    <option value="SS">South Sudan</option>
+                    <option value="ES">Spain</option>
+                    <option value="LK">Sri Lanka</option>
+                    <option value="SD">Sudan</option>
+                    <option value="SR">Suriname</option>
+                    <option value="SJ">Svalbard and Jan Mayen</option>
+                    <option value="SZ">Swaziland</option>
+                    <option value="SE">Sweden</option>
+                    <option value="CH">Switzerland</option>
+                    <option value="SY">Syrian Arab Republic</option>
+                    <option value="TW">Taiwan, Province of China</option>
+                    <option value="TJ">Tajikistan</option>
+                    <option value="TZ">Tanzania, United Republic of</option>
+                    <option value="TH">Thailand</option>
+                    <option value="TL">Timor-Leste</option>
+                    <option value="TG">Togo</option>
+                    <option value="TK">Tokelau</option>
+                    <option value="TO">Tonga</option>
+                    <option value="TT">Trinidad and Tobago</option>
+                    <option value="TN">Tunisia</option>
+                    <option value="TR">Turkey</option>
+                    <option value="TM">Turkmenistan</option>
+                    <option value="TC">Turks and Caicos Islands</option>
+                    <option value="TV">Tuvalu</option>
+                    <option value="UG">Uganda</option>
+                    <option value="UA">Ukraine</option>
+                    <option value="AE">United Arab Emirates</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="US">United States</option>
+                    <option value="UM">United States Minor Outlying Islands</option>
+                    <option value="UY">Uruguay</option>
+                    <option value="UZ">Uzbekistan</option>
+                    <option value="VU">Vanuatu</option>
+                    <option value="VE">Venezuela, Bolivarian Republic of</option>
+                    <option value="VN">Viet Nam</option>
+                    <option value="VG">Virgin Islands, British</option>
+                    <option value="VI">Virgin Islands, U.S.</option>
+                    <option value="WF">Wallis and Futuna</option>
+                    <option value="EH">Western Sahara</option>
+                    <option value="YE">Yemen</option>
+                    <option value="ZM">Zambia</option>
+                    <option value="ZW">Zimbabwe</option>
+                </select>            
+            </div>
+            <div style="margin-top:20px; margin-left:20px; border:1px black solid; width:700px; height:76px;">
+                <input id="AddPlayer" type="button" value="Add Player" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+                <input id="DelPlayer" type="button" value="Del Player" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+                <input id="ReloadPlayers" type="button" value="Reload Players" style="float:left; margin-top:20px; margin-left:20px; font-size:16px; font-weight:bold;">
+            </div>   
+        </div>    
     </div>
+       
 </body>
 </html>

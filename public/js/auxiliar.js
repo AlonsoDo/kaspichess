@@ -360,31 +360,10 @@ function FollowPlayer(){
         
         socket.emit('CheckPlayerStatus',WhoPlayer);
         
-    }
-    
-    socket.on('CheckPlayerStatusBack',function(data){        
+        //Send to control
+        //socket.emit('FollowPlayerToControl',{PlayerName:cUserName});
         
-        if ((data.PlayerStatus=='OnLine')||(data.PlayerStatus=='Challenging')) {
-            
-            $("#dialog-result").html(
-				"<div id=\"dialog-result\" title=\"Information\">" +
-				"<p style=\"color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">Player is " + data.PlayerStatus + " now.</p>" +
-				"</div>"
-				);
-	
-            $("#dialog-result").dialog({ height: 240 },{ width: 310 });
-            $('.ui-button:contains(Reconnect)').hide();
-            $('.ui-button:contains(Ok)').show();			
-            $("#dialog-result").dialog( "open" );
-                
-        }else{
-           
-            nGameNumber=data.GameNumber;
-            socket.emit('IfGameActive',nGameNumber);
-            
-        }
-        
-    });
+    }    
     
 }
 
@@ -493,6 +472,9 @@ function IfGameActive(data){
         VerCoords();
         
         Following = true;
+        
+        //Send to control
+        socket.emit('FollowPlayerToControl',{PlayerName:cUserName});
 			    
     }    
     

@@ -28,10 +28,16 @@ function UpdateTimer(Posicion) {
 	
     ValorTiempoTranscurrido = ContadorTiempo();
     
-    if ((ValorTiempoTranscurrido>=14000)&&(Playing)&&(FlagAbort)&&(cColorSide=='White')){
+    if ((ValorTiempoTranscurrido>=15000)&&(Playing)&&(FlagAbort)&&(cColorSide=='White')){
         GameAborted({ByButton:false});
         socket.emit('AbortGame',{RoomName:cWhiteIdPrivate,ByButton:false,MyPlayerName:cUserName,OpPlayerName:OpName});
-        socket.emit('UpdateGameStatus',{cStatus:'Aborted',nGameNumber:nCodigoAltaPartida});
+        socket.emit('UpdateGameStatus',{cStatus:'Aborted',nGameNumber:nCodigoAltaPartida});        
+    }
+    
+    if ((ValorTiempoTranscurrido>=20000)&&(Playing)&&(FlagAbort)&&(cColorSide=='Black')){
+        GameAborted({ByButton:false});
+        socket.emit('AbortGame',{RoomName:cWhiteIdPrivate,ByButton:false,MyPlayerName:cUserName,OpPlayerName:OpName});
+        socket.emit('UpdateGameStatus',{cStatus:'Aborted',nGameNumber:nCodigoAltaPartida});        
     }
         
     if (Posicion=='Arriba') {

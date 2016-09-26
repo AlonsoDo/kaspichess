@@ -1,12 +1,9 @@
 var aControlRetos = [];
 var nMinutosPartida = 5;
 var nSegundosPartida = 0;
-//var BufferMinutosPartida;
-//var BufferSegundosPartida;
 var OpId,OpName,OpElo,OpCountry,OpAlt,OpWelcomeMenssage;
 var Playing = false;
 var Temp;
-//var nCodigoAltaPartida = -1;
 
 function CrearRetoLocal(){
 
@@ -36,6 +33,9 @@ function CrearRetoLocal(){
     
     //Repetir cada 6 segundos
     Temp = setInterval(function(){socket.emit('MandarReto',{DatosReto:aReto});},6000);
+    
+    //Para control
+    socket.emit('Challenging',{DatosReto:aReto});
     
 }
 
@@ -264,7 +264,7 @@ function CargarRecursosRetos(){
                         nNumberOfCalls = 4;                        
                         
                     }else{
-                        $('#status2').html('<label style="color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">The Challenger is out of Range.</label>');
+                        $('#status').html('<label style="color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">The Challenger is out of Range.</label>');
 		    }
                     
                 }
@@ -283,10 +283,7 @@ function LoadBoard(data){
     //mismo tiempo, entra solo el primero
     if (Playing==false) {
         
-        Playing = true;        
-        
-        //SelectRat = data.SelectRat;        
-        //alert(SelectRat)
+        Playing = true;          
         
         //Datos Op
         OpId = data.Id;
@@ -296,10 +293,7 @@ function LoadBoard(data){
         OpAlt = data.Alt;        
         nMinutosPartida = data.MinutosPartida;
         nSegundosPartida = data.SegundosPartida;
-        OpWelcomeMenssage = data.WelcomeMenssage;
-        
-        //BufferMinutosPartida = nMinutosPartida;
-        //BufferSegundosPartida = nSegundosPartida;
+        OpWelcomeMenssage = data.WelcomeMenssage;        
         
         $('#sdivChat2').html('');
         if (cWelcomeMenssage!=''){
@@ -397,7 +391,9 @@ function AltaPartida(full) {
                             '<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Timing: </label>' +
                             '<label style="color:green; margin-left:2px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">('+nMinutosPartida+'/'+nSegundosPartida+')</label>' +
                             '<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Game: </label>' +                           
-                            '<label style="color:green; margin-left:2px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">('+SelectRat+')</label>'                            
+                            '<label style="color:green; margin-left:2px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">('+SelectRat+')</label>' +
+                            '<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">Last: </label>' +
+                            '<label id="LastMove" style="color:green; margin-left:2px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px"></label>'                            
                            )                
  
     //Grabar partida en BBDD

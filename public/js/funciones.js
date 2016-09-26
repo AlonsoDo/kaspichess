@@ -102,7 +102,7 @@ function Reset(){
     nGameNumber = -1;
     WhoPlayer = -1;
     cWhiteIdPrivate = '' // Room name
-    FlagAbort = true;
+    //FlagAbort = true;
     MoveDone = false;
     nRegla50Moves = 0;
     FlagAbort = true;
@@ -541,7 +541,14 @@ function MakeMove(CodiPromo){
     
     //alert(cResult);no completo signo + #
     
-    cPartidaCompleta = cPartidaCompleta + cResult; 
+    cPartidaCompleta = cPartidaCompleta + cResult;
+    
+    //Show last move
+    if (aPos[70]=='White') {
+        $("#LastMove").text(cResult);    
+    }else{
+        $("#LastMove").text(((ContPosi+1)/2)+'....'+cResult.substring(1,15));
+    }
     
     $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;' onclick='GameLabelClick(this.id);'>" + cResult + "</label>");
     
@@ -605,7 +612,7 @@ function MakeMove(CodiPromo){
     }
     
     //Move Pgn
-    aBuffer[78] = $("#"+(ContPosi+1)).text();
+    aBuffer[78] = $("#"+(ContPosi+1)).text();    
         
     socket.emit('SendPos',{RoomName:cWhiteIdPrivate,Pos:aBuffer,FromAskPos:false,IdWhoAsk:0});    
     StartTimer('Arriba'); 
@@ -761,6 +768,13 @@ function GetPos(data){
         LoadLegalMovesForBlack();
     }
     
+    //Show last move
+    if (aPos[70]=='Black') {
+        $("#LastMove").text(aPos[78]);    
+    }else{
+        $("#LastMove").text(((ContPosi+1)/2)+'....'+aPos[78].substring(1,15));
+    } 
+    
     //Turno
     if (data.FromAskPos){
         if(aPos[70]=='White'){
@@ -795,7 +809,7 @@ function GetPos(data){
         $('#OfferingDrawLabel').hide();
         $('#DeclinedDrawLabel').hide();
         
-        cPartidaCompleta = cPartidaCompleta + aPos[78]; 
+        cPartidaCompleta = cPartidaCompleta + aPos[78];               
     
         $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;' onclick='GameLabelClick(this.id);'>" + aPos[78] + "</label>");
         

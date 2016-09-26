@@ -1,3 +1,17 @@
+Pendiente:    
+    
+    
+    Ok* Ultima jugada label
+    oK* Abortar partida con negras
+    Ok* Poner email en div (abajo-derecha)
+    Ok* Añadir evento Rematch a Control
+    Ok* Pitido con Evento Chat en Control
+    Ok* El Evento Whatching se desencadena dos veces
+    Ok* Boton Cancel en Send Email en Control
+    Ok* Mensaje Fuera de Rango poner en Status
+    Ok* Poner email de Apolosoft al final de pagina
+        
+
 
 LUNES-14.03.2016
 
@@ -679,3 +693,114 @@ Cambio Base de datos en web.js
 Copia seguridad 20:52 0.6.9
 Subida a heroku
 
+LUNES-05.09.2016
+ 
+Creacion Grid Eventos
+
+MARTES-06.09.2016
+
+Añadir datos al grid
+
+MIERCOLES-07.09.2016
+
+Botones AutoSave y SaveEvent
+
+JUEVES-08.09.2016
+
+Eventos en Control
+Copia seguridad 22:57 0.7.0
+
+VIERNES-09.09.2016
+
+Eventos en Control
+
+SABADO-10.09.2016
+
+Cambiando a Pool en MySql
+Copia seguridad 22:20 0.7.1
+
+DOMINGO-11.09.2016
+
+Eventos en Control
+Cambiando a Pool en MySql
+Copia seguridad 11:15 0.7.2
+
+LUNES-12.09.2016
+
+Añadir campo SaveMode a tabla logfile
+Event SaveEvent en Control
+Salvar datos del evento en tabla by demand
+
+MARTES-13.09.2016
+
+Salvar datos evento Game Aborted Auto
+Copia seguridad 21:35 0.7.3
+
+MIERCOLES-14.09.2016
+
+Salvar datos evento Whatching Auto
+Salvar datos evento Connected Auto
+
+JUEVES-15.09.2016
+
+Salvar datos evento Challenging Auto
+Salvar datos evento Playing Auto
+Salvar datos evento Disconnect Auto
+Salvar datos evento Disconnect Playing Auto
+
+VIERNES-16.09.2016
+
+Salvar datos evento Rematching
+Search Events
+Format Moment en yyyy-mm-dd   hh:mm:ss
+Copia seguridad 22:50 0.7.4
+
+SABADO-17.09.2016
+
+Varios
+
+DOMINGO-18.09.2016
+
+Search datos eventos segun fecha, time y eventname
+Html Datos Jugador
+ShowPlayerData
+Container de Send Email
+Copia seguridad 21:00 0.7.5
+
+LUNES-19.09.2016
+
+Posibilidad de mandar Email a Jugador
+
+MIERCOLES-21.09.2016
+
+Varios
+
+JUEVES-22.09.2016
+
+AddPlayerBack into Control
+
+VIERNES-23.09.2016
+
+ReloadPlayers into Control
+Copia seguridad 20:23 0.7.6
+
+SABADO-23.09.2016
+
+Delete virtual Player
+Send Chat Sound to Control
+Preparando ficheros de sonido para eventos en Control
+Copia seguridad 23:03 0.7.7
+
+DOMINGO-25.09.2016
+
+Paso de ficheros de sonido a los tres formatos
+Sonido en Eventos Control
+Varios
+Copia seguridad 14:05 0.7.8
+Show Last Move
+
+LUNES-26.09.2016
+
+Abortar partida con negras
+Varios
+Copia seguridad 12:40 0.7.9

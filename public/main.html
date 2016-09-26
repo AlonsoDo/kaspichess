@@ -459,6 +459,30 @@
                 AcceptRematchBack(data);
             });
             
+            socket.on('CheckPlayerStatusBack',function(data){     
+        
+                if ((data.PlayerStatus=='OnLine')||(data.PlayerStatus=='Challenging')) {
+                    
+                    $("#dialog-result").html(
+                                        "<div id=\"dialog-result\" title=\"Information\">" +
+                                        "<p style=\"color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">Player is " + data.PlayerStatus + " now.</p>" +
+                                        "</div>"
+                                        );
+                
+                    $("#dialog-result").dialog({ height: 240 },{ width: 310 });
+                    $('.ui-button:contains(Reconnect)').hide();
+                    $('.ui-button:contains(Ok)').show();			
+                    $("#dialog-result").dialog( "open" );
+                        
+                }else{
+                   
+                    nGameNumber=data.GameNumber;
+                    socket.emit('IfGameActive',nGameNumber);
+                    
+                }
+                
+            });
+            
             $('#NewGame').button();
             $('#Cancel').button();
             $('#Resign').button();
@@ -534,7 +558,9 @@
                 // play sound
                 if ( lSound=='1') {
                     ion.sound.play('newgame');    
-                } 
+                }
+                //Send to control
+                socket.emit('Rematching',{});
             });
             
             $('#DeclineRematchBt').click(function(){
@@ -714,13 +740,13 @@
 	    }
 
 	    function checkRegexp( o, regexp, n ) {
-			if ( !( regexp.test( o.val() ) ) ) {
-				o.addClass( 'ui-state-error' );
-				updateTips( n );
-				return false;
-			} else {
-				return true;
-			}
+		if ( !( regexp.test( o.val() ) ) ) {
+		    o.addClass( 'ui-state-error' );
+		    updateTips( n );
+		    return false;
+		} else {
+		    return true;
+		}
 	    }
                 
             // increase the default animation speed to exaggerate the effect
@@ -738,8 +764,7 @@
 						$( this ).dialog('close');						
 				},'Reconnect': function() {
 					$( this ).dialog('close');
-					//location.reload(true);
-                                        window.location = 'https://stark-anchorage-59293.herokuapp.com';
+					window.location = 'https://stark-anchorage-59293.herokuapp.com';
                                         //window.location = 'http://localhost:3000';
 				}
 			}
@@ -803,7 +828,7 @@
 
 			    $(document).attr('title','Challenging...');	
 
-			    CrearRetoLocal();
+			    CrearRetoLocal();                            
 						
 			    $('#tabs').tabs('option','active',0); //jQuery 1.9+
 			    						
@@ -945,7 +970,7 @@
         <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px;">
             <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">Welcome to</label>								
             <label style="color:green; margin-left:20px; margin-top:2px; float:left; font-family:Forte,Arial,Helvetica,sans-serif; font-weight:bold; font-size:40px;">KaspiChess.com</label>								
-            <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">version 0.6.9 by ApoloSoft (c) 2016</label>								
+            <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">version 0.7.9 by ApoloSoft (c) 2016</label>								
             <button id="btSetting" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:16px;">Setting</button>
             <button id="Stats" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:16px;">Stats</button>
         </div>
@@ -1052,9 +1077,10 @@
         <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px; margin-bottom:8px; float:left;">
             <div id="status" style="background-color:#FBEDFF; margin:10px auto 0 auto; border:0px white solid; width:1080px; height:40px;"></div>
         </div>
-        <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px; float:left;">
+        <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px; margin-bottom:8px; float:left;">
             <div id="status2" style="background-color:#FBEDFF; margin:10px auto 0 auto; border:0px white solid; width:1080px; height:40px;"></div>
         </div>
+        <div id="status3" style="margin-top:6px; margin-left:20px; font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:bold; color:red; width:900px; height:80px;">ApoloSoft (c) 2016   Contact: alonso.caspi@gmail.com</div>
     </div>    
     <div id="dialogchallenge" title="Create new Challenge">
 	<p class="validateTips">All form fields are required.</p>
