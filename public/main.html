@@ -251,10 +251,11 @@
                               '<label for="nDraws" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + Draws + '</label>'  	
 			      );
                         
-            /*if (navigator.userAgent.indexOf('Safari') > -1){
+            var isSafari = navigator.vendor.indexOf("Apple")==0 && /\sSafari\//.test(navigator.userAgent); // true or false
+            if (isSafari){
                 $('#stxaMsg').attr('width',385);
-                $('#stxaMsg2').attr('width',385); 
-            } */           
+                $('#stxaMsg2').attr('width',385);
+            }
             
             $('#stxaMsg').bind('keypress',function(e){
                 if(e.keyCode==13){
