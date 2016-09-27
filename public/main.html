@@ -251,6 +251,11 @@
                               '<label for="nDraws" style="color:green; margin-left: 8px; margin-top: 10px; margin-right: 4px; float: left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + Draws + '</label>'  	
 			      );
                         
+            if (navigator.userAgent.indexOf('Safari') > -1){
+               $('#stxaMsg').attr('width',415);
+               $('#stxaMsg2').attr('width',415); 
+            }            
+            
             $('#stxaMsg').bind('keypress',function(e){
                 if(e.keyCode==13){
                     SendChatText();                    
@@ -764,8 +769,8 @@
 						$( this ).dialog('close');						
 				},'Reconnect': function() {
 					$( this ).dialog('close');
-					window.location = 'https://stark-anchorage-59293.herokuapp.com';
-                                        //window.location = 'http://localhost:3000';
+					//window.location = 'https://stark-anchorage-59293.herokuapp.com';
+                                        window.location = 'http://localhost:3000';
 				}
 			}
 	    });	
@@ -970,7 +975,7 @@
         <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px;">
             <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">Welcome to</label>								
             <label style="color:green; margin-left:20px; margin-top:2px; float:left; font-family:Forte,Arial,Helvetica,sans-serif; font-weight:bold; font-size:40px;">KaspiChess.com</label>								
-            <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">version 0.7.9 by ApoloSoft (c) 2016</label>								
+            <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">version 0.8.0 by ApoloSoft (c) 2016</label>								
             <button id="btSetting" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:16px;">Setting</button>
             <button id="Stats" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:16px;">Stats</button>
         </div>

@@ -42,8 +42,8 @@
             $("#idPlayAsGuest").click(function() {
 		$('#idUserName').val('Guest');
 		$('#idPassword').val('1234');                
-                //window.location = 'http://localhost:3000/main.html?name=Guest&pass=1234';
-                window.location = 'https://stark-anchorage-59293.herokuapp.com/main.html?name=Guest&pass=1234';
+                window.location = 'http://localhost:3000/main.html?name=Guest&pass=1234';
+                //window.location = 'https://stark-anchorage-59293.herokuapp.com/main.html?name=Guest&pass=1234';
 	    });
             
             socket.on('LoginBack',function(data){
@@ -60,8 +60,8 @@
 		    $('#dialog-result').dialog('open');
                 }else{
                     // Player Exist
-                    //window.location = 'http://localhost:3000/main.html?name='+dataJson[0].User+'&pass='+dataJson[0].PassWord+'&elo='+dataJson[0].Elo+'&country='+dataJson[0].Country+'&alt='+dataJson[0].Alt+'&games='+dataJson[0].Games+'&wins='+dataJson[0].Wins+'&losts='+dataJson[0].Losts+'&draws='+dataJson[0].Draws+'&minutes='+dataJson[0].Minutes+'&seconds='+dataJson[0].Seconds+'&minrat='+dataJson[0].MinElo+'&maxrat='+dataJson[0].MaxElo+'&rated='+dataJson[0].Rated+'&color='+dataJson[0].Color+'&highlight='+dataJson[0].Highlight+'&promote='+dataJson[0].Promote+'&sound='+dataJson[0].Sound+'&coordenadas='+dataJson[0].Coordenadas+'&welcome='+dataJson[0].Welcome;
-                    window.location = 'https://stark-anchorage-59293.herokuapp.com/main.html?name='+dataJson[0].User+'&pass='+dataJson[0].PassWord+'&elo='+dataJson[0].Elo+'&country='+dataJson[0].Country+'&alt='+dataJson[0].Alt+'&games='+dataJson[0].Games+'&wins='+dataJson[0].Wins+'&losts='+dataJson[0].Losts+'&draws='+dataJson[0].Draws+'&minutes='+dataJson[0].Minutes+'&seconds='+dataJson[0].Seconds+'&minrat='+dataJson[0].MinElo+'&maxrat='+dataJson[0].MaxElo+'&rated='+dataJson[0].Rated+'&color='+dataJson[0].Color+'&highlight='+dataJson[0].Highlight+'&promote='+dataJson[0].Promote+'&sound='+dataJson[0].Sound+'&coordenadas='+dataJson[0].Coordenadas+'&welcome='+dataJson[0].Welcome;
+                    window.location = 'http://localhost:3000/main.html?name='+dataJson[0].User+'&pass='+dataJson[0].PassWord+'&elo='+dataJson[0].Elo+'&country='+dataJson[0].Country+'&alt='+dataJson[0].Alt+'&games='+dataJson[0].Games+'&wins='+dataJson[0].Wins+'&losts='+dataJson[0].Losts+'&draws='+dataJson[0].Draws+'&minutes='+dataJson[0].Minutes+'&seconds='+dataJson[0].Seconds+'&minrat='+dataJson[0].MinElo+'&maxrat='+dataJson[0].MaxElo+'&rated='+dataJson[0].Rated+'&color='+dataJson[0].Color+'&highlight='+dataJson[0].Highlight+'&promote='+dataJson[0].Promote+'&sound='+dataJson[0].Sound+'&coordenadas='+dataJson[0].Coordenadas+'&welcome='+dataJson[0].Welcome;
+                    //window.location = 'https://stark-anchorage-59293.herokuapp.com/main.html?name='+dataJson[0].User+'&pass='+dataJson[0].PassWord+'&elo='+dataJson[0].Elo+'&country='+dataJson[0].Country+'&alt='+dataJson[0].Alt+'&games='+dataJson[0].Games+'&wins='+dataJson[0].Wins+'&losts='+dataJson[0].Losts+'&draws='+dataJson[0].Draws+'&minutes='+dataJson[0].Minutes+'&seconds='+dataJson[0].Seconds+'&minrat='+dataJson[0].MinElo+'&maxrat='+dataJson[0].MaxElo+'&rated='+dataJson[0].Rated+'&color='+dataJson[0].Color+'&highlight='+dataJson[0].Highlight+'&promote='+dataJson[0].Promote+'&sound='+dataJson[0].Sound+'&coordenadas='+dataJson[0].Coordenadas+'&welcome='+dataJson[0].Welcome;
                 }
                 
             });
@@ -82,8 +82,8 @@
             });
             
             socket.on('RegisterPlayerBack',function(data){
-                //window.location = 'http://localhost:3000/main.html?name='+data.User+'&pass='+data.PassWord+'&elo=1800'+'&country='+data.Country+'&alt='+data.Alt+'&games=0&wins=0&losts=0&draws=0&minutes=5&seconds=0&minrat=1000&maxrat=2800&rated=1&color=Random&highlight=0&promote=1&sound=1&coordenadas=1&welcome=';                                   
-                window.location = 'https://stark-anchorage-59293.herokuapp.com/main.html?name='+data.User+'&pass='+data.PassWord+'&elo=1800'+'&country='+data.Country+'&alt='+data.Alt+'&games=0&wins=0&losts=0&draws=0&minutes=5&seconds=0&minrat=1000&maxrat=2800&rated=1&color=Random&highlight=0&promote=1&sound=1&coordenadas=1&welcome=';                                   
+                window.location = 'http://localhost:3000/main.html?name='+data.User+'&pass='+data.PassWord+'&elo=1800'+'&country='+data.Country+'&alt='+data.Alt+'&games=0&wins=0&losts=0&draws=0&minutes=5&seconds=0&minrat=1000&maxrat=2800&rated=1&color=Random&highlight=0&promote=1&sound=1&coordenadas=1&welcome=';                                   
+                //window.location = 'https://stark-anchorage-59293.herokuapp.com/main.html?name='+data.User+'&pass='+data.PassWord+'&elo=1800'+'&country='+data.Country+'&alt='+data.Alt+'&games=0&wins=0&losts=0&draws=0&minutes=5&seconds=0&minrat=1000&maxrat=2800&rated=1&color=Random&highlight=0&promote=1&sound=1&coordenadas=1&welcome=';                                   
             });
             
             $.fx.speeds._default = 1000;		

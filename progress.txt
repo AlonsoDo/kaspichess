@@ -10,7 +10,9 @@ Pendiente:
     Ok* Boton Cancel en Send Email en Control
     Ok* Mensaje Fuera de Rango poner en Status
     Ok* Poner email de Apolosoft al final de pagina
-     * Reducir text edit de mensaje de chat para dispositivos apple   
+     * Reducir text edit de mensaje de chat para dispositivos apple
+     * Desactivar sonido en Control
+     
 
 
 LUNES-14.03.2016
@@ -804,3 +806,9 @@ LUNES-26.09.2016
 Abortar partida con negras
 Varios
 Copia seguridad 12:40 0.7.9
+varios
+Copia seguridad 23:35 0.8.0
+
+MARTES-27.09.2016
+
+Varios

@@ -193,6 +193,7 @@ function AddPlayerBack(data) {
         var PlayerName = $('#PlayerName2').val();
         var Elo = $('#EloPlayer2').val();
         var flag = $('#CountryPlayer2').val();
+        flag = flag.toLowerCase();
         var PlayerCountry = $('#CountryPlayer2  option:selected').text();
         var TotalGames = $('#TotalGames2').val();
         
@@ -235,10 +236,8 @@ function ReloadPlayersDataBack(data){
     
 }
 
-function DelPlayer(id,PlayerName2,TipoJugador) {
-    
-    //alert(PlayerName2);
-    
+function DelPlayer(id,PlayerName2,TipoJugador){    
+        
     if (TipoJugador=='Virtual'){
         $('#list2').jqGrid('delRowData',id);
         socket.emit('DeletePlayer',{PlayerName:PlayerName2});
