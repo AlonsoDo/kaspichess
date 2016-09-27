@@ -203,7 +203,7 @@ function SearchPlayerBack(data){
     $('#EmailPlayer').text(dataJson[0].Email);
     $('#DateSignUp').text(DateSignUp);
     
-    $('#CountryPlayer').html( '<img src="res/img/flags/' + dataJson[0].Country + '.png" style="border:1px black solid;margin-left:4px; margin-top:8px;"></a>' +
+    $('#CountryPlayer').html( '<img src="res/img/flags/' + (dataJson[0].Country).toLowerCase() + '.png" style="border:1px black solid;margin-left:4px; margin-top:8px;"></a>' +
                                       '<label for="Country" style="color:green; margin-left:4px; margin-top:0px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:14px">' + dataJson[0].Alt + '</label>'  	
 			            );
     
