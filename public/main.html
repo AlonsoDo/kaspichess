@@ -253,8 +253,8 @@
                         
             var isSafari = navigator.vendor.indexOf("Apple")==0 && /\sSafari\//.test(navigator.userAgent); // true or false
             if (isSafari){
-                $('#stxaMsg').attr('width',385);
-                $('#stxaMsg2').attr('width',385);
+                $('#stxaMsg').css('width',385);
+                $('#stxaMsg2').css('width',385);
             }
             
             $('#stxaMsg').bind('keypress',function(e){
