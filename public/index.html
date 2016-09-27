@@ -17,6 +17,14 @@
             
             var socket = io.connect(window.location.hostname);
             
+            var isSafari = navigator.vendor.indexOf("Apple")==0 && /\sSafari\//.test(navigator.userAgent); // true or false
+            if (isSafari){
+                alert('Safari');
+            }
+            //if (navigator.userAgent.indexOf('Safari') > -1){
+                //$('#LinkVCL').css('margin-top',80);                
+            //}
+            
             $('#idLogin').click(function(){
                 socket.emit('login',{cName:$('#idUserName').val(),cPassword:$('#idPassword').val()});                            
             });
@@ -216,7 +224,7 @@
         <button id="idPlayAsGuest" class="button" style="font-size:22px; margin-top:20px; margin-left:11px;">Play as Guest</button>
         <div style="float:left; margin-top:20px; margin-left:54px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:15px;">New to KaspiChess?</div>
 	<div id="signup" style="float:left; margin-top:20px; margin-left:14px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:15px;"><a href="#">Sign Up</a></div>
-	<div style="float:left; margin-top:100px; margin-left:14px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:15px;"><a href="#">Try Virtual Chess Lesson Room!</a></div>
+	<div id="LinkVCL" style="float:left; margin-top:80px; margin-left:14px; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:15px;"><a href="#">Try Virtual Chess Lesson Room!</a></div>
     </div>
     
     <div id="dialog-result" title="Information">

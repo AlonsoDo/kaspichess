@@ -13,7 +13,10 @@ function ChallengingBack(data){
     
     jQuery('#list1').jqGrid('addRowData',RowNumbers+1,{Name:data.Name,Moment:moment,Games:data.TotalGames,Event:'Challenging',Save:SaveMode},'first');
     
-    ion.sound.play('retando');
+    if ($('#cboxSound').is(':checked')){
+        ion.sound.play('retando');
+    }    
+    
 }
 
 function DisconnectPlayingControl(data){
@@ -31,7 +34,10 @@ function DisconnectPlayingControl(data){
     
     jQuery('#list1').jqGrid('addRowData',RowNumbers+1,{Name:data.PlayerName,Moment:moment,Games:data.TotalGames,Event:'Disconnect Playing',Save:SaveMode},'first');
     
-    ion.sound.play('desconectarjugando'); 
+    if ($('#cboxSound').is(':checked')){
+        ion.sound.play('desconectarjugando');
+    }
+    
 }
 
 function DisconnectControl(data){
@@ -49,7 +55,10 @@ function DisconnectControl(data){
     
     jQuery('#list1').jqGrid('addRowData',RowNumbers+1,{Name:data.PlayerName,Moment:moment,Games:data.TotalGames,Event:'Disconnect',Save:SaveMode},'first');
     
-    ion.sound.play('desconectado'); 
+    if ($('#cboxSound').is(':checked')){
+        ion.sound.play('desconectado');
+    }
+    
 }
 
 function PlayerConnectedControl(data){
@@ -67,7 +76,10 @@ function PlayerConnectedControl(data){
     
     jQuery('#list1').jqGrid('addRowData',RowNumbers+1,{Name:data.PlayerName,Moment:moment,Games:data.TotalGames,Event:'Connected',Save:SaveMode},'first');
      
-    ion.sound.play('nuevoconectado'); 
+    if ($('#cboxSound').is(':checked')){
+        ion.sound.play('nuevoconectado');
+    }
+    
 }
 
 function PlayerPlayingControl(data){
@@ -85,7 +97,10 @@ function PlayerPlayingControl(data){
     
     jQuery('#list1').jqGrid('addRowData',RowNumbers+1,{Name:data.PlayerName,Moment:moment,Games:data.TotalGames,Event:'Playing',Save:SaveMode},'first');
     
-    ion.sound.play('jugando');
+    if ($('#cboxSound').is(':checked')){
+        ion.sound.play('jugando');
+    }
+    
 }
 
 function PlayerDataWatching(data){
@@ -103,7 +118,10 @@ function PlayerDataWatching(data){
     
     jQuery('#list1').jqGrid('addRowData',RowNumbers+1,{Name:data.PlayerName,Moment:moment,Games:data.TotalGames,Event:'Watching',Save:SaveMode},'first');
     
-    ion.sound.play('mirar');    
+    if ($('#cboxSound').is(':checked')){
+        ion.sound.play('mirar');
+    }
+    
 }
 
 function GameAbortedControl(data){
@@ -121,7 +139,10 @@ function GameAbortedControl(data){
     
     jQuery('#list1').jqGrid('addRowData',RowNumbers+1,{Name:data.PlayerName,Moment:moment,Games:data.TotalGames,Event:'Game Aborted',Save:SaveMode},'first');
     
-    ion.sound.play('abortar');     
+    if ($('#cboxSound').is(':checked')){
+        ion.sound.play('abortar');
+    }
+    
 }
 
 function RematchingControlBack(data){
@@ -139,7 +160,10 @@ function RematchingControlBack(data){
     
     jQuery('#list1').jqGrid('addRowData',RowNumbers+1,{Name:data.PlayerName,Moment:moment,Games:data.TotalGames,Event:'Rematching',Save:SaveMode},'first');
     
-    ion.sound.play('revancha');    
+    if ($('#cboxSound').is(':checked')){
+        ion.sound.play('revancha');
+    }
+    
 }
 
 function SearchEventsBack(data){
