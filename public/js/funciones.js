@@ -231,7 +231,7 @@ function MakeMove(CodiPromo){
                     aPos[CasFin] = 'wq'+PiezaIni;                
                     aPos[68] = PiezaIni;
                     aPos[69] = 'wq'+PiezaIni;
-                    cMove = aCas[CasIni] + '-' + aCas[CasFin] + '=D';
+                    cMove = aCas[CasIni] + '-' + aCas[CasFin] + '=Q';
                     aPos[67] = cMove;
                     
                     if (!QueenExist('wq'+PiezaIni)){
@@ -294,7 +294,7 @@ function MakeMove(CodiPromo){
                     aPos[CasFin] = 'bq'+PiezaIni;                
                     aPos[68] = PiezaIni;
                     aPos[69] = 'bq'+PiezaIni;                                
-                    cMove = aCas[CasIni] + '-' + aCas[CasFin] + '=D';
+                    cMove = aCas[CasIni] + '-' + aCas[CasFin] + '=Q';
                     aPos[67] = cMove;
                     
                     if (!QueenExist('bq'+PiezaIni)){
@@ -404,7 +404,7 @@ function MakeMove(CodiPromo){
                     aPos[CasFin] = 'wq'+PiezaIni;                
                     aPos[68] = PiezaIni;
                     aPos[69] = 'wq'+PiezaIni;
-                    cMove = aCas[CasIni] + 'x' + aCas[CasFin] + '=D';
+                    cMove = aCas[CasIni] + 'x' + aCas[CasFin] + '=Q';
                     aPos[67] = cMove;
                     
                     if (!QueenExist('wq'+PiezaIni)){
@@ -462,12 +462,12 @@ function MakeMove(CodiPromo){
             //Coronacion negras
             if ((CasIni>47)&&(CasIni<56)&&(CasFin>55)&&(CasFin<64)){
                 
-                 if ((CodiPromo=='0')||(CodiPromo=='1')){
+                 if ((CodiPromo=='0')||(CodiPromo=='5')){
                 
                     aPos[CasFin] = 'bq'+PiezaIni;                
                     aPos[68] = PiezaIni;
                     aPos[69] = 'bq'+PiezaIni;                                
-                    cMove = aCas[CasIni] + 'x' + aCas[CasFin] + '=D';
+                    cMove = aCas[CasIni] + 'x' + aCas[CasFin] + '=Q';
                     aPos[67] = cMove;
                     
                     if (!QueenExist('bq'+PiezaIni)){
