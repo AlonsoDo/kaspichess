@@ -191,7 +191,7 @@
 		onSelectRow: function(id){
 		    var rowData = jQuery(this).getRowData(id); 
                     PlayerName = rowData['Name'];
-                    TipoJugador = rowData['Type'];
+                    TipoJugador = rowData['Tipo'];
                     RowIdPlayer = id;
                     //alert(rowData['Country']);
 		}
@@ -202,7 +202,7 @@
             $('#list2').jqGrid('setLabel','Country','Country',{'font-weight':'bold','font-size':'18px'});
             $('#list2').jqGrid('setLabel','Status','Status',{'font-weight':'bold','font-size':'18px'});
             $('#list2').jqGrid('setLabel','Games','Games',{'font-weight':'bold','font-size':'18px'});
-            $('#list2').jqGrid('setLabel','Type','Type',{'font-weight':'bold','font-size':'18px'});
+            $('#list2').jqGrid('setLabel','Tipo','Tipo',{'font-weight':'bold','font-size':'18px'});
                         
             socket.on('ChallengingBack',function(data){
                 ChallengingBack(data);
