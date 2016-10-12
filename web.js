@@ -124,7 +124,7 @@ io.sockets.on('connection',function(socket){
     
     if (Found==false){      
     
-      aPlayer[0]='abcd'; //data.MyPlayerId;
+      aPlayer[0]='-2'; //data.MyPlayerId;
       aPlayer[1]=data.PlayerName;
       aPlayer[2]=data.EloPlayer;
       aPlayer[3]=data.CountryPlayer;

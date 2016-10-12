@@ -221,7 +221,7 @@ function AddPlayerBack(data) {
         var PlayerCountry = $('#CountryPlayer2  option:selected').text();
         var TotalGames = $('#TotalGames2').val();
         
-        jQuery('#list2').jqGrid('addRowData',RowNumbers+1,{Name:PlayerName,Elo:Elo,Country:flag,Alt:PlayerCountry,Status:'OnLine',Games:TotalGames,IdPlayer:'abcd',Type:'Virtual'},'first');
+        jQuery('#list2').jqGrid('addRowData',RowNumbers+1,{Name:PlayerName,Elo:Elo,Country:flag,Alt:PlayerCountry,Status:'OnLine',Games:TotalGames,IdPlayer:'abcd',Tipo:'Virtual'},'first');
     
         $('#PlayerName2').val('');
         $('#EloPlayer2').val('');
@@ -254,7 +254,7 @@ function ReloadPlayersDataBack(data){
         }else{
             cType = '';    
         }
-        jQuery("#list2").jqGrid('addRowData',i+1,{ Name:cName , Elo:cElo , Country:cCountry , Alt:cAlt , Status:cStatus , Games:cGames , Type:cType});
+        jQuery("#list2").jqGrid('addRowData',i+1,{ Name:cName , Elo:cElo , Country:cCountry , Alt:cAlt , Status:cStatus , Games:cGames , Tipo:cType});
             
     }
     

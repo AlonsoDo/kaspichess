@@ -105,7 +105,7 @@ function Reset(){
     //FlagAbort = true;
     MoveDone = false;
     nRegla50Moves = 0;
-    FlagAbort = true;
+    FlagAbort = true;    
         
 }
 

@@ -166,11 +166,7 @@ function CargarRecursosRetos(){
             //Buscar datos del reto
             for (var i=0;i<aControlRetos.length;i++) {
                 
-                if (aControlRetos[i].Id==e.target.name){
-                    
-                    //alert(aControlRetos[i].MinElo)
-                    //alert(aControlRetos[i].MaxElo)
-                    //alert(MyElo)
+                if (aControlRetos[i].Id==e.target.name){                    
                     
                     if ((MyElo>=aControlRetos[i].MinElo)&&(MyElo<=aControlRetos[i].MaxElo)){                        
                         
@@ -219,10 +215,7 @@ function CargarRecursosRetos(){
                         OpAlt = aControlRetos[i].Alt;                    
                         nMinutosPartida = aControlRetos[i].MinutosPartida;
                         nSegundosPartida = aControlRetos[i].SegundosPartida;
-                        OpWelcomeMenssage = aControlRetos[i].WelcomeMenssage;
-                        
-                        //BufferMinutosPartida = nMinutosPartida;
-                        //BufferSegundosPartida = nSegundosPartida;
+                        OpWelcomeMenssage = aControlRetos[i].WelcomeMenssage;                        
                         
                         $('#sdivChat2').html('');
                         if (cWelcomeMenssage!=''){                        
@@ -419,6 +412,9 @@ function AltaPartida(full) {
 
 function AcceptRematch(){
     
+    CasIniSel.visible = false;
+    CasFinSel.visible = false;
+    
     // for change room
     socket.emit('unsubscribe',{WhiteIdPrivate:cWhiteIdPrivate});
     
@@ -461,6 +457,9 @@ function AcceptRematch(){
 
 function AcceptRematchBack(data){
             
+    CasIniSel.visible = false;
+    CasFinSel.visible = false;
+    
     // for change room
     socket.emit('unsubscribe',{WhiteIdPrivate:cWhiteIdPrivate});
     
