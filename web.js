@@ -76,7 +76,8 @@ io.sockets.on('connection',function(socket){
     }
     
     pool.getConnection(function(err,connection){      
-      connection.query("SELECT * FROM logfile WHERE Moment BETWEEN '"+data.DateIni+"' AND '"+data.DateEnd+"' AND TIME(Moment) BETWEEN '"+data.TimeIni+"' AND '"+data.TimeEnd+"'"+EventName,function(err,rows){
+      //connection.query("SELECT * FROM logfile WHERE Moment BETWEEN '"+data.DateIni+"' AND '"+data.DateEnd+"' AND TIME(Moment) BETWEEN '"+data.TimeIni+"' AND '"+data.TimeEnd+"'"+EventName,function(err,rows){
+        connection.query("SELECT * FROM logfile WHERE Moment>='"+data.MomentIni+"' AND Moment<='"+data.MomentEnd+"'"+EventName,function(err,rows){
         if (err){
           console.log('Error: ' + err.message);
           throw err;

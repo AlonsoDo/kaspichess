@@ -86,13 +86,22 @@
             $('#SearchEvents').click(function(){
                 
                 var EventName = $('#EventType').val();
-                var DateIni = ($('#MomentIni').val()).substring(0,10);
+                /*var DateIni = ($('#MomentIni').val()).substring(0,10);
                 var DateEnd = ($('#MomentEnd').val()).substring(0,10);
                 var TimeIni = ($('#MomentIni').val()).substring(11,19);
-                var TimeEnd = ($('#MomentEnd').val()).substring(11,19);
+                var TimeEnd = ($('#MomentEnd').val()).substring(11,19);*/
                                 
-                socket.emit('SearchEvents',{EventName:EventName,DateIni:DateIni,DateEnd:DateEnd,TimeIni:TimeIni,TimeEnd:TimeEnd});
+                //socket.emit('SearchEvents',{EventName:EventName,DateIni:DateIni,DateEnd:DateEnd,TimeIni:TimeIni,TimeEnd:TimeEnd});
                 
+            
+            
+                var MomentIni = $('#MomentIni').val();
+                var MomentEnd = $('#MomentEnd').val();
+            
+                socket.emit('SearchEvents',{EventName:EventName,MomentIni:MomentIni,MomentEnd:MomentEnd});
+                
+            
+            
             });
             
             $('#SearchPlayer').click(function(){

@@ -250,7 +250,7 @@ function GetPlayersData(data){
     $('#lPlayerOnLine').remove();
     $('#lPlayerOnLine2').remove();
     
-    $('#BotonesPlayers').append('<label id="lPlayerOnLine" style="color:red; margin-left:10px; margin-top:18px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px;">Player onLine:</label>');								
+    $('#BotonesPlayers').append('<label id="lPlayerOnLine" style="color:red; margin-left:10px; margin-top:18px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px;">Players OnLine:</label>');								
     $('#BotonesPlayers').append('<label id="lPlayerOnLine2" style="color:green; margin-left:10px; margin-top:18px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px;">'+data.Players.length+'</label>');								
     
 }
