@@ -418,7 +418,8 @@ function AcceptRematch(){
     // for change room
     socket.emit('unsubscribe',{WhiteIdPrivate:cWhiteIdPrivate});
     
-    Reset();   
+    Reset();
+    $('#sdivGame').html('');
         
     if (cColorSide=='White'){
         cColorSide = 'Black';
@@ -463,7 +464,8 @@ function AcceptRematchBack(data){
     // for change room
     socket.emit('unsubscribe',{WhiteIdPrivate:cWhiteIdPrivate});
     
-    Reset();   
+    Reset();
+    $('#sdivGame').html('');
         
     if (cColorSide=='White'){
         cColorSide = 'Black';
