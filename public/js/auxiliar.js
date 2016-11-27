@@ -175,6 +175,13 @@ function Welcome(){
                             'Sys: ' + '</span>' + 
                             '<span style="color:green; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">' +
                             'Your initial rating is:  ' + MyElo +'</span><br>');
+    if (cNickName.substring(0,5)=='Guest'){
+        $('#sdivChat').append('<span style="color:red; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">'+ 
+                            'Sys: ' + '</span>' + 
+                            '<span style="color:green; font-size:16px; font-family:Arial,Helvetica,sans-serif; font-weight:bold">' +
+                            'If you register you will begin with 1800 of rating'+'</span><br>');
+    }
+        
 }
 
 function PlayersOnLine(nPlayersOnline){

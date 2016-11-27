@@ -1,21 +1,4 @@
--- --------------------------------------------------------
--- Host:                         us-cdbr-east-04.cleardb.com
--- Versión del servidor:         5.5.40-log - MySQL Community Server (GPL)
--- SO del servidor:              Linux
--- HeidiSQL Versión:             8.3.0.4694
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-
--- Volcando estructura de base de datos para heroku_d6062326996f9df
-CREATE DATABASE IF NOT EXISTS `heroku_d6062326996f9df` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `heroku_d6062326996f9df`;
-
-
--- Volcando estructura para tabla heroku_d6062326996f9df.autentificacion
+﻿
 CREATE TABLE IF NOT EXISTS `autentificacion` (
   `User` varchar(20) NOT NULL,
   `PassWord` varchar(20) NOT NULL,
@@ -42,179 +25,6 @@ CREATE TABLE IF NOT EXISTS `autentificacion` (
   `Coordenadas` tinyint(1) unsigned NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla heroku_d6062326996f9df.autentificacion: 166 rows
-/*!40000 ALTER TABLE `autentificacion` DISABLE KEYS */;
-INSERT INTO `autentificacion` (`User`, `PassWord`, `Email`, `DateSignUp`, `Elo`, `Games`, `Wins`, `Losts`, `Draws`, `Highlight`, `Promote`, `Sound`, `MinElo`, `MaxElo`, `Rated`, `Ron`, `Color`, `Minutes`, `Seconds`, `Welcome`, `Country`, `Alt`, `Coordenadas`) VALUES
-	('lambadarica', '12345678', 'alonso_caspi@hotmail.com', '2011-05-05', 1787, 57, 15, 37, 5, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 4, 2, '', 'CL', 'Chile', 1),
-	('bonty', '12345678', 'alonso_caspi@hotmail.com', '2011-05-05', 1854, 25, 10, 12, 3, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 3, 2, 'Good Luck', 'CR', 'Costa Rica', 1),
-	('onemik', '12345678', 'alonso_caspi@hotmail.com', '2011-05-05', 1848, 30, 14, 13, 3, 0, 1, 1, 1000, 2800, 1, 1, 'Random', 4, 4, '', 'ES', 'Spain', 1),
-	('alfonsoperez', 'test', 'alonso_caspi@hotmail.com', '2011-05-07', 1881, 53, 25, 20, 8, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 5, 3, 'Buena suerte amigo.', 'MX', 'Mexico', 1),
-	('naturale', '12345678', 'alonso_caspi@hotmail.com', '2011-05-08', 1845, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'IT', 'Italy', 1),
-	('carldeone', '12345678', 'alonso_caspi@hotmail.com', '2011-05-09', 1803, 18, 10, 5, 3, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'IT', 'Italy', 1),
-	('a1234', '12345678', 'alonso.caspi@gmail.com', '2011-05-09', 1826, 13, 8, 5, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 15, 5, 'Good Game!!', 'DK', 'Denmark', 1),
-	('juanjo', 'diabla49', 'diamanteblanco@gmail.com', '2014-06-07', 1798, 1, 0, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Rinju', '123456', 'lab_ajedrez@hotmail.com', '2014-06-07', 1941, 59, 29, 23, 7, 0, 1, 0, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('lupii', 'juanita80', 'lupi_linares@yahoo.es', '2014-06-08', 1967, 76, 31, 41, 4, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Nietzscheck', 'android', 'arteandaluz@hotmail.com', '2014-06-08', 1808, 1, 1, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('asdasd', '12345678', 'alonso_caspi@hotmail.com', '2011-05-09', 1824, 32, 19, 10, 3, 0, 1, 1, 1000, 2000, 1, 1, 'Random', 5, 3, '', 'BG', 'Bulgaria', 1),
-	('JoseMachuca93', 'giftfro', 'josemachuca93@hotmail.es', '2014-06-08', 1802, 2, 1, 0, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Crapulin', 'crapulin', 'framarca50@gmail.com', '2014-06-09', 2169, 171, 124, 40, 7, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 4, 0, '', 'LS', 'Lesotho', 1),
-	('margaritatulipan', '12345678', 'alonso.caspi@gmail.com', '2014-06-10', 1778, 5, 1, 3, 1, 0, 1, 1, 1000, 2800, 1, 1, 'Random', 10, 2, '', 'ES', 'Spain', 1),
-	('FJPAREJA', '987654321', 'clubajedrezsanpedro@yahoo.es', '2014-06-11', 1890, 2, 0, 2, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Morenoalberti', '111222', 'Morenoalberti@gmail.com', '2014-06-07', 1900, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('BeWater', '12345678', 'alonso.caspi@gmail.com', '2014-06-07', 1680, 49, 19, 24, 6, 1, 1, 1, 1000, 2800, 1, 1, 'Random', 5, 3, '', 'FI', 'Finland', 1),
-	('olenrin', '12345678', 'alonso.caspi@gmail.com', '2014-06-04', 1794, 6, 3, 3, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 2, 0, '', 'SK', 'Slovakia', 1),
-	('cazadorx23', '1563739', 'moisesmerinoherrerosuno@gmail.com', '2014-06-05', 1798, 1, 0, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Atomo', 'atomo300572cristal', 'j.o.r.0063@gmail.com', '2014-06-06', 1893, 18, 6, 10, 2, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('franklinzc', 'FaZc14099039', 'franklinzc@live.com', '2014-06-07', 1924, 15, 8, 6, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('eltigreII', '24de11de2000', 'eltigreii@hotmail.com', '2014-06-07', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('marker', '12345678', 'alonso.caspi@gmail.com', '2014-06-04', 1738, 28, 11, 12, 5, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 3, 2, '', 'EG', 'Egypt', 1),
-	('supergirl1', '12345678', 'alonso_caspi@hotmail.com', '2014-06-04', 2046, 42, 6, 33, 3, 0, 1, 1, 1000, 2800, 1, 1, 'Random', 3, 2, '', 'NZ', 'New Zealand', 1),
-	('poweroflove', '12345678', 'alonso.caspi@gmail.com', '2014-06-04', 1736, 7, 4, 2, 1, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 5, 3, '', 'RO', 'Romania', 1),
-	('livingtron', '12345678', 'alonso.caspi@gmail.com', '2011-05-10', 1715, 8, 4, 4, 0, 0, 1, 1, 1300, 2800, 1, 1, 'Random', 5, 3, '', 'CA', 'Canada', 1),
-	('petheons', '12345678', 'alonsocaspi@gmail.com', '2011-06-06', 1999, 38, 15, 19, 4, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'DO', 'Dominican Republic', 1),
-	('carioca23', '12345678', 'apolosoft@telefonica.net', '2011-06-06', 1785, 30, 11, 12, 7, 0, 1, 1, 1000, 2800, 1, 1, 'Random', 15, 10, '', 'BR', 'Brazil', 1),
-	('mijiban', 'chessy7030', 'migueljimenezbanderas@gmail.com', '2014-06-08', 1747, 73, 24, 44, 5, 0, 0, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('lasonadora', 'Ya1nO1Se1qUe1', 'el_za_mo_re@hotmail.com', '2013-10-19', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('icy', 'babybaby', 'josephnewark@aol.com', '2014-02-13', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('kunfupanda', '12345678', 'alonso.caspi@gmail.com', '2014-03-09', 1742, 67, 36, 28, 3, 0, 1, 1, 1000, 2800, 1, 1, 'Random', 10, 0, '', 'ES', 'Spain', 1),
-	('kareoke2014', '12345678', 'alonso.caspi@gmail.com', '2014-03-09', 1809, 33, 12, 16, 5, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 10, 0, '', 'GR', 'Greece', 1),
-	('casimirov', '12345678', 'alonso.caspi@gmail.com', '2014-03-09', 1874, 16, 13, 3, 0, 0, 0, 0, 1600, 2800, 1, 1, 'Random', 3, 0, '', 'JM', 'Jamaica', 1),
-	('orion5000', 'ajedrezmoron', 'carlosnacer@hotmail.com', '2014-05-25', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('tonyxz10', '123456', 'tonylazarte@yahoo.com.ar', '2014-05-26', 1780, 3, 1, 2, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('amsuperzz', '12345678', 'alonso_caspi@hotmail.com', '2014-05-28', 1774, 21, 8, 13, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 3, 2, '', 'DE', 'Germany', 1),
-	('cevecitafesca', 'rafita72', 'cevecitafesca@yahoo.es', '2014-06-01', 1782, 4, 0, 3, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Font1965', '12345678', 'alonso.caspi@gmail.com', '2014-06-04', 1830, 31, 9, 16, 6, 0, 1, 1, 1600, 2000, 1, 1, 'Random', 20, 5, '', 'LV', 'Latvia', 1),
-	('SmallDog', '12345678', 'alonso.caspi@gmail.com', '2014-06-04', 1808, 11, 4, 4, 3, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 20, 10, '', 'LT', 'Lithuania', 1),
-	('Sofia30', '12345678', 'albadominguezbelmonte@hotmail.com', '2012-11-02', 1900, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('franciskov85', '369paco', 'franciskov@live.com', '2014-06-12', 1908, 58, 17, 36, 5, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Caspi', '12345678', 'alonso_caspi@hotmail.com', '2012-04-02', 1928, 2059, 1189, 747, 122, 1, 0, 1, 1000, 2800, 1, 1, 'Random', 1, 0, 'Saludos desde La Costa del Sol', 'ES', 'Spain', 1),
-	('Mary3808', '12345678', 'maria3808@hotmail.com', '2012-04-03', 1937, 767, 580, 133, 54, 0, 1, 1, 1700, 2800, 1, 1, 'Random', 3, 2, 'good game!', 'BE', 'Belgium', 1),
-	('Sofia22', '12345678', 'sofia@hotmail.com', '2012-04-03', 2014, 120, 42, 63, 15, 0, 1, 1, 1700, 2200, 1, 1, 'White', 3, 2, '', 'RS', 'Serbia', 1),
-	('pelizone1967', '12345678', 'alonso.caspi@gmail.com', '2012-05-13', 1687, 30, 16, 12, 2, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 5, 2, 'Hello', 'IT', 'Italy', 1),
-	('Mendi', 'raulde', 'rmendizabal@ciccp.es', '2014-06-10', 1786, 5, 1, 3, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('JamesL', '12345678', 'alonso_caspi@hotmaill.com', '2012-09-15', 1953, 77, 40, 32, 5, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 2, 1, '', 'US', 'United States', 1),
-	('SabiodelCiruelo', 'guerrerodelaluz', 'guillermotorresahu@live.com.mx', '2012-10-25', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Tinotin', 'e4c5Cf3d6', 'tinotin@gmail.com', '2012-10-15', 1917, 14, 4, 8, 2, 0, 0, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('batablanca', 'lfsy040640', 'cipleiras@gmail.com', '2012-10-15', 1809, 1, 1, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('nicog', 'cplatano2', 'nicolas.guillen@uca.es', '2012-10-17', 2093, 5, 1, 3, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('buscavida', 'fr0016', 'feriamalaga@hotmail.com', '2012-10-23', 1800, 2, 1, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('arquero', 'fr0016', 'feriamalaga@hotmail.com', '2012-10-23', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('buscavida64', 'fr0016', 'feriamalaga@hotmail.com', '2012-10-23', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Fedallah', '25681111', 'angel23467@hotmail.com', '2012-10-23', 1939, 38, 14, 21, 3, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('enriquebutti', 'ajedrez', 'chessenri@hotmail.com', '2014-06-11', 1823, 11, 8, 3, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('ale101', 'patata35', 'cantunez@excite.com', '2012-11-02', 1878, 3, 1, 2, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('JRegio', '12345678', 'alonso_caspi@hotmail.com', '2012-11-03', 1697, 3, 0, 2, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 3, 2, '', 'CO', 'Colombia', 1),
-	('skaor', 'skaor850206', 'girot.nicolas@gmail.com', '2012-11-14', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('raimon120', 'jtkprmon', 'rmonfdez@gmail.com', '2012-11-19', 1764, 79, 25, 44, 10, 0, 0, 0, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('neralnesSin', '12345678', 'alonso_caspi@hotmail.com', '2012-11-24', 1819, 5, 2, 1, 2, 0, 1, 1, 1400, 2800, 1, 1, 'Random', 4, 1, '', 'KZ', 'Kazakhstan', 1),
-	('Trainer3jaques', 'tigranorex2000', 'ediciones3jaques@hotmail.com', '2012-12-02', 1793, 1, 0, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('acolan', '19651970', 'acolan@terra.es', '2012-12-08', 1949, 25, 12, 13, 0, 0, 0, 1, 1600, 2800, 1, 1, 'Black', 30, 5, '', 'ES', 'Spain', 1),
-	('lionheart95', 'palolo', 'lionheart_1995@hotmail.com', '2012-12-16', 1805, 1, 1, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Edumatematica', 'boquita', 'edumatematica@hotmail.com', '2012-12-28', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('zeroansone', '12345678', 'alonso_caspi@hotmail.com', '2012-12-28', 1753, 33, 23, 7, 3, 0, 1, 1, 1000, 2000, 1, 1, 'Random', 5, 2, '', 'FR', 'France', 1),
-	('junior', 'acolan88', 'aitorluquepicos@hotmail.com', '2013-01-05', 1801, 3, 1, 2, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('ramonchess', 'ramonchess', 'ramondiazreyes@yahoo.es', '2013-01-05', 1924, 8, 5, 3, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('romix', 'romix66', 'romeu@litegrup.com', '2013-01-05', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('rafa', 'cocoloco', 'rfpstr@gmail.com', '2013-01-05', 1805, 1, 1, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('xscellente', 'blueandgreen', 'rmicoleta@yahoo.com', '2013-01-07', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('berlinche', '12345678', 'alonso.caspi@gmail.com', '2013-01-07', 1568, 1066, 509, 500, 57, 1, 0, 1, 1000, 2800, 1, 1, 'Black', 5, 0, 'Have a good game!', 'AU', 'Australia', 1),
-	('alej112', 'patata', 'alej112@hotmail.es', '2013-01-08', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('ChessAndTea', '12345678', 'alonso_caspi@hotmail.com', '2013-01-09', 1844, 58, 30, 18, 10, 0, 1, 1, 1000, 2000, 1, 1, 'Random', 10, 5, '', 'ES', 'Spain', 1),
-	('BigTree', '12345678', 'alonso_caspi@hotmail.com', '2013-01-20', 1895, 50, 20, 25, 5, 0, 1, 1, 1750, 2800, 1, 1, 'Random', 3, 0, '', 'IS', 'Iceland', 1),
-	('bepper', '12345678', 'alonso_caspi@hotmail.com', '2013-01-25', 1543, 31, 20, 9, 2, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 5, 3, '', 'NO', 'Norway', 1),
-	('dragonz', '12345678', 'alonso_caspi@hotmail.com', '2013-01-25', 1799, 121, 37, 79, 5, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Kwells', 'chapstick', 'the808dropps@yahoo.com', '2013-02-01', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('sofia_oronita', '12345678', 'alonso.caspi@gmail.com', '2014-06-12', 1790, 1, 0, 1, 0, 0, 1, 1, 1000, 2800, 1, 1, 'Random', 20, 5, '', 'ES', 'Spain', 1),
-	('josh', '10021996', 'joshlee14396@yahoo.com', '2014-06-12', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('sexonthebeach10', '12345678', 'alonso.caspi@gmail.com', '2014-06-12', 1742, 29, 7, 18, 4, 0, 1, 1, 1100, 2100, 1, 1, 'Random', 3, 2, '', 'SE', 'Sweden', 1),
-	('a3zzrio', '12345678', 'alonso.caspi@gmail.com', '2014-06-12', 1788, 14, 5, 3, 6, 0, 1, 1, 1000, 2000, 1, 1, 'Random', 15, 3, '', 'AD', 'Andorra', 1),
-	('buenavista', '12345678', 'alonso.caspi@gmail.com', '2014-06-12', 1668, 2, 2, 0, 0, 0, 1, 1, 1000, 2800, 1, 1, 'Random', 3, 0, '', 'MX', 'Mexico', 1),
-	('cokoro', 'soypro12', 'malditosnoob@hotmail.com', '2014-06-12', 1892, 1, 0, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('mariozevich', 'mariozevich', 'MARIODIAZLABASTIDA@HOTMAIL.COM', '2014-06-12', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Pepe64', '050562', 'pepe_martinez64@yahoo.com.mx', '2014-06-12', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('miraflores', '952396118', 'rrdoblas@gmail.com', '2014-06-13', 2011, 2, 1, 0, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Cachun', 'mipa570310', 'amirandaponce@gmai.com', '2014-06-13', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', 'Andorra', 1),
-	('Andretta', 'suani1977', 'Gnomo20x6@hotmail.com', '2014-06-13', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('valor1967', 'chess67', 'valor1967@hotmail.com', '2014-06-13', 1795, 3, 0, 2, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('adonaire', 'hab0302', 'adonaire@um.es', '2014-06-14', 1797, 1, 0, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('cariocachino', 'peon4rey', 'carioca50@hotmail.com', '2014-06-14', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Payta', '653252', 'ruben45tj@hotmail.com', '2014-06-14', 1796, 4, 1, 3, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('odnucafito', 'facundo', 'resalado1@gmail.com', '2014-06-14', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('lordmate', 'blue33', 'lsemh@yahoo.com', '2014-06-14', 1861, 15, 8, 5, 2, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('yeyezeta', 'pomito', 'yeyezeta@hotmail.com', '2014-06-15', 1805, 1, 1, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('davidchristian', 'cleopatra2209', 'aliciafraga1978@hotmail.com', '2014-06-15', 1965, 40, 34, 4, 2, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 3, 0, '', 'AD', '', 1),
-	('AjedrezporAndaluz', 'tusmuertos', 'ajedrecistanovato@gmail.com', '2014-06-15', 1808, 1, 1, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('alac', 'alac1961', 'alac.alcazar@gmail.com', '2014-06-15', 1800, 0, 0, 0, 0, 0, 0, 1, 1500, 2800, 1, 1, 'Black', 5, 0, '', 'AD', '', 1),
-	('Vanesa', 'vanesavanesa', 'joenna32@yahoo.es', '2014-06-15', 1797, 2, 1, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Paolicepe', 'teuelches', 'paolini.rw@gmail.com', '2014-06-15', 1800, 0, 0, 0, 0, 0, 0, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('larios', 'olalla', 'olaorte@gmail.com', '2014-06-15', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('alexiswhite', '12345678', 'alonso.caspi@gmail.com', '2014-06-16', 2140, 24, 8, 11, 5, 0, 1, 1, 1100, 2800, 1, 1, 'Random', 3, 0, '', 'BB', 'Barbados', 1),
-	('TheSimpsonsFun', '12345678', 'alonso.caspi@hotmail.com', '2014-06-16', 1856, 19, 7, 11, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 3, 0, '', 'KW', 'Kuwait', 1),
-	('a3zzlogo', '12345678', 'alonso.caspi@gmail.com', '2014-06-16', 1847, 8, 4, 2, 2, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 15, 0, '', 'HR', 'Croatia', 1),
-	('Arpulwon', 'gandekan48', 'johannesmasduki@gmail.com', '2014-06-19', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('batresian', 'farida88', 'franchess55@hotmail.com', '2014-06-25', 1791, 3, 0, 2, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('newinhome', '12345678', 'alonso.caspi@gmail.com', '2014-06-25', 1792, 10, 4, 6, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'PL', 'Poland', 1),
-	('perikkito', 'pardillo', 'juanmalobato@telefonica.net', '2014-06-26', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('villei', '4nt0n10', 'juan_villalobos05@hotmail.com', '2014-06-26', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('horse', 'elhuracan76', 'cavallocarlos@hotmail.com', '2014-06-26', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Pinkie', 'panchita123', 'jocnarq@hotmail.com', '2014-06-26', 1790, 4, 1, 3, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('casariche', 'jaisacocinas', 'antonio.casa1971@gmail.com', '2014-06-26', 1699, 9, 0, 9, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('olvera', 'Lagarto19', 'amaya1985@hotmail.es', '2014-06-26', 1742, 669, 35, 623, 11, 1, 1, 1, 1600, 2800, 1, 1, 'Random', 3, 0, '', 'PT', 'Portugal', 1),
-	('carlosmarx', 'comunista', 'carlos261@outlook.es', '2014-06-27', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('MuySexy', 'damaportorre', 'francisblanca1@hotmail.com', '2014-06-27', 1777, 4, 0, 4, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('monicaca', 'comunista', 'josecarlos_ji_ru@hotmail.com', '2014-06-27', 1806, 2, 1, 1, 0, 0, 0, 0, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Jesus', 'jesus1968', 'jnavarrojimenez@gmail.com', '2014-06-27', 1811, 1, 1, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('davidzuma', 'mairena', 'david_dc@hotmail.com', '2014-06-30', 1605, 60, 13, 44, 3, 1, 1, 0, 1100, 2800, 1, 1, 'White', 5, 0, '', 'AD', '', 1),
-	('gastongaston', 'gaston', 'gaston_xd13@msn.com', '2014-06-30', 1883, 7, 6, 0, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('theokojack', 'lamayora', 'migallardo@msn.com', '2014-06-30', 1786, 1, 0, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('Pluskat', 'pike1973', 'olivinoalg@hotmail.com', '2014-06-30', 1764, 20, 6, 14, 0, 0, 1, 1, 1200, 2800, 1, 1, 'Random', 5, 3, '', 'AD', '', 1),
-	('Francis', '650092002', 'curritof@hotmail.com', '2014-07-01', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('marinaval', 'Hockey31', 'maylu_enf@hotmail.com', '2014-07-01', 1765, 3, 1, 2, 0, 0, 0, 0, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Sergestus', 'ironman', 'sergestusmagnus@yahoo.es', '2014-07-02', 1779, 7, 2, 5, 0, 1, 0, 0, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('minijarn', '9876543210asdf', 'rinconagueraadrian@gmail.com', '2014-07-06', 1806, 2, 1, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('terminator64', '46rot', 'education000@gmail.com', '2014-07-06', 2081, 62, 52, 4, 6, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, 'Hola, buena suerte', 'AD', '', 1),
-	('pokerkarpov', 'abc12345', 'poker_karpov@hotmail.com', '2014-07-10', 1798, 10, 2, 6, 2, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AD', '', 1),
-	('DrCabeza', '12345678', 'alonso.caspi@gmail.com', '2014-07-14', 1791, 1, 0, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('mamyama', '12345678', 'alonso.caspi@gmail.com', '2014-07-14', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'JP', 'Japan', 1),
-	('carapillo', '12345678', 'alonso.caspi@gmail.com', '2014-07-15', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 3, 0, '', 'VE', 'Venezuela, Bolivarian Republic of', 1),
-	('landdry', '12345678', 'alonso.caspi@gmail.com', '2014-07-15', 2272, 22, 8, 12, 2, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 3, 0, '', 'AU', 'Australia', 1),
-	('jose', 'estepona', 'joseagma@gmail.com', '2015-04-17', 1785, 3, 1, 1, 1, 1, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Yokomojamo', '80080700969', 'medinariesgo@gmail.com', '2015-02-16', 1996, 52, 28, 14, 10, 0, 1, 1, 1700, 2800, 1, 1, 'Random', 5, 2, '', 'CU', 'Cuba', 1),
-	('ssx', '53684562d', 'primoajedrez@lhotmail.com', '2015-02-16', 1794, 4, 1, 2, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('comodiosmanda', '12361236', 'garymach32@hotmail.com', '2015-02-22', 1791, 2, 0, 2, 0, 1, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'EspaÃ±a', 1),
-	('pacopeperamos', 'miperroboby', 'pacopeperamos@hotmail.com', '2015-02-22', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Pergolin', 'Cr1Son1a', 'crisonia@telefonica.net', '2015-02-23', 1816, 1, 1, 0, 0, 0, 0, 0, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('SALGUERIV', 'PANCHITA123', 'ppkno@coamalaga.es', '2015-02-23', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Sofia7', '12345678', 'alonso.caspi@gmail.com', '2015-02-24', 2058, 30, 11, 16, 3, 0, 1, 1, 1800, 2800, 1, 1, 'Random', 3, 0, '', 'ES', 'Spain', 1),
-	('Gulbirra', 'caissa', 'gulbirra9@hotmail.com', '2015-04-05', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Aitortilladepatatas', 'aitortilladepatatas', 'aitorpinedasoto@gmail.com', '2015-04-06', 1735, 16, 0, 13, 3, 1, 1, 1, 1600, 2800, 1, 1, 'White', 20, 0, 'Hola a todos', 'ES', 'Spain', 1),
-	('MyNick', '18122007', 'alonso.caspi@gmail.com', '2015-04-09', 1793, 1, 0, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('MyNick2', '18122007', 'alonso.caspi@gmail.com', '2015-04-09', 1797, 2, 0, 1, 1, 1, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, 'Hello', 'ES', 'Spain', 1),
-	('MyNick3', '18122007', 'alonso.caspi@gmail.com', '2015-04-09', 1817, 2, 1, 0, 1, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('lagartomaldito', 'andrade', 'diegoalexseissoler@gmail.com', '2015-04-10', 1910, 18, 11, 4, 3, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('capitan10', '199199', 'diego199a@hotmail.com', '2015-04-10', 1784, 2, 1, 1, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'EspaÃ±a', 1),
-	('juliomorales22', 'caspiajedrez', 'juliomorales22@hotmail.com', '2015-08-28', 1814, 5, 3, 2, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('Gagarin', 'Pluskat', 'olivinoalg@hotmail.com', '2015-09-02', 1782, 4, 1, 3, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('NombreTest', '12345678', 'alonso.caspi@gmail.com', '2016-03-19', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AF', 'Afghanistan', 1),
-	('Caspi1111', '12345678', 'alonso.caspi@gmail.com', '2016-03-19', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AF', 'Afghanistan', 1),
-	('CaspiTest', '12345678', 'alonso.caspi@gmail.com', '2016-03-19', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AF', 'Afghanistan', 1),
-	('yosoyunaprueba', '12345678', 'alonso.caspi@gmail.com', '2016-03-19', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AG', 'Antigua and Barbuda', 1),
-	('Testdeprueba', '12345678', 'alonso.caspi@gmail.com', '2016-03-19', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AF', 'Afghanistan', 1),
-	('Berlin03', '12345678', 'alonso.caspi@gmail.com', '2016-03-25', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AT', 'Austria', 1),
-	('LaPrueba', '12345678', 'alonso.caspi@gmail.com', '2016-03-25', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'BE', 'Belgium', 1),
-	('EsteEsDePrueba', '12345678', 'alonso.caspi@gmail.com', '2016-04-01', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'FR', 'France', 1),
-	('HolaEstoEsUnaPruebaD', '12345678', 'alonso_caspi@hotmail.com', '2016-04-09', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AT', 'Austria', 1),
-	('EstoEsUnTest', '12345678', 'alonso.caspi@gmail.com', '2016-04-10', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'BE', 'Belgium', 1),
-	('EstoEsUnaPrueba', '123456', 'alonso.caspi@gmail.com', '2016-04-12', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AF', 'Afghanistan', 1),
-	('Test1212', '12345678', 'alonso.caspi@gmail.com', '2016-04-12', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AF', 'Afghanistan', 1),
-	('Test1313', '12345678', 'alonso.caspi@gmail.com', '2016-04-12', 1800, 0, 0, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'AR', 'Argentina', 1),
-	('Sofilita', '12345678', 'alonso_caspi@hotmail.com', '2016-05-01', 1800, 0, 0, 0, 0, 1, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'ES', 'Spain', 1),
-	('HolaYuYu', '12345678', 'alonso.caspi@gmail.com', '2016-09-01', 1800, 1, 1, 0, 0, 0, 1, 1, 1600, 2800, 1, 1, 'Random', 5, 0, '', 'BR', 'Brazil', 1);
-/*!40000 ALTER TABLE `autentificacion` ENABLE KEYS */;
-
-
--- Volcando estructura para tabla heroku_d6062326996f9df.games
 CREATE TABLE IF NOT EXISTS `games` (
   `number` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `cuando` datetime DEFAULT NULL,
@@ -230,9 +40,11 @@ CREATE TABLE IF NOT EXISTS `games` (
   PRIMARY KEY (`number`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla heroku_d6062326996f9df.games: 0 rows
-/*!40000 ALTER TABLE `games` DISABLE KEYS */;
-/*!40000 ALTER TABLE `games` ENABLE KEYS */;
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+CREATE TABLE IF NOT EXISTS `logfile` (
+  `User` varchar(20) NOT NULL,
+  `Moment` datetime NOT NULL,
+  `Event` varchar(20) NOT NULL,
+  `Games` int(11) NOT NULL,
+  `SaveMode` varchar(12) NOT NULL,
+  KEY `index_moment` (`Moment`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

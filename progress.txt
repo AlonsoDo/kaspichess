@@ -814,3 +814,10 @@ MARTES-27.09.2016
 
 Varios
 Copia seguridad 21:55 0.8.1
+
+DOMINGO-26.11.2016
+
+Varios
+Bajar sonido move
+Mensaje elo 1800 con login as Guest
+Copia seguridad 20:34 0.8.4
