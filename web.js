@@ -7,7 +7,7 @@ var mysql = require('mysql');
 var pool  = mysql.createPool({
   host     : 'us-cdbr-iron-east-04.cleardb.net',
   user     : 'b52e988cd6806f',
-  password : '26576328',
+  password : '****',
   database : 'heroku_9e1ea27dfb893a5',
   connectionLimit : 200
 });
@@ -76,7 +76,6 @@ io.sockets.on('connection',function(socket){
     }
     
     pool.getConnection(function(err,connection){      
-      //connection.query("SELECT * FROM logfile WHERE Moment BETWEEN '"+data.DateIni+"' AND '"+data.DateEnd+"' AND TIME(Moment) BETWEEN '"+data.TimeIni+"' AND '"+data.TimeEnd+"'"+EventName,function(err,rows){
         connection.query("SELECT * FROM logfile WHERE Moment>='"+data.MomentIni+"' AND Moment<='"+data.MomentEnd+"'"+EventName,function(err,rows){
         if (err){
           console.log('Error: ' + err.message);
@@ -248,9 +247,7 @@ io.sockets.on('connection',function(socket){
       io.sockets.socket(data.IdWhoAsk).emit('SendPosBack',data);  
     }else{ //Normal
       socket.broadcast.to(data.RoomName).emit('SendPosBack',data);
-    }
-    
-    //socket.broadcast.to(data.RoomName).emit('SendPosBack',data);
+    }    
     
   });
   
@@ -269,31 +266,7 @@ io.sockets.on('connection',function(socket){
         aPlayers[i][4]=parseInt(aPlayers[i][4]) + 1;
         aPlayers[i][5]='OnLine';
       }
-    }
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');*/
-    
-   
-    
-    /*client.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });*/
+    }    
     
     pool.getConnection(function(err,connection){
       if (data.InsufficientMaterial){
@@ -310,28 +283,6 @@ io.sockets.on('connection',function(socket){
         connection.release();
       });   
     });    
-    
-    /*var client2 = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client2.query('USE heroku_9e1ea27dfb893a5');*/    
-    
-    /*client2.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client2.end();                
-    });*/
     
     pool.getConnection(function(err,connection){
       if (data.InsufficientMaterial){
@@ -367,18 +318,7 @@ io.sockets.on('connection',function(socket){
         aPlayers[i][4]=parseInt(aPlayers[i][4]) + 1;
         aPlayers[i][5]='OnLine';
       }
-    }
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');*/
+    }    
     
     pool.getConnection(function(err,connection){
       cQuery = "UPDATE autentificacion SET Elo='" + data.OpElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.OpPlayerName+"'";
@@ -390,29 +330,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });    
-    
-    /*client.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });*/
-    
-    /*var client2 = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client2.query('USE heroku_9e1ea27dfb893a5');*/        
+    });            
         
     pool.getConnection(function(err,connection){
       cQuery = "UPDATE autentificacion SET Elo='" + data.MyElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.MyPlayerName+"'"
@@ -424,18 +342,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });    
-    
-    /*client2.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client2.end();                
-    });*/
+    });     
     
     socket.broadcast.to(data.RoomName).emit('DrawByStaleMateBack',data);
   });
@@ -479,55 +386,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-    
-    cQuery = "UPDATE autentificacion SET Elo='" + data.OpElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.OpPlayerName+"'";
-    
-    client.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });
-    
-    var client2 = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client2.query('USE heroku_9e1ea27dfb893a5');
-        
-    cQuery = "UPDATE autentificacion SET Elo='" + data.MyElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.MyPlayerName+"'"
-        
-    client2.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client2.end();                
-    });*/
+    });    
     
     socket.broadcast.to(data.RoomName).emit('DrawBy3RepeatBack',data);
   });
@@ -571,55 +430,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-    
-    cQuery = "UPDATE autentificacion SET Elo='" + data.OpElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.OpPlayerName+"'";
-    
-    client.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });
-    
-    var client2 = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client2.query('USE heroku_9e1ea27dfb893a5');
-        
-    cQuery = "UPDATE autentificacion SET Elo='" + data.MyElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.MyPlayerName+"'"
-        
-    client2.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client2.end();                
-    });*/
+    });    
     
     socket.broadcast.to(data.RoomName).emit('DrawByInsuficientMaterialBack',data);
   });
@@ -663,55 +474,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-    
-    cQuery = "UPDATE autentificacion SET Elo='" + data.OpElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.OpPlayerName+"'";
-    
-    client.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });
-    
-    var client2 = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client2.query('USE heroku_9e1ea27dfb893a5');
-        
-    cQuery = "UPDATE autentificacion SET Elo='" + data.MyElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.MyPlayerName+"'"
-        
-    client2.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client2.end();                
-    });*/
+    });    
     
     socket.broadcast.to(data.RoomName).emit('DrawBy50MovesRuleBack',data);
   });
@@ -755,55 +518,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-    
-    cQuery = "UPDATE autentificacion SET Elo='" + data.OpElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.OpPlayerName+"'";
-    
-    client.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });
-    
-    var client2 = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client2.query('USE heroku_9e1ea27dfb893a5');
-        
-    cQuery = "UPDATE autentificacion SET Elo='" + data.MyElo+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.MyPlayerName+"'"
-        
-    client2.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client2.end();                
-    });*/
+    });    
     
     socket.broadcast.to(data.RoomName).emit('AcceptDrawBack',data);
   });
@@ -823,22 +538,7 @@ io.sockets.on('connection',function(socket){
         aPlayers[i][4]=parseInt(aPlayers[i][4]) + 1;
         aPlayers[i][5]='OnLine';
       }
-    }
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');*/
-    
-    
-    
-    
+    }    
     
     pool.getConnection(function(err,connection){
       if (data.InsufficientMaterial){
@@ -856,35 +556,6 @@ io.sockets.on('connection',function(socket){
       });   
     });
     
-    
-    
-    
-    /*client.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });
-    
-    var client2 = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client2.query('USE heroku_9e1ea27dfb893a5');*/
-        
-    
-    
-    
-    
     pool.getConnection(function(err,connection){
       if (data.InsufficientMaterial){
         cQuery = "UPDATE autentificacion SET Elo='" + data.EloWhoWin+"' , Games=Games+1 , Draws=Draws+1 WHERE User='"+data.PlayerNameWhoWin+"'"
@@ -899,20 +570,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });
-    
-    
-    
-    /*client2.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client2.end();                
-    });*/
+    });    
     
     socket.broadcast.to(data.RoomName).emit('GameResignBack',data);
   });
@@ -932,20 +590,7 @@ io.sockets.on('connection',function(socket){
         aPlayers[i][4]=parseInt(aPlayers[i][4]) + 1;
         aPlayers[i][5]='OnLine';
       }
-    }
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');*/
-        
-    
+    }    
     
     pool.getConnection(function(err,connection){
       cQuery = "UPDATE autentificacion SET Elo='" + data.EloWhoLost+"' , Games=Games+1 , Losts=Losts+1 WHERE User='"+data.PlayerNameWhoLost+"'";  
@@ -957,31 +602,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });
-    
-    
-    /*client.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });
-    
-    var client2 = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client2.query('USE heroku_9e1ea27dfb893a5');*/
-        
+    });        
         
     pool.getConnection(function(err,connection){
       cQuery = "UPDATE autentificacion SET Elo='" + data.EloWhoWin+"' , Games=Games+1 , Wins=Wins+1 WHERE User='"+data.PlayerNameWhoWin+"'";
@@ -993,19 +614,7 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
       });   
-    });
-    
-    
-    /*client2.query(cQuery,
-      function Datos(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client2.end();                
-    });*/
+    });    
     
     socket.broadcast.to(data.RoomName).emit('WinByMateBack',data);
   });
@@ -1414,33 +1023,7 @@ io.sockets.on('connection',function(socket){
   socket.on('TryRegister',function(data){
     
     var lFound = false;
-    var cQuery;
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-        
-    client.query("SELECT * FROM autentificacion WHERE User='"+data.cName+"'",
-      function TryRegisterPlayer(err,results,fields){ 
-        if (err){
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();        
-        if (results.length==1){
-          lFound = true;
-        }        
-        socket.emit('CheckIfRegisterBack',{Found:lFound});                
-    }); */
+    var cQuery;    
     
     pool.getConnection(function(err,connection){
       cQuery = "SELECT * FROM autentificacion WHERE User='"+data.cName+"'";
@@ -1463,30 +1046,7 @@ io.sockets.on('connection',function(socket){
   socket.on('RegisterPlayer',function(data){
     
     //var lFound = false;
-    var cQuery;
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-        
-    client.query("INSERT INTO autentificacion(User,PassWord,Email,DateSignUp,Country,Alt) VALUES ('"+data.cName+"','"+data.cPassword+"','"+data.cEmail+"','"+data.dDate+"','"+data.cCountry+"','"+data.cAlt+"')",
-      function RegisterPlayer(err,results,fields){ 
-        if (err){
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();
-        socket.emit('RegisterPlayerBack',{User:data.cName,Country:data.cCountry,Alt:data.cAlt});
-    });*/
+    var cQuery;    
     
     pool.getConnection(function(err,connection){
       cQuery = "INSERT INTO autentificacion(User,PassWord,Email,DateSignUp,Country,Alt) VALUES ('"+data.cName+"','"+data.cPassword+"','"+data.cEmail+"','"+data.dDate+"','"+data.cCountry+"','"+data.cAlt+"')";
@@ -1555,46 +1115,11 @@ io.sockets.on('connection',function(socket){
         }  
         io.sockets.socket(SocketIdControl).emit('PlayerPlayingControl',{TotalGames:TotalGames2,PlayerName:PlayerName2});
       }
-    }    
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5'); */   
+    }      
       
     var momento = data.when;
     var estado = data.status;
-    var mostrar = data.show;
-    
-    /*client.query("INSERT INTO games (cuando,status,mostrar,whitename,blackname,whiteelo,blackelo,whiteid,blackid,timing) VALUES ('"+momento+"','"+estado+"','"+mostrar+"','"+data.whitename+"','"+data.blackname+"','"+data.whiteelo+"','"+data.blackelo+"','"+data.whiteid+"','"+data.blackid+"','"+data.timing+"')",
-      function RegisterGame(err,results,fields){ 
-        if (err){
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);        
-        // Set Last Game number playing
-        for (var i=0;i<aPlayers.length;i++) {
-          if (aPlayers[i][0]==data.whiteid){
-            aPlayers[i][8]=results.insertId;
-            console.log(results.insertId);
-            io.sockets.socket(data.whiteid).emit('RegisterGameBack',{GameNumber:results.insertId});            
-          }
-          if (aPlayers[i][0]==data.blackid){
-            aPlayers[i][8]=results.insertId;
-            console.log(results.insertId);
-            io.sockets.socket(data.blackid).emit('RegisterGameBack',{GameNumber:results.insertId});
-          }
-        }
-        client.end();       
-    });*/
+    var mostrar = data.show;   
     
     pool.getConnection(function(err,connection){
       cQuery = "INSERT INTO games (cuando,status,mostrar,whitename,blackname,whiteelo,blackelo,whiteid,blackid,timing) VALUES ('"+momento+"','"+estado+"','"+mostrar+"','"+data.whitename+"','"+data.blackname+"','"+data.whiteelo+"','"+data.blackelo+"','"+data.whiteid+"','"+data.blackid+"','"+data.timing+"')";
@@ -1625,29 +1150,7 @@ io.sockets.on('connection',function(socket){
   
   socket.on('SalvarDatosReto',function(data){
     
-    var cQuery;
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-        
-    client.query("UPDATE autentificacion SET Minutes='" + data.Minutos + "' , Seconds='"+data.Segundos+"' , MinElo='"+data.MinRat+"' , MaxElo='"+data.MaxRat+"' , Rated='"+data.SelectRated+"' , Color='"+data.ColorPartida+"' WHERE User='"+data.Name+"'",
-      function DatosReto(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });*/
+    var cQuery;    
     
     pool.getConnection(function(err,connection){
       cQuery = "UPDATE autentificacion SET Minutes='" + data.Minutos + "' , Seconds='"+data.Segundos+"' , MinElo='"+data.MinRat+"' , MaxElo='"+data.MaxRat+"' , Rated='"+data.SelectRated+"' , Color='"+data.ColorPartida+"' WHERE User='"+data.Name+"'";
@@ -1665,31 +1168,7 @@ io.sockets.on('connection',function(socket){
   
   socket.on('SalvarDatosSetting',function(data){
     
-    var cQuery;
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-        
-    client.query("UPDATE autentificacion SET HighLight='" + data.HighLight + "' , Promote='"+data.Promote+"' , Sound='"+data.Sound+"' , Welcome='"+data.Welcome+"' , Country='"+data.MyCountry+"' , Alt='"+data.Alt+"' , Coordenadas='"+data.ShowCoord+"' WHERE User='"+data.MyName+"'",
-      function DatosReto(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results);
-        client.end();                
-    });
-    console.log('SalvarDatosSetting');*/
-    
+    var cQuery;    
     
     pool.getConnection(function(err,connection){
       cQuery = "UPDATE autentificacion SET HighLight='" + data.HighLight + "' , Promote='"+data.Promote+"' , Sound='"+data.Sound+"' , Welcome='"+data.Welcome+"' , Country='"+data.MyCountry+"' , Alt='"+data.Alt+"' , Coordenadas='"+data.ShowCoord+"' WHERE User='"+data.MyName+"'";
@@ -1702,72 +1181,13 @@ io.sockets.on('connection',function(socket){
         connection.release();
         console.log('SalvarDatosSetting');
       });   
-    });   
-    
+    });      
     
   });
 
   socket.on('SendPass',function(data){  
   
-    var cQuery;
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-        
-    client.query("SELECT PassWord,Email FROM autentificacion WHERE User='"+data.cName+"'",
-      function SelectPlayer(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results[0].PassWord);
-        
-        var cPassWord = results[0].PassWord;
-        var cEmail = results[0].Email;
-        
-        var smtpTransport = nodemailer.createTransport("SMTP",{
-          service: "Gmail",
-          auth: {
-              user: "alonso.caspi@gmail.com",
-              pass: "AJDEMCBMAMDBSDB"
-         }
-        });        
-        smtpTransport.sendMail({
-          from: "KaspiChess <alonso.caspi@gmail.com>", // sender address
-          to: cEmail , // comma separated list of receivers
-          subject: "Here is your password",    
-          text:   
-              "Hello Friend \r\n" +
-              " \r\n" +
-              " Forgot your data? Do not worry.\r\n" +
-              " Here are.\r\n" +
-              " \r\n" +
-              " Your User Name: " + data.cName + "\r\n" +
-              " Your Password: " + cPassWord + "\r\n" +
-              " \r\n" +
-              " I hope you continue enjoying at KaspiChess.\r\n" +
-              " Best regards."   
-        }, function(error, response){
-          if(error){
-            console.log(error);
-          }else{
-            console.log("Message sent: " + response.message);
-          }
-        });
-        smtpTransport.close();
-        console.log('hecho');              
-        client.end();        
-    });*/
-    
+    var cQuery;    
     
     pool.getConnection(function(err,connection){
       cQuery = "SELECT PassWord,Email FROM autentificacion WHERE User='"+data.cName+"'";
@@ -1784,7 +1204,7 @@ io.sockets.on('connection',function(socket){
           service: "hotmail",
           auth: {
               user: "alonso_caspi@hotmail.com",
-              pass: "CaspiAutentico2"
+              pass: "****"
          }
         });        
         smtpTransport.sendMail({
@@ -1837,7 +1257,7 @@ io.sockets.on('connection',function(socket){
           service: "hotmail",
           auth: {
               user: "alonso_caspi@hotmail.com",
-              pass: "CaspiAutentico2"
+              pass: "****"
          }
         });        
         
@@ -1870,7 +1290,7 @@ io.sockets.on('connection',function(socket){
           service: "hotmail",
           auth: {
               user: "alonso_caspi@hotmail.com",
-              pass: "CaspiAutentico2"
+              pass: "****"
          }
     });
     

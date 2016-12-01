@@ -828,4 +828,4 @@ Varios
 
 JUEVES-01.12.2016
 
-Cambio de cuenta de correo SMTP
+Cambio de cuenta de correo SMTP a hotmail
