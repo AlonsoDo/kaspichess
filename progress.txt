@@ -821,3 +821,11 @@ Varios
 Bajar sonido move
 Mensaje elo 1800 con login as Guest
 Copia seguridad 20:34 0.8.4
+
+LUNES-27.11.2016
+
+Varios
+
+JUEVES-01.12.2016
+
+Cambio de cuenta de correo SMTP

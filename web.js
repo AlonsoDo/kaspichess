@@ -1779,17 +1779,16 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
         var cPassWord = rows[0].PassWord;
-        var cEmail = rows[0].Email;
-        
+        var cEmail = rows[0].Email;        
         var smtpTransport = nodemailer.createTransport("SMTP",{
-          service: "Gmail",
+          service: "hotmail",
           auth: {
-              user: "alonso.caspi@gmail.com",
-              pass: "AJDEMCBMAMDBSDB"
+              user: "alonso_caspi@hotmail.com",
+              pass: "CaspiAutentico2"
          }
         });        
         smtpTransport.sendMail({
-          from: "KaspiChess <alonso.caspi@gmail.com>", // sender address
+          from: "KaspiChess <alonso_caspi@hotmail.com>", // sender address
           to: cEmail , // comma separated list of receivers
           subject: "Here is your password",    
           text:   
@@ -1820,53 +1819,7 @@ io.sockets.on('connection',function(socket){
   
   socket.on('SendGame',function(data){  
   
-    var cQuery;
-    
-    /*var client = mysql.createConnection({
-      
-      user: 'b52e988cd6806f',
-      password: '26576328',
-      host: 'us-cdbr-iron-east-04.cleardb.net',
-      port: '3306'      
-      
-    });
-    
-    client.query('USE heroku_9e1ea27dfb893a5');
-        
-    client.query("SELECT Email FROM autentificacion WHERE User='"+data.cName+"'",
-      function SelectPlayer(err, results, fields) { 
-        if (err) {
-          console.log('Error: ' + err.message);
-          throw err;
-        } 
-        console.log('Number of rows: '+results.length);
-        console.log(results[0].Email);
-        
-        var cEmail = results[0].Email;
-        
-        var smtpTransport = nodemailer.createTransport("SMTP",{
-          service: "Gmail",
-          auth: {
-              user: "alonso.caspi@gmail.com",
-              pass: "AJDEMCBMAMDBSDB"
-         }
-        });        
-        smtpTransport.sendMail({
-          from: "KaspiChess <alonso.caspi@gmail.com>", // sender address
-          to: cEmail , // comma separated list of receivers
-          subject: "Here is your game",    
-          text: data.Partida                
-        }, function(error, response){
-          if(error){
-            console.log(error);
-          }else{
-            console.log("Message sent: " + response.message);
-          }
-        });
-        smtpTransport.close();
-        console.log('hecho');              
-        client.end();        
-    });*/
+    var cQuery;    
     
     pool.getConnection(function(err,connection){
       cQuery = "SELECT Email FROM autentificacion WHERE User='"+data.cName+"'";
@@ -1878,17 +1831,18 @@ io.sockets.on('connection',function(socket){
         console.log('Number of rows: '+rows.length);
         connection.release();
         
-        var cEmail = rows[0].Email;
+        var cEmail = rows[0].Email;       
         
         var smtpTransport = nodemailer.createTransport("SMTP",{
-          service: "Gmail",
+          service: "hotmail",
           auth: {
-              user: "alonso.caspi@gmail.com",
-              pass: "AJDEMCBMAMDBSDB"
+              user: "alonso_caspi@hotmail.com",
+              pass: "CaspiAutentico2"
          }
         });        
+        
         smtpTransport.sendMail({
-          from: "KaspiChess <alonso.caspi@gmail.com>", // sender address
+          from: "KaspiChess <alonso_caspi@hotmail.com>", // sender address
           to: cEmail , // comma separated list of receivers
           subject: "Here is your game",    
           text: data.Partida                
@@ -1913,14 +1867,15 @@ io.sockets.on('connection',function(socket){
     console.log(data.EmailAdress);
     
     var smtpTransport = nodemailer.createTransport("SMTP",{
-      service:"Gmail",
-      auth:{
-        user:"alonso.caspi@gmail.com",
-        pass:"AJDEMCBMAMDBSDB"
-      }
-    });        
+          service: "hotmail",
+          auth: {
+              user: "alonso_caspi@hotmail.com",
+              pass: "CaspiAutentico2"
+         }
+    });
+    
     smtpTransport.sendMail({
-      from: "KaspiChess <alonso.caspi@gmail.com>", // sender address
+      from: "KaspiChess <alonso_caspi@hotmail.com>", // sender address
       to: data.EmailAdress , // comma separated list of receivers
       subject: data.SubjectEmail ,    
       text: data.TextEmail                
