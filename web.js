@@ -7,7 +7,7 @@ var mysql = require('mysql');
 var pool  = mysql.createPool({
   host     : 'us-cdbr-iron-east-04.cleardb.net',
   user     : 'b52e988cd6806f',
-  password : '****',
+  password : '26576328',
   database : 'heroku_9e1ea27dfb893a5',
   connectionLimit : 200
 });
@@ -1204,7 +1204,7 @@ io.sockets.on('connection',function(socket){
           service: "hotmail",
           auth: {
               user: "alonso_caspi@hotmail.com",
-              pass: "****"
+              pass: "CaspiAutentico2"
          }
         });        
         smtpTransport.sendMail({
@@ -1257,7 +1257,7 @@ io.sockets.on('connection',function(socket){
           service: "hotmail",
           auth: {
               user: "alonso_caspi@hotmail.com",
-              pass: "****"
+              pass: "CaspiAutentico2"
          }
         });        
         
@@ -1290,7 +1290,7 @@ io.sockets.on('connection',function(socket){
           service: "hotmail",
           auth: {
               user: "alonso_caspi@hotmail.com",
-              pass: "****"
+              pass: "CaspiAutentico2"
          }
     });
     

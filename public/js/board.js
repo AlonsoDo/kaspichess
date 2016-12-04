@@ -157,8 +157,8 @@ function GameTimeOff(){
     }    
     
     if (SelectRat=='Rated') {
-        if (lKingAlone){
-            cCadena = 'The game was draw by insufficient material. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')';		
+        if (lKingAlone){            		
+            cCadena = 'Draw by insufficient material. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')';            
             $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
             $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
             ResultadoPartida = '1/2-1/2';
@@ -175,7 +175,7 @@ function GameTimeOff(){
         }    
     }else{
         if (lKingAlone){
-            cCadena = 'The game was draw by insufficient material. ( 0.5-0.5 ) The game was unrated.';
+            cCadena = 'Draw by insufficient material. ( 0.5-0.5 ) The game was unrated.';
             $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
             $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
             ResultadoPartida = '1/2-1/2';
@@ -200,9 +200,8 @@ function GameTimeOff(){
         
     $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;'>" + ' ' + ResultadoPartida + "</label>");
         
-    cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
+    cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;    
     
-    PartidaTerminada = true;
     $('#BotonesGame').show();
     
     $(document).attr('title','Game Time Off');
@@ -243,6 +242,8 @@ function GameTimeOff(){
     BufferMoveShow = ContPosi;
     
     $('#dialog-promo').dialog('close');
+    
+    PartidaTerminada = true;
         
 }
 
@@ -270,7 +271,7 @@ function GameTimeOffBack(data){
             OpElo = Math.round(OpElo);
         }
         if (data.InsufficientMaterial){
-            cCadena = 'The game was draw by insufficient material. ( 0.5-0.5 ) The new rating is: ' + data.EloWhoWin + ' (' + cVarElo + ')';
+            cCadena = 'Draw by insufficient material. ( 0.5-0.5 ) The new rating is: ' + data.EloWhoWin + ' (' + cVarElo + ')';
             ResultadoPartida = '1/2-1/2';
         }else{
             cCadena = data.PlayerNameWhoWin + ' won by time. ( 1-0 ) The new rating is: ' + data.EloWhoWin + ' (' + cVarElo + ')';
@@ -282,7 +283,7 @@ function GameTimeOffBack(data){
         }        
     }else{
         if (data.InsufficientMaterial){
-            cCadena = 'The game was draw by insufficient material. ( 0.5-0.5 ) The game was unrated.';
+            cCadena = 'Draw by insufficient material. ( 0.5-0.5 ) The game was unrated.';
             ResultadoPartida = '1/2-1/2';
         }else{
            cCadena = data.PlayerNameWhoWin + ' won by time. ( 1-0 ) The game was unrated.';
@@ -298,34 +299,39 @@ function GameTimeOffBack(data){
         $('#RelojArribaLabel').text('Time');
         $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;'>" + ' ' + ResultadoPartida + "</label>");
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
-        PartidaTerminada = true;
         $('#BotonesGame').show();
     }else{
-        if (cColorSide!=data.ColorSide){
-            $('#RelojArribaLabel').text('Time');   
-        }else{            
-            $('#RelojAbajoLabel').text('Time');
+        if (PartidaTerminada=='false'){        
+            if (cColorSide!=data.ColorSide){
+                $('#RelojArribaLabel').text('Time');   
+            }else{            
+                $('#RelojAbajoLabel').text('Time');
+            }
         }        
     } 
     
-    $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
-        
-    $(document).attr('title','Game Time Off');    
+    if (PartidaTerminada=='false'){    
     
-    if (data.InsufficientMaterial){
-        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-    }else{
-        if (cColorSide!=data.ColorSide) {
-           $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
-           $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+        $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+            
+        $(document).attr('title','Game Time Off');    
+        
+        if (data.InsufficientMaterial){
+            $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+            $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         }else{
-           $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
-           $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
-       }   
+            if (cColorSide!=data.ColorSide) {
+               $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
+               $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+            }else{
+               $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+               $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
+           }   
+        }    
+         
+        $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
+        
     }    
-     
-    $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
     
     if (Playing) {
         $('#dialog-result').html(
@@ -362,6 +368,8 @@ function GameTimeOffBack(data){
     }
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
     
 }
 
@@ -389,7 +397,7 @@ function GameResignBack(data){
             OpElo = Math.round(OpElo);
         }
         if (data.InsufficientMaterial){
-            cCadena = 'The game was draw by insufficient material. ( 0.5-0.5 ) The new rating is: ' + data.EloWhoWin + ' (' + cVarElo + ')';
+            cCadena = 'Draw by insufficient material. ( 0.5-0.5 ) The new rating is: ' + data.EloWhoWin + ' (' + cVarElo + ')';
             ResultadoPartida = '1/2-1/2';
         }else{
             cCadena = data.PlayerNameWhoWin + ' won by resign. ( 1-0 ) The new rating is: ' + data.EloWhoWin + ' (' + cVarElo + ')'; 
@@ -401,7 +409,7 @@ function GameResignBack(data){
         }        
     }else{
         if (data.InsufficientMaterial){
-            cCadena = 'The game was draw by insufficient material. ( 0.5-0.5 ) The game was unrated.';
+            cCadena = 'Draw by insufficient material. ( 0.5-0.5 ) The game was unrated.';
             ResultadoPartida = '1/2-1/2';
         }else{
            cCadena = data.PlayerNameWhoWin + ' won by resign. ( 1-0 ) The game was unrated.';  
@@ -413,29 +421,32 @@ function GameResignBack(data){
         }              
     }
     
-    $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
-        
-    $(document).attr('title','Game Resign');
+    if (PartidaTerminada=='false'){
     
-    if (data.InsufficientMaterial){
-        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-    }else{
-        if (cColorSide!=data.ColorSide) {
-           $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
-           $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+        $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+            
+        $(document).attr('title','Game Resign');
+        
+        if (data.InsufficientMaterial){
+            $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+            $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         }else{
-           $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
-           $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
-       }   
-    }    
-     
-    $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
+            if (cColorSide!=data.ColorSide) {
+               $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
+               $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+            }else{
+               $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+               $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
+           }   
+        }    
+         
+        $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
+        
+    }
     
     if (Playing) {
         $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;'>" + ' ' + ResultadoPartida + "</label>");
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
-        PartidaTerminada = true;
         $('#BotonesGame').show();
         $('#dialog-result').html(
                             '<div id="dialog-result" title="Information">' +
@@ -471,6 +482,8 @@ function GameResignBack(data){
     }
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
     
 }
 
@@ -521,6 +534,8 @@ function GameAborted(data){
     
     Playing = false;
     
+    PartidaTerminada = true;
+    
 }
 
 function GameResign() {
@@ -565,7 +580,7 @@ function GameResign() {
     
     if (SelectRat=='Rated') {
         if (lKingAlone){
-            cCadena = 'The game was draw by insufficient material. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')';		
+            cCadena = 'Draw by insufficient material. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')';		
             $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
             $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
             ResultadoPartida = '1/2-1/2';
@@ -582,7 +597,7 @@ function GameResign() {
         }    
     }else{
         if (lKingAlone){
-            cCadena = 'The game was draw by insufficient material. ( 0.5-0.5 ) The game was unrated.';
+            cCadena = 'Draw by insufficient material. ( 0.5-0.5 ) The game was unrated.';
             $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
             $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
             ResultadoPartida = '1/2-1/2';
@@ -611,7 +626,6 @@ function GameResign() {
         
     cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
     
-    PartidaTerminada = true;
     $('#BotonesGame').show();
     
     // Reset all
@@ -650,6 +664,8 @@ function GameResign() {
     Playing = false;
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
        
 }
 
@@ -713,7 +729,6 @@ function WinByMate(){
         
     cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
     
-    PartidaTerminada = true;
     $('#BotonesGame').show();
         
     // Reset all
@@ -749,6 +764,8 @@ function WinByMate(){
     $('#dialog-result').dialog('open');
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
         
 }
 
@@ -769,19 +786,20 @@ function WinByMateBack(data){
 	cVarElo = VarElo;
     }       
          
-    $(document).attr('title','Game Mate');    
-    
-    if (cColorSide!=data.ColorSide) {
-        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
-        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
-        ResultadoPartida = '0-1';
-    }else{
-        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
-        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
-        ResultadoPartida = '1-0';
-    }        
+    $(document).attr('title','Game Mate');            
             
-    if (Playing) {
+    if (Playing){
+        
+        if (cColorSide!=data.ColorSide) {
+            $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+            $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
+            ResultadoPartida = '0-1';
+        }else{
+            $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
+            $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+            ResultadoPartida = '1-0';
+        }
+        
         if (SelectRat=='Rated'){
             MyElo = (parseFloat(MyElo) + parseFloat(VarElo));
             MyElo = Math.round(MyElo);
@@ -798,7 +816,6 @@ function WinByMateBack(data){
         
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
         
-        PartidaTerminada = true;
         $('#BotonesGame').show();
         
         $('#dialog-result').html(
@@ -808,14 +825,28 @@ function WinByMateBack(data){
                             );
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
-    }else{
-        if (data.Desconect==false){
-            cCadena = data.PlayerNameWhoWin + ' won by mate.';
-            $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
-        }else{
-            cCadena = data.PlayerNameWhoWin + ' won by disconnect.';
-            $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
-            $(document).attr('title','Won by Disconnect');
+    
+    }else{        
+        
+        if (PartidaTerminada==false){
+            
+            if (cColorSide!=data.ColorSide) {
+                $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+                $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
+            }else{
+                $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1</label>');    
+                $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">0</label>');    
+            }
+            
+            if (data.Desconect==false){
+                cCadena = data.PlayerNameWhoWin + ' won by mate.';
+                $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+                $(document).attr('title','Won by Mate');
+            }else{
+                cCadena = data.PlayerNameWhoWin + ' won by disconnect.';
+                $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+                $(document).attr('title','Won by Disconnect');
+            }
         }
     }
     
@@ -845,6 +876,8 @@ function WinByMateBack(data){
     }
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
         
 }
 
@@ -877,11 +910,11 @@ function DrawByStaleMate(){
     }    
     
     if (SelectRat=='Rated') {
-        cCadena = 'The game was draw by StaleMate. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
+        cCadena = 'Draw by StaleMate. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }else{
-        cCadena = 'The game was draw by StaleMate. ( 0.5-0.5 ) The game was unrated.';
+        cCadena = 'Draw by StaleMate. ( 0.5-0.5 ) The game was unrated.';
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }
@@ -900,7 +933,6 @@ function DrawByStaleMate(){
         
     cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
     
-    PartidaTerminada = true;
     $('#BotonesGame').show();
     
     // Reset all
@@ -937,6 +969,8 @@ function DrawByStaleMate(){
     
     BufferMoveShow = ContPosi;
     
+    PartidaTerminada = true;
+    
 }
 
 function DrawByStaleMateBack(data){
@@ -956,25 +990,25 @@ function DrawByStaleMateBack(data){
 	cVarElo = VarElo;
     }       
          
-    $(document).attr('title','Game StaleMate');    
-    
-    $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-    $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-                
+    if (PartidaTerminada=='false'){
+        $(document).attr('title','Game StaleMate');    
+        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+    }            
+   
     if (Playing) {
         if (SelectRat=='Rated'){                
-            cCadena = 'The game was draw by StaleMate. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')'; 
+            cCadena = 'Draw by StaleMate. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')'; 
             MyElo = (parseFloat(MyElo) + parseFloat(VarElo));
             MyElo = Math.round(MyElo);
             OpElo = (parseFloat(OpElo) - parseFloat(VarElo));
             OpElo = Math.round(OpElo);
         }else{
-            cCadena = 'The game was draw by StaleMate. ( 0.5-0.5 ) The game was unrated.';  
+            cCadena = 'Draw by StaleMate. ( 0.5-0.5 ) The game was unrated.';  
         }
         ResultadoPartida = '1/2-1/2';
         $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;'>" + ' ' + ResultadoPartida + "</label>");
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
-        PartidaTerminada = true;
         $('#BotonesGame').show();
         $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
         $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
@@ -986,8 +1020,10 @@ function DrawByStaleMateBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        cCadena = 'The game was draw by StaleMate. ( 0.5-0.5 )';
-        $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        if (PartidaTerminada=='false'){
+            cCadena = 'Draw by StaleMate. ( 0.5-0.5 )';
+            $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        }
     }
     
     // Reset all    
@@ -1015,6 +1051,8 @@ function DrawByStaleMateBack(data){
     }
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
 }
 
 function DrawByInsuficientMaterial(){
@@ -1083,11 +1121,11 @@ function UpdateDrawByInsuficientMaterial(){
     }    
     
     if (SelectRat=='Rated') {
-        cCadena = 'The game was draw by Insuficient Material. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
+        cCadena = 'Draw by Insuficient Material. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }else{
-        cCadena = 'The game was draw by Insuficient Material. ( 0.5-0.5 ) The game was unrated.';
+        cCadena = 'Draw by Insuficient Material. ( 0.5-0.5 ) The game was unrated.';
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }
@@ -1106,7 +1144,6 @@ function UpdateDrawByInsuficientMaterial(){
         
     cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
     
-    PartidaTerminada = true;
     $('#BotonesGame').show();
     
     // Reset all
@@ -1142,6 +1179,8 @@ function UpdateDrawByInsuficientMaterial(){
     $('#dialog-result').dialog('open');
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
         
 }
 
@@ -1161,27 +1200,27 @@ function DrawByInsuficientMaterialBack(data){
     }else{
 	cVarElo = VarElo;
     }       
-         
-    $(document).attr('title','Insuficient Material');    
     
-    $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-    $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-                
+    if (PartidaTerminada=='false'){     
+        $(document).attr('title','Insuficient Material');    
+        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+    }
+                    
     if (Playing) {
         if (SelectRat=='Rated'){                
-            cCadena = 'The game was draw by Insuficient Material. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')';
+            cCadena = 'Draw by Insuficient Material. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')';
             MyElo = (parseFloat(MyElo) + parseFloat(VarElo));
             MyElo = Math.round(MyElo);
             OpElo = (parseFloat(OpElo) - parseFloat(VarElo));
             OpElo = Math.round(OpElo);
         }else{
-            cCadena = 'The game was draw by Insuficient Material. ( 0.5-0.5 ) The game was unrated.';  
+            cCadena = 'Draw by Insuficient Material. ( 0.5-0.5 ) The game was unrated.';  
         }
         
         ResultadoPartida = '1/2-1/2';
         $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;'>" + ' ' + ResultadoPartida + "</label>");
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
-        PartidaTerminada = true;
         $('#BotonesGame').show();
         $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
         $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
@@ -1193,8 +1232,10 @@ function DrawByInsuficientMaterialBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        cCadena = 'The game was draw by Insuficient Material. ( 0.5-0.5 )';
-        $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        if (PartidaTerminada=='false'){    
+            cCadena = 'Draw by Insuficient Material. ( 0.5-0.5 )';
+            $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        }
     }
     
     // Reset all
@@ -1222,6 +1263,8 @@ function DrawByInsuficientMaterialBack(data){
     }
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
     
 }
 
@@ -1295,11 +1338,11 @@ function UpdateDrawBy3Repeat(){
     }    
     
     if (SelectRat=='Rated') {
-        cCadena = 'The game was draw by 3 repeat position. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
+        cCadena = 'Draw by 3 repeat position. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }else{
-        cCadena = 'The game was draw by 3 repeat position. ( 0.5-0.5 ) The game was unrated.';
+        cCadena = 'Draw by 3 repeat position. ( 0.5-0.5 ) The game was unrated.';
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }
@@ -1318,7 +1361,6 @@ function UpdateDrawBy3Repeat(){
         
     cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
     
-    PartidaTerminada = true;
     $('#BotonesGame').show();
     
     // Reset all
@@ -1356,6 +1398,8 @@ function UpdateDrawBy3Repeat(){
     
     BufferMoveShow = ContPosi;
     
+    PartidaTerminada = true;
+    
 }
 
 function DrawBy3RepeatBack(data){
@@ -1375,26 +1419,26 @@ function DrawBy3RepeatBack(data){
 	cVarElo = VarElo;
     }       
          
-    $(document).attr('title','3 Repeat Position');    
+    if (PartidaTerminada=='false'){
+        $(document).attr('title','3 Repeat Position');    
+        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+    }
     
-    $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-    $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-                
     if (Playing) {
         if (SelectRat=='Rated'){                
-            cCadena = 'The game was draw by 3 repeat position. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')'; 
+            cCadena = 'Draw by 3 repeat position. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')'; 
             MyElo = (parseFloat(MyElo) + parseFloat(VarElo));
             MyElo = Math.round(MyElo);
             OpElo = (parseFloat(OpElo) - parseFloat(VarElo));
             OpElo = Math.round(OpElo);
         }else{
-            cCadena = 'The game was draw by 3 repeat position. ( 0.5-0.5 ) The game was unrated.';  
+            cCadena = 'Draw by 3 repeat position. ( 0.5-0.5 ) The game was unrated.';  
         }
         
         ResultadoPartida = '1/2-1/2';
         $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;'>" + ' ' + ResultadoPartida + "</label>");
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
-        PartidaTerminada = true;
         $('#BotonesGame').show();
         $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
         $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
@@ -1406,8 +1450,10 @@ function DrawBy3RepeatBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        cCadena = 'The game was draw by 3 repeat position. ( 0.5-0.5 )';
-        $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        if (PartidaTerminada=='false'){
+            cCadena = 'Draw by 3 repeat position. ( 0.5-0.5 )';
+            $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        }
     }
     
     // Reset all
@@ -1435,6 +1481,8 @@ function DrawBy3RepeatBack(data){
     }
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
     
 }
 
@@ -1467,11 +1515,11 @@ function UpdateDrawBy50MovesRule(){
     }    
     
     if (SelectRat=='Rated') {
-        cCadena = 'The game was draw by 50 moves rule. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
+        cCadena = 'Draw by 50 moves rule. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }else{
-        cCadena = 'The game was draw by 50 moves rule. ( 0.5-0.5 ) The game was unrated.';
+        cCadena = 'Draw by 50 moves rule. ( 0.5-0.5 ) The game was unrated.';
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }
@@ -1490,7 +1538,6 @@ function UpdateDrawBy50MovesRule(){
         
     cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
     
-    PartidaTerminada = true;
     $('#BotonesGame').show();
     
     // Reset all
@@ -1527,6 +1574,8 @@ function UpdateDrawBy50MovesRule(){
     
     BufferMoveShow = ContPosi;
     
+    PartidaTerminada = true;
+    
 }
 
 function DrawBy50MovesRuleBack(data){
@@ -1545,28 +1594,28 @@ function DrawBy50MovesRuleBack(data){
     }else{
 	cVarElo = VarElo;
     }       
-         
-    $(document).attr('title','50 Moves Rule');    
     
-    $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-    $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-                
+    if (PartidaTerminada=='false'){     
+        $(document).attr('title','50 Moves Rule');    
+        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+    }
+    
     if (Playing) {
         if (SelectRat=='Rated'){                
-            cCadena = 'The game was draw by 50 Moves Rule. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')'; 
+            cCadena = 'Draw by 50 Moves Rule. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')'; 
             MyElo = (parseFloat(MyElo) + parseFloat(VarElo));
             MyElo = Math.round(MyElo);
             OpElo = (parseFloat(OpElo) - parseFloat(VarElo));
             OpElo = Math.round(OpElo);
         }else{
-            cCadena = 'The game was draw by 50 Moves Rule. ( 0.5-0.5 ) The game was unrated.';  
+            cCadena = 'Draw by 50 Moves Rule. ( 0.5-0.5 ) The game was unrated.';  
         }
         
         ResultadoPartida = '1/2-1/2';
         $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;'>" + ' ' + ResultadoPartida + "</label>");
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
         
-        PartidaTerminada = true;
         $('#BotonesGame').show();
         
         $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
@@ -1579,8 +1628,10 @@ function DrawBy50MovesRuleBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        cCadena = 'The game was draw by 50 Moves Rule. ( 0.5-0.5 )';
-        $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        if (PartidaTerminada=='false'){
+            cCadena = 'Draw by 50 Moves Rule. ( 0.5-0.5 )';
+            $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        }
     }
     
     // Reset all
@@ -1608,6 +1659,8 @@ function DrawBy50MovesRuleBack(data){
     }
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
     
 }
 
@@ -1671,7 +1724,6 @@ function DisconnectPlaying(data){
         
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
         
-        PartidaTerminada = true;
         $('#BotonesGame').show();
         
         // Reset all
@@ -1707,6 +1759,8 @@ function DisconnectPlaying(data){
     
     BufferMoveShow = ContPosi;
     
+    //PartidaTerminada = true;
+    
 }
 
 function AcceptDraw(){    
@@ -1738,11 +1792,11 @@ function AcceptDraw(){
     }    
     
     if (SelectRat=='Rated') {
-        cCadena = 'The game was draw by agreement. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
+        cCadena = 'Draw by agreement. ( 0.5-0.5 ) The new rating is: ' + MyElo + ' (' + cVarElo + ')'; 
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }else{
-        cCadena = 'The game was draw by agreement. ( 0.5-0.5 ) The game was unrated.';
+        cCadena = 'Draw by agreement. ( 0.5-0.5 ) The game was unrated.';
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
     }
@@ -1761,7 +1815,6 @@ function AcceptDraw(){
         
     cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
     
-    PartidaTerminada = true;
     $('#BotonesGame').show();
     
     // Reset all
@@ -1798,6 +1851,8 @@ function AcceptDraw(){
     
     BufferMoveShow = ContPosi;
     
+    PartidaTerminada = true;
+    
 }
 
 function AcceptDrawBack(data){
@@ -1816,27 +1871,27 @@ function AcceptDrawBack(data){
     }else{
 	cVarElo = VarElo;
     }       
-         
-    $(document).attr('title','Draw by Agreement');    
     
-    $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-    $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
-                
+    if (PartidaTerminada=='false'){    
+        $(document).attr('title','Draw by Agreement');    
+        $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+        $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
+    }
+                    
     if (Playing) {
         if (SelectRat=='Rated'){                
-            cCadena = 'The game was draw by agreement. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')'; 
+            cCadena = 'Draw by agreement. ( 0.5-0.5 ) The new rating is: ' + data.OpElo + ' (' + cVarElo + ')'; 
             MyElo = (parseFloat(MyElo) + parseFloat(VarElo));
             MyElo = Math.round(MyElo);
             OpElo = (parseFloat(OpElo) - parseFloat(VarElo));
             OpElo = Math.round(OpElo);
         }else{
-            cCadena = 'The game was draw by agreement. ( 0.5-0.5 ) The game was unrated.';  
+            cCadena = 'Draw by agreement. ( 0.5-0.5 ) The game was unrated.';  
         }
         
         ResultadoPartida = '1/2-1/2';
         $("#sdivGame").append("<label id='" + (ContPosi+1) + "' style='float:left; margin-left:7px; font-size:22px; font-weight:bold; font-family:Arial,Helvetica,sans-serif;'>" + ' ' + ResultadoPartida + "</label>");
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
-        PartidaTerminada = true;
         $('#BotonesGame').show();
         
         $('#DatosAbajoPlayer').append('<label style="color:green; margin-left:12px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">(' + cVarElo + ')</label>');    
@@ -1849,8 +1904,10 @@ function AcceptDrawBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        cCadena = 'The game was draw by agreement. ( 0.5-0.5 )';
-        $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        if (PartidaTerminada=='false'){
+            cCadena = 'Draw by agreement. ( 0.5-0.5 )';
+            $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
+        }
     }
     
     // Reset all
@@ -1878,5 +1935,7 @@ function AcceptDrawBack(data){
     }
     
     BufferMoveShow = ContPosi;
+    
+    PartidaTerminada = true;
     
 }

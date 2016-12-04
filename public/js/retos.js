@@ -258,7 +258,14 @@ function CargarRecursosRetos(){
                         
                     }else{
                         $('#status').html('<label style="color:red; margin-left:8px; margin-top:10px; margin-right:4px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">The Challenger is out of Range.</label>');
-		    }
+                        $("#dialog-result").html(
+					"<div id=\"dialog-result\" title=\"Information\">" +
+					"<p style=\"color:red; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px\">" + "The Challenger is out of Range.</p>" +
+					"</div>"
+                        );                                
+                        $("#dialog-result").dialog({ height: 360 },{ width: 310 });                        			
+                        $("#dialog-result").dialog( "open" );	
+                    }
                     
                 }
                 
@@ -407,6 +414,8 @@ function AltaPartida(full) {
     $('#RelojAbajoLabel').text(FormatearMilisegundos(TiempoRestanteAbajo));
     
     LoadLegalMovesForWhite();
+    
+    PartidaTerminada = false;
     
 }
 

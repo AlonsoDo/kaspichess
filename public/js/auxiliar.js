@@ -480,6 +480,8 @@ function IfGameActive(data){
         
         Following = true;
         
+        PartidaTerminada = false;
+        
         //Send to control
         socket.emit('FollowPlayerToControl',{PlayerName:cUserName});
 			    

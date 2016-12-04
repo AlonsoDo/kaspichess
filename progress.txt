@@ -829,3 +829,10 @@ Varios
 JUEVES-01.12.2016
 
 Cambio de cuenta de correo SMTP a hotmail
+
+SABADO-03.12.2016
+
+Cuadro dialogo en reto fuera de rango
+Acortar cadena fin de partida Draw by insufficient material
+Control del flag PartidaTerminada
+copia seguridad 20:22 0.8.5
