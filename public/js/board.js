@@ -301,7 +301,7 @@ function GameTimeOffBack(data){
         cPartidaCompleta = cPartidaCompleta + ' ' + ResultadoPartida;
         $('#BotonesGame').show();
     }else{
-        if (PartidaTerminada=='false'){        
+        if (PartidaTerminada==false){        
             if (cColorSide!=data.ColorSide){
                 $('#RelojArribaLabel').text('Time');   
             }else{            
@@ -310,7 +310,7 @@ function GameTimeOffBack(data){
         }        
     } 
     
-    if (PartidaTerminada=='false'){    
+    if (PartidaTerminada==false){    
     
         $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
             
@@ -421,7 +421,7 @@ function GameResignBack(data){
         }              
     }
     
-    if (PartidaTerminada=='false'){
+    if (PartidaTerminada==false){
     
         $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
             
@@ -990,7 +990,7 @@ function DrawByStaleMateBack(data){
 	cVarElo = VarElo;
     }       
          
-    if (PartidaTerminada=='false'){
+    if (PartidaTerminada==false){
         $(document).attr('title','Game StaleMate');    
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
@@ -1020,7 +1020,7 @@ function DrawByStaleMateBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        if (PartidaTerminada=='false'){
+        if (PartidaTerminada==false){
             cCadena = 'Draw by StaleMate. ( 0.5-0.5 )';
             $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
         }
@@ -1201,7 +1201,7 @@ function DrawByInsuficientMaterialBack(data){
 	cVarElo = VarElo;
     }       
     
-    if (PartidaTerminada=='false'){     
+    if (PartidaTerminada==false){     
         $(document).attr('title','Insuficient Material');    
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
@@ -1232,7 +1232,7 @@ function DrawByInsuficientMaterialBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        if (PartidaTerminada=='false'){    
+        if (PartidaTerminada==false){    
             cCadena = 'Draw by Insuficient Material. ( 0.5-0.5 )';
             $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
         }
@@ -1419,7 +1419,7 @@ function DrawBy3RepeatBack(data){
 	cVarElo = VarElo;
     }       
          
-    if (PartidaTerminada=='false'){
+    if (PartidaTerminada==false){
         $(document).attr('title','3 Repeat Position');    
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
@@ -1450,7 +1450,7 @@ function DrawBy3RepeatBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        if (PartidaTerminada=='false'){
+        if (PartidaTerminada==false){
             cCadena = 'Draw by 3 repeat position. ( 0.5-0.5 )';
             $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
         }
@@ -1595,7 +1595,7 @@ function DrawBy50MovesRuleBack(data){
 	cVarElo = VarElo;
     }       
     
-    if (PartidaTerminada=='false'){     
+    if (PartidaTerminada==false){     
         $(document).attr('title','50 Moves Rule');    
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
@@ -1628,7 +1628,7 @@ function DrawBy50MovesRuleBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        if (PartidaTerminada=='false'){
+        if (PartidaTerminada==false){
             cCadena = 'Draw by 50 Moves Rule. ( 0.5-0.5 )';
             $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
         }
@@ -1872,7 +1872,7 @@ function AcceptDrawBack(data){
 	cVarElo = VarElo;
     }       
     
-    if (PartidaTerminada=='false'){    
+    if (PartidaTerminada==false){    
         $(document).attr('title','Draw by Agreement');    
         $('#DatosAbajoPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
         $('#DatosArribaPlayer').append('<label style="margin-left:6px; margin-top:2px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:22px">1/2</label>');    
@@ -1904,7 +1904,7 @@ function AcceptDrawBack(data){
         $('#dialog-result').dialog({height:330},{width:300});
         $('#dialog-result').dialog('open');    
     }else{
-        if (PartidaTerminada=='false'){
+        if (PartidaTerminada==false){
             cCadena = 'Draw by agreement. ( 0.5-0.5 )';
             $('#status').append('<label style="color:red; margin-left:10px; margin-top:10px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:18px">' + cCadena + '</label>');                            
         }
