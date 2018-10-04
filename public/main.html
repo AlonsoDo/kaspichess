@@ -507,6 +507,7 @@
             $('#PrevGame').button();
             $('#NextGame').button();
             $('#EndGame').button();
+            $('#btSCC').button();
             
             $('#Cancel').hide();            
             $('#Resign').hide();
@@ -605,6 +606,10 @@
             
             $('#btSetting').click(function(){               
                 $('#dialogsetting').dialog('open');                
+            });
+            
+            $('#btSCC').click(function(){
+                window.open('http://sharechessclub.com/','_blank');
             });
             
             $('#TabPlayers').click(function(){                 
@@ -977,9 +982,10 @@
         <div style="background-color:#e8e8e8; border:0px black solid; width:1100px; height:60px;">
             <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">Welcome to</label>								
             <label style="color:green; margin-left:20px; margin-top:2px; float:left; font-family:Forte,Arial,Helvetica,sans-serif; font-weight:bold; font-size:40px;">KaspiChess.com</label>								
-            <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">version 0.8.6 by ApoloSoft (c) 2018</label>								
-            <button id="btSetting" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:16px;">Setting</button>
-            <button id="Stats" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:16px;">Stats</button>
+            <label style="color:#800080; margin-left:20px; margin-top:6px; float:left; font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:20px;">version 0.8.7 by ApoloSoft (c) 2018</label>								
+            <button id="btSetting" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:12px;">Setting</button>
+            <button id="Stats" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:12px;">Stats</button>
+            <button id="btSCC" style="padding:0px 0px 0px 0px; float:right; font-size:12px; font-weight:bold; margin-top:16px; margin-right:12px;">ShareChessClub</button>
         </div>
         <div id="ContenedorBoard" style="background-color:#e8e8e8; border:0px black solid; width:546px; height:564px; margin-top:8px; margin-bottom:8px; margin-right:8px; float:left;">
             <div id="DatosArribaPlayer" style="background-color:#e8e8e8; border:0px black solid; width:346px; height:30px; margin-top:21px; margin-left:52px; float:left;">
